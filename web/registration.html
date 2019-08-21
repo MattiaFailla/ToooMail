@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <title>TooMail</title>
+
+    <script type="text/javascript" src="/eel.js"></script>
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+
+    <link rel='stylesheet' href='css/registration.css'>
+    <script type="text/javascript">
+      function signing() {
+        // show the loading gif
+        document.querySelector('.cont').classList.toggle('s--signup');
+
+        // take data from the form
+        var name = document.getElementById("name").value;
+        var nick = document.getElementById("nickname").value;
+        var email = document.getElementById("email").value;
+        var passw = document.getElementById("passw").value;
+
+        document.getElementById('login').innerHTML = '<div style="width:100%;height:0;padding-bottom:100%;position:relative;"><center><img src="https://i.giphy.com/media/KxzKGZJrYeILmlr9UA/giphy.webp"></center></div>';
+
+        document.getElementById('info_desc').innerHTML = 'Hey '+nick+' welcome on board! We are actually setting up the application to offer the best user experience.<br>Are you ready? ';
+
+        eel.set_user(name,nick,email,passw);
+      }
+    </script>
+
+</head>
+<body translate="no" id="body">
+  <p class="tip"></p>
+  <div class="cont">
+    <div class="form sign-in">
+      <h2>Welcome in TooMail,</h2>
+      <form id="login">
+        <label>
+          <span>Name</span>
+          <input type="text" id="name" />
+        </label>
+        <label>
+          <span>Nickname</span>
+          <input type="text" id="nickname" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" required id="email" />
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" required id="passw" />
+        </label>
+        <button type="button" class="submit" onclick="signing();">Sign In</button>
+      </form>
+    </div>
+    <div class="sub-cont">
+      <div class="img">
+        <div class="img__text m--up">
+          <h2>New here?</h2>
+          <p>If you need more information about TooMail click down here!</p>
+        </div>
+        <div class="img__text m--in">
+          <h2>Ready to rock?</h2>
+          <p>The best mail client so far!</p>
+        </div>
+        <div class="img__btn">
+          <span class="m--up">Info</span>
+          <span class="m--in">Sign In</span>
+        </div>
+      </div>
+      <div class="form sign-up">
+        <h2>Mail client? Much more.</h2>
+        <p id="info_desc">Cool product description</p>
+      </div>
+    </div>
+  </div>
+      <script id="rendered-js">
+      document.querySelector('.img__btn').addEventListener('click', function () {
+          document.querySelector('.cont').classList.toggle('s--signup');
+        });
+      //# sourceURL=pen.js
+    </script>
+
+    <script type="text/javascript">
+      // EEL LOGIC
+      eel.expose(say_hello_js);               // Expose this function to Python
+      function say_hello_js(x) {
+         console.log("Hello from " + x);
+      }
+
+      say_hello_js("Javascript World!");
+      eel.say_hello_py("Javascript registration World!");  // Call a Python function
+
+      window.console = window.console || function(t) {};
+      if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+      }
+
+
+    </script>
+  </body>
+</html>
