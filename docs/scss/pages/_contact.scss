@@ -1,0 +1,29 @@
+.address{
+	.block{
+		.address-block{
+			text-align: center;
+			.icon{
+				margin-bottom: 25px;
+				display: flex;
+		        justify-content: center;
+				i{
+					display: block;
+					height: 100px;
+					width: 100px;
+					background: $light-gray;
+					border-radius: 100%;
+					font-size: 45px;
+					text-align: center;
+					line-height: 100px;
+				}
+			}
+		}
+	}
+	.google-map{
+		position: relative;
+		#googleMap {
+		    height: 400px;
+		    width: 100%;
+		}
+	}
+}

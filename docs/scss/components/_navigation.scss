@@ -1,0 +1,103 @@
+.main-nav{
+	background: $light;
+	.navbar-brand{
+		padding: 0;
+	}
+	.navbar-nav{
+		.nav-item{
+			position: relative;
+			font-family: $primary-font;
+			.nav-link{
+				position: relative;
+				text-align: center;
+				font-size: 13px;
+				text-transform: uppercase;
+				font-weight: 600;
+				color: $dark;
+				padding-left: 20px;
+				padding-right: 20px;
+				line-height: 45px;
+			}
+			&.active{
+				.nav-link{
+					color: $primary-color;
+					&:before{
+						@include tablet {
+							content: none;
+						}
+						content: '';
+						background: $primary-color;
+						width: 100%;
+						height: 4px;
+						position: absolute;
+						top: 0;
+						left: 0;
+					}
+				}
+			}
+		}
+	}
+	.dropdown-slide {
+	  position: static;
+	  .open>a, .open>a:focus, .open>a:hover {
+	    background: transparent;
+	  }
+	  &.full-width {
+	    .dropdown-menu {
+	      left:0!important;
+	      right:0!important;
+	    }
+	  }
+	  &:hover .dropdown-menu {
+	    display:none;
+	    opacity: 1;
+	    display: block;
+	    transform: translate(0px ,0px);
+	    opacity: 1;
+	    visibility: visible;
+	    color: #777;
+	    transform: translateY(0px);
+	    @include tablet {
+    	    transform: none;
+		    left: auto;
+		    position: relative;
+		    text-align: center;
+	    }
+	  }
+	  .dropdown-menu {
+	  	.dropdown-item{
+	  		font-size: 13px;
+  		    padding: 4px 10px;
+  		    transition: .3s ease;
+  		    &:hover{
+  		    	transform: translate3d(5px,0,0);
+  		    	background: $light;
+  		    	color: $primary-color;
+  		    }
+	  	}
+	  	margin-top: 0;
+	    border-radius:0;
+	    opacity: 1;
+	    visibility: visible;
+	    position: absolute;
+	    padding: 5px 15px;
+	    border: 1px solid #ebebeb;
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	    transition:.3s all;
+	    position: absolute;
+	    display: block;
+	    visibility: hidden;
+	    opacity: 0;
+	    transform: translateY(30px);
+	    transition: visibility 0.2s, opacity 0.2s, transform 500ms cubic-bezier(0.43, 0.26, 0.11, 0.99);
+	    @include mobile {
+	      transform:none;
+	    }
+	  }
+	}
+}
+
+// bootstrap override
+.navbar-toggler:focus, .navbar-toggler:hover{
+	outline: none;
+}
