@@ -127,8 +127,6 @@ setNumberUnread();
       var loading_img = document.getElementById("loading-image");
       loading_img.parentNode.removeChild(loading_img);
 
-      var loading_more_button = document.getElementById("load_more");
-      loading_more_button.parentNode.removeChild(loading_more_button);
     }
     catch(err) {
       
@@ -179,7 +177,7 @@ setNumberUnread();
     }
     // Append to the bottom of inbox a button to load next mails
     document.getElementById('inbox').innerHTML += `
-        <button id="load_more" onclick="get_other_mail(${anchor_number});">Carica altre mail</button>
+    <button class="more" style="vertical-align:middle" id="load_more"  onclick="get_other_mail(${anchor_number});"><span>Load more </span>
       `;
 
 
@@ -198,7 +196,11 @@ getEmails(year,month,day);
 // THE FUNCTION LOADS THE EMAILS FROM TODAY-NUMBEROFSCROLLEDDAY
 // AND APPEND THEM ON THE INBOX DIV
 function get_other_mail(anchor_number) {
-  document.getElementById('inbox').innerHTML += '<center><li class="loading-image" id="loading-image"><img src="img/810.gif"></li></center>';
+
+  document.getElementById('inbox').innerHTML += '<center><li class="loading-image" id="loading-image"><img src="img/load_mails.gif" height="100%"></li></center>';
+
+  var loading_more_button = document.getElementById("load_more");
+      loading_more_button.parentNode.removeChild(loading_more_button);
 
   d.setDate(d.getDate() - anchor_number);
   let year = d.getFullYear();
@@ -325,7 +327,7 @@ window.setInterval(function(){
         <ul class="inbox" id="inbox">
 
           <li class="loading-image" id="loading-image">
-            <img src="img/810.gif">
+            <img src="img/load_mails.gif" style="width: 200%;max-height: 100%">
           </li>
            
 
@@ -334,6 +336,7 @@ window.setInterval(function(){
 
         <div class="message" id="message">
             QUI POSSO AGGIUNGERE DEI WIDGETS
+            <button class="more" style="vertical-align:middle"><span>Load more </span>
         </div>
   </div>
   <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>

@@ -27,6 +27,16 @@
      outline: none;
      background: #f0f0f0;
      }
+     .more {
+     padding: 10px 15px;
+     width: 100%;
+     transition: background-color 200ms ease-in-out;
+     color: white;
+     border-radius: 3px;
+     background-color: #2196f3;
+     font-size: 20px;
+     }
+
      body {
       height: 100vh;
      /*display: auto;*/
@@ -325,6 +335,45 @@
      }
      .search-button:active {
      background-color: #b9132a;
+     }
+     .more {
+       display: inline-block;
+       border-radius: 4px;
+       background-color: #f4511e;
+       border: none;
+       color: #FFFFFF;
+       text-align: center;
+       font-size: 12px;
+       padding: 20px;
+       width: 100%;
+       transition: all 0.5s;
+       cursor: pointer;
+       margin: 5px;
+     }
+
+     .more span {
+       cursor: pointer;
+       display: inline-block;
+       position: relative;
+       transition: 0.5s;
+     }
+
+     .more span:after {
+       content: '\00bb';
+       position: absolute;
+       opacity: 0;
+       top: 0;
+       right: -20px;
+       transition: 0.5s;
+     }
+
+     .more:hover span {
+       padding-right: 25px;
+     }
+
+     .more:hover span:after {
+       opacity: 1;
+       right: 0;
      }
      .message-labels .message-labels-item {
      margin: 20px 0;
