@@ -97,13 +97,11 @@ def get_mails(year,month,day):
 		logging.info('Account informations correct. Connected.')
 
 		# Gets all messages after the day x
-
-		# to get the mails of today:
 		all_inbox_messages = imbox.messages(date__on=datetime.date(year,month,day))
 		unread_msgs = imbox.messages(unread=True)
 		unread_uid = []
 		for uid, msg in unread_msgs:
-			unread_uid.append(uid)
+			unread_uid.append(uid.decode())
 		logging.debug('Gathered all inbox messages')
 
 		for uid, message in reversed(all_inbox_messages):
@@ -206,6 +204,88 @@ def get_starred():
 @eel.expose
 def send_mail(account, to, subject, body, attach):
 	pass
+
+@eel.expose
+def get_flagged():
+	mails = []
+	username = get_user_info("mail")
+	passw = get_user_info("password")
+	with Imbox('imap-mail.outlook.com',
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False) as imbox:
+
+		logging.info('Account informations correct. Connected.')
+
+		# Gets all messages after the day x
+		all_inbox_messages = imbox.messages(flagged=True)
+		unread_msgs = imbox.messages(unread=True)
+		unread_uid = []
+		for uid, msg in unread_msgs:
+			unread_uid.append(uid.decode())
+		logging.debug('Gathered all inbox messages')
+
+		for uid, message in reversed(all_inbox_messages):
+			#print(message.attachments)
+			sanitized_body = str(message.body['html'])
+			if sanitized_body == "[]":
+				sanitized_body = str(message.body['plain'])
+			sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\r", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\t", "")
+			sanitized_body = sanitized_body.replace(r"['", "")
+			sanitized_body = sanitized_body.replace(r"']", "")
+
+			# Apply local time to base server time
+			From_name = message.sent_from[0]['name']
+			From_mail = message.sent_from[0]['email']
+			To_name = message.sent_to[0]['name']
+			To_mail = message.sent_to[0]['email']
+
+			# If html body is empty, load the plain
+			if sanitized_body == "[]":
+				sanitized_body = message.body['plain']
+
+			if uid.decode() in unread_uid:
+				unread = False
+			else:
+				unread = True
+
+			Subject = str(message.subject) if str(message.subject) else "(No subject)"
+			appmails = {
+				'uid': uid.decode(),
+				'From_name': str(From_name),
+				'From_mail': str(From_mail),
+				'To_name': str(To_name),
+				'To_mail': str(To_mail),
+				'Subject': str(Subject),
+				'bodyHTML': str(sanitized_body),
+				'bodyPLAIN': str(message.body['plain']),
+				'directory': "",
+				'datetimes': str(datetime.date(year,month,day)),
+				'readed': unread
+				}
+			mails.append(appmails)
+
+			"""db_api.insert("emails",
+				{
+				'uid': uid.decode(),
+				'from_name': str(From_name),
+				'from_mail': str(From_mail),
+				'to_name': str(To_name),
+				'to_mail': str(To_mail),
+				'subject': str(Subject),
+				'bodyHTML': str(sanitized_body),
+				'bodyPLAIN': str(message.body['plain']),
+				'directory': "",
+				'datetimes': datetime.date(year,month,day)
+				})"""
+		return mails
 
 @eel.expose
 def delete_mail(uid):
