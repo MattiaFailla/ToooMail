@@ -109,6 +109,8 @@ def get_mails(year,month,day):
 		for uid, message in reversed(all_inbox_messages):
 			#print(message.attachments)
 			sanitized_body = str(message.body['html'])
+			if sanitized_body == "[]":
+				sanitized_body = str(message.body['plain'])
 			sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
 			sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
 			sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -123,6 +125,10 @@ def get_mails(year,month,day):
 			From_mail = message.sent_from[0]['email']
 			To_name = message.sent_to[0]['name']
 			To_mail = message.sent_to[0]['email']
+
+			# If html body is empty, load the plain
+			if sanitized_body == "[]":
+				sanitized_body = message.body['plain']
 
 			if uid.decode() in unread_uid:
 				unread = False
