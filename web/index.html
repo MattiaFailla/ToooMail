@@ -111,7 +111,7 @@ async function setNumberUnread(){
 
 setNumberUnread();
 
- async function getEmails(year,month,day) {
+ async function getEmails(year,month,day,anchor_number = 1) {
     console.log("Waiting the backend");
 
 
@@ -126,6 +126,9 @@ setNumberUnread();
     try {
       var loading_img = document.getElementById("loading-image");
       loading_img.parentNode.removeChild(loading_img);
+
+      var loading_more_button = document.getElementById("load_more");
+      loading_more_button.parentNode.removeChild(loading_more_button);
     }
     catch(err) {
       
@@ -173,9 +176,11 @@ setNumberUnread();
       `;
       
       document.getElementById('inbox').appendChild(li);
-      //document.getElementById('inbox-item-'+a).style.opacity = 1;
     }
-
+    // Append to the bottom of inbox a button to load next mails
+    document.getElementById('inbox').innerHTML += `
+        <button id="load_more" onclick="get_other_mail(${anchor_number});">Carica altre mail</button>
+      `;
 
 
 };
@@ -188,16 +193,20 @@ let day = d.getDate();
 getEmails(year,month,day);
 
 
-// TO CALL WHEN USER REACH THE BOTTOM OF THE PAGE
+
+// TO CALL WHEN USER REACH THE BOTTOM OF THE CURRENT DAY
+// THE FUNCTION LOADS THE EMAILS FROM TODAY-NUMBEROFSCROLLEDDAY
+// AND APPEND THEM ON THE INBOX DIV
 function get_other_mail(anchor_number) {
-  document.getElementById('inbox').innerHTML += '<li class="loading-image" id="loading-image"><img src="img/gg.gif"></li>';
+  document.getElementById('inbox').innerHTML += '<center><li class="loading-image" id="loading-image"><img src="img/810.gif"></li></center>';
 
   d.setDate(d.getDate() - anchor_number);
   let year = d.getFullYear();
   let month = d.getMonth()+1;
   let day = d.getDate();
-  getEmails(year,month,day);
+  getEmails(year,month,day,anchor_number+1);
 }
+
 
 
 // When the user click the mail 
@@ -316,7 +325,7 @@ window.setInterval(function(){
         <ul class="inbox" id="inbox">
 
           <li class="loading-image" id="loading-image">
-            <img src="img/gg.gif">
+            <img src="img/810.gif">
           </li>
            
 
