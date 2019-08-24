@@ -64,6 +64,19 @@ def get_user_info(what):
 	p = data[0]
 	return p[0]
 
+@eel.expose
+def verify_user_info(email,passw):
+	try:
+		with Imbox('imap-mail.outlook.com',
+			username=email,
+			password=passw,
+			ssl=True,
+			ssl_context=None,
+			starttls=False) as imbox:
+			imbox.messages()
+		return True
+	except Exception as e:
+		return False
 
 @eel.expose
 def get_mails(year,month,day):
