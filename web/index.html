@@ -307,20 +307,22 @@ window.setInterval(function(){
               <ul class="categories">
                  <li>
                     <div class="notification"><span id="NumberUnread">0</span></div>
-                    <i class="fa fa-inbox is-active"></i>
+                    <i class="fa fa-inbox is-active" title="Inbox"></i>
                  </li>
-                 <li><i class="fa fa-star"></i></li>
-                 <li><i class="fa fa-send"></i></li>
-                 <li><i class="fa fa-folder"></i></li>
-                 <li><i class="fa fa-ban"></i></li>
-                 <li><i class="fa fa-trash"></i></li>
+                 <li><i class="fa fa-star" title="Starred"></i></li>
+                 <li><i class="fa fa-envelope-o" aria-hidden="true" title="Unread"></i></li>
+                 <li><i class="fa fa-send" title="Sent"></i></li>
+                 <li><i class="fa fa-folder" title="Change folder"></i></li>
+                 <li><i class="fa fa-ban" title="Spam"></i></li>
+                 <li><i class="fa fa-trash" title="Deleted"></i></li>
               </ul>
            </nav>
+           <!-- 
            <ul class="message-labels">
-              <!-- <li class="message-labels-item yellow" alt="unread"></li> -->
+              <li class="message-labels-item yellow" alt="unread"></li>
               <li class="message-labels-item blue"></li>
               <li class="message-labels-item red"></li>
-           </ul>
+           </ul>-->
            <div class="user-profile"><i class="fa fa-cog"></i><i class="fa fa-sign-out"></i></div>
         </aside>
 
