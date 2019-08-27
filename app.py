@@ -65,9 +65,9 @@ def get_user_info(what):
 	return p[0]
 
 @eel.expose
-def verify_user_info(email,passw):
+def verify_user_info(email,passw,imap):
 	try:
-		with Imbox('imap-mail.outlook.com',
+		with Imbox(imap,
 			username=email,
 			password=passw,
 			ssl=True,
@@ -87,7 +87,8 @@ def get_mails(year,month,day):
 	mails = []
 	username = get_user_info("mail")
 	passw = get_user_info("password")
-	with Imbox('imap-mail.outlook.com',
+	imapserver = get_user_info("imapserver")
+	with Imbox(imapserver,
         username=username,
         password=passw,
         ssl=True,
@@ -167,7 +168,8 @@ def get_mails(year,month,day):
 def mark_as_seen(uid):
 	username = get_user_info("mail")
 	passw = get_user_info("password")
-	with Imbox('imap-mail.outlook.com',
+	imapserver = get_user_info("imapserver")
+	with Imbox(imapserver,
         username=username,
         password=passw,
         ssl=True,
@@ -179,7 +181,8 @@ def mark_as_seen(uid):
 def get_number_unread():
 	username = get_user_info("mail")
 	passw = get_user_info("password")
-	with Imbox('imap-mail.outlook.com',
+	imapserver = get_user_info("imapserver")
+	with Imbox(imapserver,
         username=username,
         password=passw,
         ssl=True,
@@ -210,7 +213,8 @@ def get_flagged():
 	mails = []
 	username = get_user_info("mail")
 	passw = get_user_info("password")
-	with Imbox('imap-mail.outlook.com',
+	imapserver = get_user_info("imapserver")
+	with Imbox(imapserver,
         username=username,
         password=passw,
         ssl=True,
@@ -330,7 +334,7 @@ def other():
 	pass
 
 @eel.expose
-def set_user(name,nick,mail,passw):
+def set_user(name,nick,mail,passw,imapserver):
 	db_api.insert("user",
 		{
 		'name': name,
@@ -340,7 +344,7 @@ def set_user(name,nick,mail,passw):
 		'mail': mail,
 		'password': passw,
 		'profilepic': "",
-		'imapserver': "",
+		'imapserver': imapserver,
 		'smtpserver': "",
 		'datetime': datetime.datetime.now(),
 		})

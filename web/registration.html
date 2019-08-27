@@ -30,6 +30,7 @@
         var nick = document.getElementById("nickname").value;
         var email = document.getElementById("email").value;
         var passw = document.getElementById("passw").value;
+        var imap = document.getElementById("imap").value;
 
         toastr.options = {
           "closeButton": false,
@@ -49,9 +50,9 @@
           "hideMethod": "fadeOut"
         }
 
-        let verification = await eel.verify_user_info(email,passw)();
+        let verification = await eel.verify_user_info(email,passw,imap)();
         if (verification) {
-          eel.set_user(name,nick,email,passw);
+          eel.set_user(name,nick,email,passw,imap);
         }else{
           toastr.error("We can't login into your inbox. Please verify your password or email.", "Incorrect informations");
           console.log("User informations incorrect");
@@ -83,6 +84,10 @@
         <label>
           <span>Nickname</span>
           <input type="text" id="nickname" />
+        </label>
+        <label>
+          <span>imap server</span>
+          <input type="text" id="imap" />
         </label>
         <label>
           <span>Email</span>
