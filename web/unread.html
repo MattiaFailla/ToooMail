@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TooMail - starred emails</title>
+  <title>TooMail - unread emails</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
 
@@ -116,7 +116,7 @@ setNumberUnread();
 
 
     // Let's take the data from the backend
-    let emails = await eel.get_starred()();
+    let emails = await eel.get_unread()();
     console.log("emails: \n");
     console.log(emails); // we need to itarate this in order to display
 
@@ -155,7 +155,7 @@ setNumberUnread();
       li.innerHTML = `
         <div class="inbox-sender" message-id="${i}">
            <div class="sender-name"> <img src="${getImage(emails[i]['From_name'])}" height="10" width="10"> - <a href="#">${emails[i]['From_name']} </a></div>
-           <div class="sender-date"><i class="sender-label fa fa-star"></i><span>${emails[i]['datetimes']}</span></div>
+           <div class="sender-date"><i class="sender-label fa fa-envelope"></i><span>${emails[i]['datetimes']}</span></div>
         </div>
         <div class="inbox-title">
            ${label}
@@ -166,6 +166,16 @@ setNumberUnread();
       
       document.getElementById('inbox').appendChild(li);
     }
+    document.getElementById('inbox').innerHTML += `
+        <li class="inbox-item">
+            <div class="inbox-title">
+            <div class="message-labels-item "></div>
+            </div>
+            <p class="inbox-short">You reached the end.</p>
+            </li>
+            <img src="img/taken.png" style="width: 200%;max-height: 100%">
+          </li>
+      `;
 
 
 };
@@ -278,8 +288,8 @@ window.setInterval(function(){
                     <div class="notification"><span id="NumberUnread">0</span></div>
                     <i class="fa fa-inbox" title="Inbox" onclick="change_page('index.html')"></i>
                  </li>
-                 <li><i class="fa fa-star is-active" title="Starred" onclick="change_page('starred.html')"></i></li>
-                 <li><i class="fa fa-envelope-o" aria-hidden="true" title="Unread" onclick="change_page('unread.html')"></i></li>
+                 <li><i class="fa fa-star" title="Starred" onclick="change_page('starred.html')"></i></li>
+                 <li><i class="fa fa-envelope-o is-active" aria-hidden="true" title="Unread" onclick="change_page('unread.html')"></i></li>
                  <li><i class="fa fa-send" title="Sent"></i></li>
                  <li><i class="fa fa-folder" title="Change folder"></i></li>
                  <li><i class="fa fa-ban" title="Spam"></i></li>
@@ -315,6 +325,8 @@ window.setInterval(function(){
             <li class="loading-image" id="loading-image">
             <img src="img/load_mails.gif" style="width: 200%;max-height: 100%">
           </li>
+
+          
 
            
 
