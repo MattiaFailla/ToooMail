@@ -21,8 +21,16 @@
 
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
   <script src="css/jquery.mousewheel.js"></script>
   <script src="css/scrollbar-plugin.js"></script>
+
+  <!-- calendar stuff -->
+  <link href="https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i|IBM+Plex+Sans:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i|Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Ramabhadra" rel="stylesheet">
+
+<link rel="stylesheet" href="https://anandchowdhary.github.io/ionicons-3-cdn/icons.css" integrity="sha384-+iqgM+tGle5wS+uPwXzIjZS5v6VkqCUV7YQ/e/clzRHAxYbzpUJ+nldylmtBWCP0" crossorigin="anonymous">
+
 
   <link rel="stylesheet" href="css/base.css">
 
@@ -386,7 +394,182 @@ window.setInterval(function(){
 
 
         <div class="message" id="message">
-            <center><img src="img/loading.gif" height="100"></center>
+            <img src="img/logo.png" height="100">
+
+            <h2>Apps</h2>
+
+            <div class="cards-list">
+  
+            <div class="card 1">
+              <div class="card_image"> 
+                <img src="https://media.giphy.com/media/1zKRlTFQ278PtPtrV2/giphy.gif" /> 
+              </div>
+              <div class="card_title title-white">
+                <p style="color:white;">Files</p>
+              </div>
+            </div>
+
+              <div class="card 2">
+              <div class="card_image">
+                <img src="https://media.giphy.com/media/WirhZMBF1AZVK/giphy.gif" />
+                </div>
+              <div class="card_title title-white">
+                <p style="color:white;">Chat</p>
+              </div>
+            </div>
+
+            <div class="card 3">
+              <div class="card_image">
+                <img src="https://media.giphy.com/media/etSwiUkXNhTB6/giphy.gif" />
+              </div>
+              <div class="card_title">
+                <p style="color:white;">Notes</p>
+              </div>
+            </div>
+
+            <div class="card 4">
+              <div class="card_image">
+                <img src="https://media.giphy.com/media/l2YWxPbinlJYX5zMc/giphy.gif" />
+              </div>
+              <div class="card_title">
+                <p style="color:white;">Calendar</p>
+              </div>
+            </div>
+            </div>
+
+            <h2>Your events</h2>
+            <div class="mobile-wrapper">
+
+<header class="header">
+<div class="container">
+<span>Welcome Back!</span>
+<h1>Calendar Plan</h1>
+<div class="menu-toggle">
+<div>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+</div>
+</header>
+
+<section class="today-box" id="today-box">
+<span class="breadcrumb">Today</span>
+<h3 class="date-title">Aug 30, 2019</h3>
+<div class="plus-icon">
+<i class="ion ion-ios-add"></i>
+</div>
+</section>
+
+<section class="upcoming-events">
+<div class="container">
+<h3>
+Lastest Events
+</h3>
+<div class="events-wrapper">
+<div class="event">
+<i class="ion ion-ios-flame hot"></i>
+<h4 class="event__point">11:00 am</h4>
+<span class="event__duration">in 30 minutes.</span>
+<p class="event__description">
+Monday briefing with the team (...).
+</p>
+</div>
+<div class="event">
+<i class="ion ion-ios-flame done"></i>
+<h4 class="event__point">12:00 pm</h4>
+<span class="event__duration">in 1 hour.</span>
+<p class="event__description">
+Lunch with Paul Mccartney @Burgers House!
+</p>
+</div>
+<div class="event active">
+<i class="ion ion-ios-radio-button-on icon-in-active-mode"></i>
+<h4 class="event__point">14:00 pm</h4>
+<p class="event__description">
+Meet clients from project.
+ </p>
+</div>
+<div class="event">
+<i class="ion ion-ios-flame-outline upcoming"></i>
+<h4 class="event__point">20:45 pm</h4>
+<span class="event__duration">in 45 minutes.</span>
+<p class="event__description">
+Watch sci-fi series.
+</p>
+</div>
+<div class="event">
+<i class="ion ion-ios-flame-outline upcoming"></i>
+<h4 class="event__point">23:15 pm</h4>
+<span class="event__duration">in 20 minutes.</span>
+<p class="event__description">
+Customer dialog on Skype.
+</p>
+</div>
+</div>
+<button class="add-event-button">
+<span class="add-event-button__title">Add Event</span>
+<span class="add-event-button__icon">
+<i class="ion ion-ios-star-outline"></i>
+</span>
+</button>
+</div>
+</section>
+</div>
+            
+
+    <h2>Stories</h2>
+    <div class="cards-list-stories">
+            <div class="card-stories 3">
+              <div class="card-stories_image">
+                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+              </div>
+              <div class="card-stories_title">
+                <p style="color:white;">ANSA</p>
+              </div>
+            </div>
+
+            <div class="card-stories 3">
+              <div class="card-stories_image">
+                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+              </div>
+              <div class="card-stories_title">
+                <p style="color:white;">TGCOM24</p>
+              </div>
+            </div>
+
+            <div class="card-stories 3">
+              <div class="card-stories_image">
+                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+              </div>
+              <div class="card-stories_title">
+                <p style="color:white;">FANPAGE</p>
+              </div>
+            </div>
+
+            <div class="card-stories 3">
+              <div class="card-stories_image">
+                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+              </div>
+              <div class="card-stories_title">
+                <p style="color:white;">LA7</p>
+              </div>
+            </div>
+
+            <div class="card-stories 3">
+              <div class="card-stories_image">
+                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+              </div>
+              <div class="card-stories_title">
+                <p style="color:white;">OTHER</p>
+              </div>
+            </div>
+
+      </div>
+
+
+
         </div>
   </div>
   <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
@@ -412,6 +595,18 @@ window.setInterval(function(){
          });
      });
      //# sourceURL=pen.js
+  </script>
+  <script type="text/javascript">
+    $('.readmore').click(function() {
+  $('.content').toggleClass('full');
+  $('.header').toggleClass('collapse');
+  $('.readmore').toggle();
+});
+$('.closebttn').click(function() {
+  $('.content').removeClass('full');
+  $('.header').removeClass('collapse');
+  $('.readmore').toggle();
+});
   </script>
 </body>
 </html>
