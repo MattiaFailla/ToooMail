@@ -1,8 +1,15 @@
 import threading
 from imbox import Imbox
+from py_modules import db_api
 # from pynotifier import Notification
 
 # DOWNLOAD WITH LAST DATE
+
+def get_user_info(what):
+	data = db_api.get("user",what,"WHERE ID = 1")
+	p = data[0]
+	return p[0]
+
 
 def get_user_connection_data():
 	data = ['imap-mail.outlook.com',
@@ -12,6 +19,53 @@ def get_user_connection_data():
 			None,
 			False]
 	return data
+
+def update_starred():
+	mails = []
+	with Imbox(get_user_connection_data()) as imbox:
+
+		logging.info('Account informations correct. Connected.')
+
+		# Gets all messages after the day x
+
+		# to get the mails of today:
+		all_inbox_messages = imbox.messages(flagged=True)
+		logging.debug('Gathered all inbox messages')
+
+		for uid, message in reversed(all_inbox_messages):
+			#print(message.attachments)
+			sanitized_body = str(message.body['html'])
+			sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\r", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\n", "&#13;")
+			sanitized_body = sanitized_body.replace(r"\t", "")
+			sanitized_body = sanitized_body.replace(r"['", "")
+			sanitized_body = sanitized_body.replace(r"']", "")
+
+			# Apply local time to base server time
+			From_name = message.sent_from[0]['name']
+			From_mail = message.sent_from[0]['email']
+			To_name = message.sent_to[0]['name']
+			To_mail = message.sent_to[0]['email']
+
+			Subject = str(message.subject) if str(message.subject) else "(No subject)"
+
+			db_api.insert("emails",
+				{
+				'uid': uid.decode(),
+				'from_name': str(From_name),
+				'from_mail': str(From_mail),
+				'to_name': str(To_name),
+				'to_mail': str(To_mail),
+				'subject': str(Subject),
+				'bodyHTML': str(sanitized_body),
+				'bodyPLAIN': str(message.body['plain']),
+				'directory': "",
+				'datetimes': datetime.date(year,month,day)
+				})
+
 
 def get_mails(year, month, day):
 
