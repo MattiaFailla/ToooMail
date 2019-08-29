@@ -22,6 +22,23 @@
      img {
      max-width: 100%;
      }
+     #progress {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: -6px;
+    width: 1%;
+    height: 5px;
+    background-color: #ce0000;
+    -moz-border-radius: 1px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    -moz-transition: width 600ms ease-out,opacity 500ms linear;
+    -ms-transition: width 600ms ease-out,opacity 500ms linear;
+    -o-transition: width 600ms ease-out,opacity 500ms linear;
+    -webkit-transition: width 600ms ease-out,opacity 500ms linear;
+    transition: width 1000ms ease-out,opacity 500ms linear;
+    }
      .compose, .search-button, .modal-button button {
      border: none;
      outline: none;
@@ -260,7 +277,7 @@
        opacity: 0;
      }
      .inbox-item {
-     opacity: 1;
+     opacity: 1; 
      min-width: 35%;
      height: auto;
      padding: 20px;
