@@ -774,11 +774,14 @@ def say_hello_py(x):
     print('Hello from %s' % x)
 
 
-say_hello_py('Python World!')
-eel.say_hello_js('Python World!')  # Call a Javascript function
 
-template = check_if_user_exists()
 
-eel.start(template, mode='electron')  # Start
+if __name__ == '__main__':
+	say_hello_py('Python World!')
+	eel.say_hello_js('Python World!')  # Call a Javascript function
 
-conn.close()
+	template = check_if_user_exists()
+
+	eel.start(template, mode='electron')  # Start
+
+	conn.close()

@@ -174,6 +174,7 @@ def insert(table,data):
 	sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(table, cols, vals)
 	conn.cursor().execute(sql, data)
 	conn.commit()
+	return True
 	"""example
 	sqlite_insert(conn, 'stocks', {
 		'created_at': '2016-04-17',
