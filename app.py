@@ -133,6 +133,7 @@ def get_mails(year, month, day):
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -257,6 +258,7 @@ def get_unread():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -343,6 +345,7 @@ def get_starred():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -429,6 +432,7 @@ def get_sent():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -515,6 +519,7 @@ def get_unwanted():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -601,6 +606,7 @@ def get_deleted():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
@@ -731,6 +737,7 @@ def get_flagged():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
             from_name = message.sent_from[0]["name"]
