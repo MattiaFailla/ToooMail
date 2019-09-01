@@ -6,7 +6,7 @@ from py_modules import db_api
 
 class TestStringMethods(unittest.TestCase):
     def test__user_info(self):
-        self.assertEqual(verify_user_info("false", "false", "false"), False)
+        self.assertEqual(check_smtp_connection("false", "false", "false"), False)
 
     def test__user_exist(self):
         self.assertEqual(check_if_user_exists(), "registration.html")
