@@ -73,6 +73,13 @@
         }else{
           toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
           console.log("User informations incorrect");
+          if (!verification_imap) {
+            // There was an error with imap connection
+            toastr.error("Please check the imap field!.", "IMAP connection can't be established");
+          }else{
+            // There was and error with smtp connection
+            toastr.error("Please check the smtp field!.", "SMTP connection can't be established");
+          }
           return;
         }
         toastr.success("Welcome in TooMail. We are ready to go.", "Hey!")
