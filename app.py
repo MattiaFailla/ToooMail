@@ -769,7 +769,7 @@ def other():
 
 
 @eel.expose
-def set_user(name, nick, mail, passw, imapserver):
+def set_user(name, nick, mail, passw, imapserver,smtpserver):
     db_api.insert(
         "user",
         {
@@ -781,7 +781,7 @@ def set_user(name, nick, mail, passw, imapserver):
             "password": passw,
             "profilepic": "",
             "imapserver": imapserver,
-            "smtpserver": "",
+            "smtpserver": smtpserver,
             "datetime": datetime.datetime.now(),
         },
     )

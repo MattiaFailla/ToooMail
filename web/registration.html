@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +17,24 @@
 
     <script type="text/javascript">
       function verifyOnline() {
+        toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "800",
+          "hideDuration": "1000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+
         toastr.info('Welcome in TooMail. We are online!');
       }
 
@@ -31,6 +46,7 @@
         var email = document.getElementById("email").value;
         var passw = document.getElementById("passw").value;
         var imap = document.getElementById("imap").value;
+        var smtp = document.getElementById("smtp").value;
 
         toastr.options = {
           "closeButton": false,
@@ -40,7 +56,7 @@
           "positionClass": "toast-top-right",
           "preventDuplicates": false,
           "onclick": null,
-          "showDuration": "500",
+          "showDuration": "800",
           "hideDuration": "1000",
           "timeOut": "5000",
           "extendedTimeOut": "1000",
@@ -52,9 +68,9 @@
 
         let verification = await eel.verify_user_info(email,passw,imap)();
         if (verification) {
-          eel.set_user(name,nick,email,passw,imap);
+          eel.set_user(name,nick,email,passw,imap,smtp);
         }else{
-          toastr.error("We can't login into your inbox. Please verify your password or email.", "Incorrect informations");
+          toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
           console.log("User informations incorrect");
           return;
         }
@@ -88,6 +104,10 @@
         <label>
           <span>imap server</span>
           <input type="text" id="imap" />
+        </label>
+        <label>
+          <span>smtp server</span>
+          <input type="text" id="smtp" />
         </label>
         <label>
           <span>Email</span>
