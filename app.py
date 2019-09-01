@@ -11,7 +11,9 @@ from imbox import Imbox
 
 from email import encoders
 from email.header import Header
-from email.mime.text import MIMEText, MIMEBase, MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
 from email.utils import parseaddr, formataddr
 
 # import python smtplib module
@@ -809,11 +811,6 @@ def get_contacts():
 @eel.expose
 def event():
     # notify the frontend for incoming events
-    pass
-
-
-@eel.expose
-def other():
     pass
 
 
