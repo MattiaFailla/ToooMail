@@ -73,6 +73,29 @@ def check_if_user_exists():
     else:
         return "index.html"
 
+@eel.expose
+def check_smtp_connection(username,password,smtp):
+    msg = MIMEMultipart()
+    msg['From'] = username
+    msg['To'] = username
+    msg['Subject'] = "Weclome in ToooMail"
+    msg.attach(MIMEText("Hey! We're glad you're here!"))
+
+    try:
+        print('sending mail to ' + username + ' on ' + "Welcome in ToooMail")
+
+        mailServer = smtplib.SMTP(smtp, 587)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.ehlo()
+        mailServer.login(username, password)
+        mailServer.sendmail(username, username, msg.as_string())
+        mailServer.close()
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
 
 @eel.expose
 def verify_user_info(email, passw, imap):
@@ -690,13 +713,18 @@ def send_mail(account, to, subject, body, attach):
         # encode with base64
         encoders.encode_base64(mime)
         # add MIMEBase object to MIMEMultipart object
-        msg.attach(mime)"""
+        msg.attach(mime)
+        
+        'smtp-mail.outlook.com'
+        """
 
-    server = smtplib.SMTP(smtp_server, 25)
-    server.set_debuglevel(1)
-    server.login(from_addr, password)
-    server.sendmail(from_addr, [to_addr], msg.as_string())
-    server.quit()
+    mailServer = smtplib.SMTP(backend_api.get_user_info("imapserver"), 587)
+    mailServer.ehlo()
+    mailServer.starttls()
+    mailServer.ehlo()
+    mailServer.login(backend_api.get_user_info("mail"), backend_api.get_user_info("password"))
+    mailServer.sendmail(username, recipient, msg.as_string())
+    mailServer.close()
 
 
 @eel.expose
