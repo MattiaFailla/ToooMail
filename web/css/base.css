@@ -23,6 +23,13 @@
      max-width: 100%;
      }
 
+     .heading {
+      display: inline;
+      position: center;
+
+      }
+
+
 
     /*
     .card {
@@ -1105,3 +1112,4 @@
   font-size: 25px;
   padding: 13px 0;
 }
+
