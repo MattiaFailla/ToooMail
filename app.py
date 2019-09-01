@@ -98,7 +98,7 @@ def check_smtp_connection(username,password,smtp):
         return False
 
 @eel.expose
-def verify_user_info(email, passw, imap):
+def check_imap_connection(email, passw, imap):
     try:
         with Imbox(
             imap,

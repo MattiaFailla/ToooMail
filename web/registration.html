@@ -66,8 +66,9 @@
           "hideMethod": "fadeOut"
         }
 
-        let verification = await eel.verify_user_info(email,passw,imap)();
-        if (verification) {
+        let verification_imap = await eel.check_imap_connection(email,passw,imap)();
+        let verification_smtp = await eel.check_smtp_connection(email,passw,smtp)();
+        if (verification_imap && verification_smtp) {
           eel.set_user(name,nick,email,passw,imap,smtp);
         }else{
           toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
