@@ -5,7 +5,17 @@ from __future__ import print_function  # For Py2/3 compatibility
 import eel
 import sqlite3
 import datetime
+
+# import python imaplib wrapper module
 from imbox import Imbox
+
+from email import encoders
+from email.header import Header
+from email.mime.text import MIMEText
+from email.utils import parseaddr, formataddr
+
+# import python smtplib module
+import smtplib
 
 from py_modules import db_api
 from py_modules import backend_api
@@ -639,7 +649,46 @@ def get_deleted():
 
 @eel.expose
 def send_mail(account, to, subject, body, attach):
-    pass
+    # get user input
+    # input sender email address and password:
+    from_addr = backend_api.get_user_info("mail")
+    password = backend_api.get_user_info("password")
+    # input receiver email address.
+    to_addr = to
+    # input smtp server ip address:
+    smtp_server = backend_api.get_user_info("smtpserver")
+
+    # email object that has multiple part:
+    msg = MIMEMultipart()
+    msg['From'] = from_addr
+    msg['To'] = to_addr
+    msg['Subject'] = Header(subject, 'utf-8').encode()
+
+    # attache a MIMEText object to save email content
+    msg_content = MIMEText(body, 'plain', 'utf-8')
+    msg.attach(msg_content)
+
+    # to add an attachment is just add a MIMEBase object to read a picture locally.
+    # extracting list of attach from the attach object (vector)
+    """with open('/Users/jerry/img1.png', 'rb') as f:
+        # set attachment mime and file name, the image type is png
+        mime = MIMEBase('image', 'png', filename='img1.png')
+        # add required header data:
+        mime.add_header('Content-Disposition', 'attachment', filename='img1.png')
+        mime.add_header('X-Attachment-Id', '0')
+        mime.add_header('Content-ID', '<0>')
+        # read attachment file content into the MIMEBase object
+        mime.set_payload(f.read())
+        # encode with base64
+        encoders.encode_base64(mime)
+        # add MIMEBase object to MIMEMultipart object
+        msg.attach(mime)"""
+
+    server = smtplib.SMTP(smtp_server, 25)
+    server.set_debuglevel(1)
+    server.login(from_addr, password)
+    server.sendmail(from_addr, [to_addr], msg.as_string())
+    server.quit()
 
 
 @eel.expose
