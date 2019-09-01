@@ -31,6 +31,9 @@
 
 <link rel="stylesheet" href="https://anandchowdhary.github.io/ionicons-3-cdn/icons.css" integrity="sha384-+iqgM+tGle5wS+uPwXzIjZS5v6VkqCUV7YQ/e/clzRHAxYbzpUJ+nldylmtBWCP0" crossorigin="anonymous">
 
+<!-- LAZY LOAD -->
+  <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+
 
   <link rel="stylesheet" href="css/base.css">
 
@@ -394,7 +397,7 @@ window.setInterval(function(){
 
 
         <div class="message" id="message">
-            <img src="img/logo.png" height="100">
+            <img class="lazyload" src="img/wheel.gif" data-src="img/logo.png" height="100">
 
             <h2>Apps</h2>
 
@@ -402,7 +405,7 @@ window.setInterval(function(){
   
             <div class="card 1">
               <div class="card_image"> 
-                <img src="https://media.giphy.com/media/1zKRlTFQ278PtPtrV2/giphy.gif" /> 
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/1zKRlTFQ278PtPtrV2/giphy.gif" /> 
               </div>
               <div class="card_title title-white">
                 <p style="color:white;">Files</p>
@@ -411,7 +414,7 @@ window.setInterval(function(){
 
               <div class="card 2">
               <div class="card_image">
-                <img src="https://media.giphy.com/media/WirhZMBF1AZVK/giphy.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/WirhZMBF1AZVK/giphy.gif" />
                 </div>
               <div class="card_title title-white">
                 <p style="color:white;">Chat</p>
@@ -420,7 +423,7 @@ window.setInterval(function(){
 
             <div class="card 3">
               <div class="card_image">
-                <img src="https://media.giphy.com/media/etSwiUkXNhTB6/giphy-downsized-large.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/etSwiUkXNhTB6/giphy-downsized-large.gif" />
               </div>
               <div class="card_title">
                 <p style="color:white;">Notes</p>
@@ -429,7 +432,7 @@ window.setInterval(function(){
 
             <div class="card 4">
               <div class="card_image">
-                <img src="https://media.giphy.com/media/l2YWxPbinlJYX5zMc/giphy.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/l2YWxPbinlJYX5zMc/giphy.gif" />
               </div>
               <div class="card_title">
                 <p style="color:white;">Calendar</p>
@@ -523,7 +526,7 @@ Customer dialog on Skype.
     <div class="cards-list-stories">
             <div class="card-stories 3">
               <div class="card-stories_image">
-                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
               </div>
               <div class="card-stories_title">
                 <p style="color:white;">ANSA</p>
@@ -532,7 +535,7 @@ Customer dialog on Skype.
 
             <div class="card-stories 3">
               <div class="card-stories_image">
-                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
               </div>
               <div class="card-stories_title">
                 <p style="color:white;">TGCOM24</p>
@@ -541,7 +544,7 @@ Customer dialog on Skype.
 
             <div class="card-stories 3">
               <div class="card-stories_image">
-                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
               </div>
               <div class="card-stories_title">
                 <p style="color:white;">FANPAGE</p>
@@ -550,7 +553,7 @@ Customer dialog on Skype.
 
             <div class="card-stories 3">
               <div class="card-stories_image">
-                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
               </div>
               <div class="card-stories_title">
                 <p style="color:white;">LA7</p>
@@ -559,7 +562,7 @@ Customer dialog on Skype.
 
             <div class="card-stories 3">
               <div class="card-stories_image">
-                <img src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
+                <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/39wBBqmsPOQVLf8paS/source.gif" />
               </div>
               <div class="card-stories_title">
                 <p style="color:white;">OTHER</p>
@@ -608,6 +611,7 @@ $('.closebttn').click(function() {
   $('.readmore').toggle();
 });
   </script>
+  <script>lazyload();</script>
 </body>
 </html>
 
