@@ -73,16 +73,17 @@ def check_if_user_exists():
     else:
         return "index.html"
 
+
 @eel.expose
-def check_smtp_connection(username,password,smtp):
+def check_smtp_connection(username, password, smtp):
     msg = MIMEMultipart()
-    msg['From'] = username
-    msg['To'] = username
-    msg['Subject'] = "Weclome in ToooMail"
+    msg["From"] = username
+    msg["To"] = username
+    msg["Subject"] = "Weclome in ToooMail"
     msg.attach(MIMEText("Hey! We're glad you're here!"))
 
     try:
-        print('sending mail to ' + username + ' on ' + "Welcome in ToooMail")
+        print("sending mail to " + username + " on " + "Welcome in ToooMail")
 
         mailServer = smtplib.SMTP(smtp, 587)
         mailServer.ehlo()
@@ -96,6 +97,7 @@ def check_smtp_connection(username,password,smtp):
     except Exception as e:
         print(str(e))
         return False
+
 
 @eel.expose
 def check_imap_connection(email, passw, imap):
@@ -691,12 +693,12 @@ def send_mail(account, to, subject, body, attach):
 
     # email object that has multiple part:
     msg = MIMEMultipart()
-    msg['From'] = from_addr
-    msg['To'] = to_addr
-    msg['Subject'] = Header(subject, 'utf-8').encode()
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+    msg["Subject"] = Header(subject, "utf-8").encode()
 
     # attache a MIMEText object to save email content
-    msg_content = MIMEText(body, 'plain', 'utf-8')
+    msg_content = MIMEText(body, "plain", "utf-8")
     msg.attach(msg_content)
 
     # to add an attachment is just add a MIMEBase object to read a picture locally.
@@ -722,7 +724,9 @@ def send_mail(account, to, subject, body, attach):
     mailServer.ehlo()
     mailServer.starttls()
     mailServer.ehlo()
-    mailServer.login(backend_api.get_user_info("mail"), backend_api.get_user_info("password"))
+    mailServer.login(
+        backend_api.get_user_info("mail"), backend_api.get_user_info("password")
+    )
     mailServer.sendmail(username, recipient, msg.as_string())
     mailServer.close()
 
@@ -850,7 +854,7 @@ def event():
 
 
 @eel.expose
-def set_user(name, nick, mail, passw, imapserver,smtpserver):
+def set_user(name, nick, mail, passw, imapserver, smtpserver):
     db_api.insert(
         "user",
         {
