@@ -11,7 +11,7 @@ from imbox import Imbox
 
 from email import encoders
 from email.header import Header
-from email.mime.text import MIMEText
+from email.mime.text import MIMEText, MIMEBase, MIMEMultipart
 from email.utils import parseaddr, formataddr
 
 # import python smtplib module
