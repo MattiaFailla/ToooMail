@@ -5,7 +5,8 @@ from __future__ import print_function  # For Py2/3 compatibility
 import eel
 import sqlite3
 import datetime
-
+import re
+import socket
 # import python imaplib wrapper module
 from imbox import Imbox
 
@@ -875,6 +876,7 @@ def set_user(name, nick, mail, passw, imapserver, smtpserver):
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
     print("Hello from %s" % x)
+
 
 @eel.expose
 def guess_server(mail):
