@@ -19,10 +19,19 @@
     <script src="js/toastr.min.js"></script>
 
     <script type="text/javascript">
+
       function verifyOnline() {
         toastr.info('Welcome in TooMail. We are online!');
       }
 
+      async function guessImap() {
+        var dom = document.getElementById("email");
+        x = dom.value();
+        let imapSrv = await eel.guess_imap(x);
+        if(imapSrv){
+          document.getElementById("imap").value = imapSrv;
+          }
+      }
       async function signing() {
 
         // take data from the form
@@ -86,16 +95,16 @@
           <input type="text" id="nickname" />
         </label>
         <label>
-          <span>imap server</span>
-          <input type="text" id="imap" />
-        </label>
-        <label>
           <span>Email</span>
-          <input type="email" required id="email" />
+          <input type="email" required id="email" onchange="guessImap();"/>
         </label>
         <label>
           <span>Password</span>
           <input type="password" required id="passw" />
+        </label>
+        <label>
+          <span>imap server</span>
+          <input type="text" id="imap" />
         </label>
         <button type="button" class="submit" onclick="signing();">Sign In</button>
       </form>
@@ -127,7 +136,6 @@
         });
       //# sourceURL=pen.js
     </script>
-
     <script type="text/javascript">
       // EEL LOGIC
       eel.expose(say_hello_js);               // Expose this function to Python

@@ -50,13 +50,13 @@ Api
 DB_LOCATION = "db/app.db"
 
 conn = sqlite3.connect(DB_LOCATION)
-#c = conn.cursor()
+# c = conn.cursor()
 
 conn = sqlite3.connect(DB_LOCATION)
 c = conn.cursor()
 
-#--- emails table
-#create table
+# --- emails table
+# create table
 c.execute('''CREATE TABLE IF NOT EXISTS emails (
  uid integer PRIMARY KEY,
  from_name text NOT NULL,
@@ -72,12 +72,12 @@ c.execute('''CREATE TABLE IF NOT EXISTS emails (
 conn.commit()
 
 
-#--- unreads table
-#create table
+# --- unreads table
+# create table
 c.execute('''CREATE TABLE IF NOT EXISTS unreads (
  id integer PRIMARY KEY,
  uid int NOT NULL);''')
-#commit the changes to db			
+# commit the changes to db
 conn.commit()
 
 

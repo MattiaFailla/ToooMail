@@ -768,6 +768,39 @@ def set_user(name, nick, mail, passw, imapserver):
                       'datetime': datetime.datetime.now(),
                   })
 
+@eel.expose
+def guess_server(mail):
+    """This function tries to find the imap address from a list of known servers
+        or tries to guess the server from the e-mail address.
+        It checks if the server answers to socket call"""
+    domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+    server = {'gmail': 'imap.gmail.com',
+              'yahoo': 'imap.mail.yahoo.com',
+              'aol': 'imap.aol.com',
+              'icloud': 'imap.mail.me.com',
+              'me': 'imap.mail.me.com',
+              'hotmail': 'imap-mail.outlook.com',
+              'live': 'imap-mail.outlook.com'
+              }
+    if domain in server.keys():
+        return server[domain]
+    else:
+        connection = False
+        ip = None
+        prefix = ['mail.', 'imap.', 'imap.mail.' ]
+        for i in prefix:
+            try:
+                connection = socket.create_connection((i+domain, 993), timeout=5)
+                if connection:
+                    ip = i + domain
+            except:
+                pass
+            finally:
+                if ip:
+                    return ip
+                else:
+                    return False
+
 
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):

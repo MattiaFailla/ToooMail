@@ -1,7 +1,8 @@
 import threading
 from imbox import Imbox
 from py_modules import db_api
-
+import re
+import socket
 
 # from pynotifier import Notification
 
@@ -15,8 +16,8 @@ def get_user_info(what):
 
 
 def get_user_connection_data():
-    data = ['imap-mail.outlook.com',
-            'mattiafailla@hotmail.it',
+    data = ['imap.gmail.com',
+            'simone.p.paso@gmail.com',
             'pass',
             True,
             None,
