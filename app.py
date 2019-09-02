@@ -879,7 +879,7 @@ def say_hello_py(x):
 
 
 @eel.expose
-def guess_server(mail):
+def guess_imap(mail):
     """This function tries to find the imap/smtp address from a list of known servers
         or tries to guess the server from the e-mail address.
         It checks if the server answers to a socket call"""
@@ -900,7 +900,7 @@ def guess_server(mail):
         return server[domain]
     else:
         ip = None
-        prefix = ['mail.', 'imap.', 'imap.mail.' ]
+        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
         for i in prefix:
             try:
                 connection = socket.create_connection((i+complete_domain, 993), timeout=2)
@@ -915,6 +915,43 @@ def guess_server(mail):
             else:
                 return False
 
+
+@eel.expose
+def guess_smtp(mail):
+    """This function tries to find the imap/smtp address from a list of known servers
+        or tries to guess the server from the e-mail address.
+        It checks if the server answers to a socket call"""
+    if mail:
+        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+    else:
+        return False
+    server = {'gmail': 'smtp.gmail.com',
+              'yahoo': 'smtp.mail.yahoo.com',
+              'aol': 'smtp.aol.com',
+              'icloud': 'smtp.mail.me.com',
+              'me': 'smtp.mail.me.com',
+              'hotmail': 'smtp-mail.outlook.com',
+              'live': 'smtp-mail.outlook.com'
+              }
+    if domain in server.keys():
+        return server[domain]
+    else:
+        ip = None
+        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
+        for i in prefix:
+            try:
+                connection = socket.create_connection((i+complete_domain, 465), timeout=2)
+                if connection:
+                    ip = i + complete_domain
+                    connection.close()
+                    return ip
+            except:
+                pass
+            if ip:
+                return ip
+            else:
+                return False
 
 
 if __name__ == "__main__":

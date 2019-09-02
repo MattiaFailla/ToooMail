@@ -40,15 +40,17 @@
 
         toastr.info('Welcome in TooMail. We are online!');
       }
-        async function guessImap() {
+        async function guessServer() {
           var dom = document.getElementById("email");
-          console.log(dom);
           x = dom.value;
-          let imapSrv = await eel.guess_server(x)();
-          console.log(imapSrv)
+          let imapSrv = await eel.guess_imap(x)();
+          let smtpSrv = await eel.guess_smtp(x)();
           if(imapSrv){
             document.getElementById("imap").value = imapSrv;
             }
+          if(smtpSrv){
+            document.getElementById("smtp").value = smtpSrv;
+          }
         }
       async function signing() {
 
@@ -122,20 +124,20 @@
           <input type="text" id="nickname" />
         </label>
         <label>
-          <span>imap server</span>
-          <input type="text" id="imap" />
-        </label>
-        <label>
-          <span>smtp server</span>
-          <input type="text" id="smtp" />
-        </label>
-        <label>
           <span>Email</span>
-          <input type="email" required id="email" />
+          <input type="email" required id="email" onchange="guessServer();"/>
         </label>
         <label>
           <span>Password</span>
           <input type="password" required id="passw" />
+        </label>
+          <label>
+              <span>imap server</span>
+              <input type="text" id="imap"/>
+          </label>
+        <label>
+          <span>smtp server</span>
+          <input type="text" id="smtp" />
         </label>
         <button type="button" class="submit" onclick="signing();">Sign In</button>
       </form>
