@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,32 +15,11 @@
     <link href="css/toastr.min.css" rel="stylesheet"/>
     <script src="js/toastr.min.js"></script>
 
+    <!-- LAZY LOAD -->
+  <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+
     <script type="text/javascript">
-
       function verifyOnline() {
-        toastr.info('Welcome in TooMail. We are online!');
-      }
-      console.log("ciao");
-      async function guessImap() {
-        var dom = document.getElementById("email");
-        console.log(dom);
-        x = dom.value;
-        console.log(x);
-        let imapSrv = await eel.guess_server(x)();
-        console.log(imapSrv)
-        if(imapSrv){
-          document.getElementById("imap").value = imapSrv;
-          }
-      }
-      async function signing() {
-
-        // take data from the form
-        var name = document.getElementById("name").value;
-        var nick = document.getElementById("nickname").value;
-        var email = document.getElementById("email").value;
-        var passw = document.getElementById("passw").value;
-        var imap = document.getElementById("imap").value;
-
         toastr.options = {
           "closeButton": false,
           "debug": false,
@@ -52,7 +28,7 @@
           "positionClass": "toast-top-right",
           "preventDuplicates": false,
           "onclick": null,
-          "showDuration": "500",
+          "showDuration": "800",
           "hideDuration": "1000",
           "timeOut": "5000",
           "extendedTimeOut": "1000",
@@ -62,12 +38,51 @@
           "hideMethod": "fadeOut"
         }
 
-        let verification = await eel.verify_user_info(email,passw,imap)();
-        if (verification) {
-          eel.set_user(name,nick,email,passw,imap);
+        toastr.info('Welcome in TooMail. We are online!');
+      }
+
+      async function signing() {
+
+        // take data from the form
+        var name = document.getElementById("name").value;
+        var nick = document.getElementById("nickname").value;
+        var email = document.getElementById("email").value;
+        var passw = document.getElementById("passw").value;
+        var imap = document.getElementById("imap").value;
+        var smtp = document.getElementById("smtp").value;
+
+        toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "800",
+          "hideDuration": "1000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+
+        let verification_imap = await eel.check_imap_connection(email,passw,imap)();
+        let verification_smtp = await eel.check_smtp_connection(email,passw,smtp)();
+        if (verification_imap && verification_smtp) {
+          eel.set_user(name,nick,email,passw,imap,smtp);
         }else{
-          toastr.error("We can't login into your inbox. Please verify your password or email.", "Incorrect informations");
+          toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
           console.log("User informations incorrect");
+          if (!verification_imap) {
+            // There was an error with imap connection
+            toastr.error("Please check the imap field!.", "IMAP connection can't be established");
+          }else{
+            // There was and error with smtp connection
+            toastr.error("Please check the smtp field!.", "SMTP connection can't be established");
+          }
           return;
         }
         toastr.success("Welcome in TooMail. We are ready to go.", "Hey!")
@@ -98,16 +113,20 @@
           <input type="text" id="nickname" />
         </label>
         <label>
+          <span>imap server</span>
+          <input type="text" id="imap" />
+        </label>
+        <label>
+          <span>smtp server</span>
+          <input type="text" id="smtp" />
+        </label>
+        <label>
           <span>Email</span>
-          <input type="email" required id="email" onchange="guessImap();"/>
+          <input type="email" required id="email" />
         </label>
         <label>
           <span>Password</span>
           <input type="password" required id="passw" />
-        </label>
-        <label>
-          <span>imap server</span>
-          <input type="text" id="imap" />
         </label>
         <button type="button" class="submit" onclick="signing();">Sign In</button>
       </form>
@@ -139,6 +158,7 @@
         });
       //# sourceURL=pen.js
     </script>
+
     <script type="text/javascript">
       // EEL LOGIC
       eel.expose(say_hello_js);               // Expose this function to Python

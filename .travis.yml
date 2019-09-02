@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.4"
   - "3.5"
   - "3.6"      # current detault Python on Travis CI
   - "3.7"
@@ -10,4 +9,4 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - pytest
+  - python test.py

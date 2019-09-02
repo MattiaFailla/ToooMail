@@ -1,3 +1,4 @@
 
 *.pyc
 *.db
+py_modules/__pycache__/

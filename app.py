@@ -5,16 +5,30 @@ from __future__ import print_function  # For Py2/3 compatibility
 import eel
 import sqlite3
 import datetime
-import re
-import socket
+
+# import python imaplib wrapper module
 from imbox import Imbox
+
+from email import encoders
+from email.header import Header
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.utils import parseaddr, formataddr
+
+# import python smtplib module
+import smtplib
 
 from py_modules import db_api
 from py_modules import backend_api
 
 import logging
 
-logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.CRITICAL)
+logging.basicConfig(
+    format="%(asctime)s - %(message)s",
+    datefmt="%d-%b-%y %H:%M:%S",
+    level=logging.CRITICAL,
+)
 
 """
 **** feature
@@ -45,12 +59,12 @@ INVECE DI COMUNICARE DIRETTAMENTE CON IL FRONTED PASSIAMO TUTTO AL DB
 """
 
 # Set web files folder
-eel.init('web')
+eel.init("web")
 
 
 def check_if_user_exists():
     # if user isn't logged -> start the "subscription app" the first time
-    conn = sqlite3.connect('db/app.db')
+    conn = sqlite3.connect("db/app.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM user;")
     # print(cursor.fetchall())
@@ -61,14 +75,41 @@ def check_if_user_exists():
 
 
 @eel.expose
-def verify_user_info(email, passw, imap):
+def check_smtp_connection(username, password, smtp):
+    msg = MIMEMultipart()
+    msg["From"] = username
+    msg["To"] = username
+    msg["Subject"] = "Weclome in ToooMail"
+    msg.attach(MIMEText("Hey! We're glad you're here!"))
+
     try:
-        with Imbox(imap,
-                   username=email,
-                   password=passw,
-                   ssl=True,
-                   ssl_context=None,
-                   starttls=False) as imbox:
+        print("sending mail to " + username + " on " + "Welcome in ToooMail")
+
+        mailServer = smtplib.SMTP(smtp, 587)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.ehlo()
+        mailServer.login(username, password)
+        mailServer.sendmail(username, username, msg.as_string())
+        mailServer.close()
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+
+
+@eel.expose
+def check_imap_connection(email, passw, imap):
+    try:
+        with Imbox(
+            imap,
+            username=email,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
+        ) as imbox:
             imbox.messages()
         return True
     except Exception as e:
@@ -85,14 +126,16 @@ def get_mails(year, month, day):
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account informations correct. Connected.')
+        logging.info("Account informations correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(date__on=datetime.date(year, month, day))
@@ -100,13 +143,13 @@ def get_mails(year, month, day):
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -115,16 +158,17 @@ def get_mails(year, month, day):
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -133,17 +177,17 @@ def get_mails(year, month, day):
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'from_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(datetime.date(year, month, day)),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "from_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(datetime.date(year, month, day)),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -168,12 +212,14 @@ def mark_as_seen(uid):
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
         imbox.mark_seen(uid)
 
 
@@ -182,13 +228,15 @@ def get_number_unread():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
-        logging.info('Account informations correct. Connected.')
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
+        logging.info("Account informations correct. Connected.")
 
         # Gets all messages after the day x
 
@@ -203,14 +251,16 @@ def get_unread():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account informations correct. Connected.')
+        logging.info("Account informations correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(unread=True)
@@ -218,13 +268,13 @@ def get_unread():
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -233,16 +283,17 @@ def get_unread():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -251,17 +302,17 @@ def get_unread():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(message.date),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(message.date),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -287,14 +338,16 @@ def get_starred():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account information correct. Connected.')
+        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(flagged=True)
@@ -302,13 +355,13 @@ def get_starred():
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -317,16 +370,17 @@ def get_starred():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -335,17 +389,17 @@ def get_starred():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(message.date),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(message.date),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -371,14 +425,16 @@ def get_sent():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account information correct. Connected.')
+        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(sent_from=username)
@@ -386,13 +442,13 @@ def get_sent():
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -401,16 +457,17 @@ def get_sent():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -419,17 +476,17 @@ def get_sent():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(message.date),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(message.date),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -455,28 +512,30 @@ def get_unwanted():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account information correct. Connected.')
+        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(folder='Junk')
+        all_inbox_messages = imbox.messages(folder="Junk")
         unread_msgs = imbox.messages(unread=True)
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -485,16 +544,17 @@ def get_unwanted():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -503,17 +563,17 @@ def get_unwanted():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(message.date),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(message.date),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -539,28 +599,30 @@ def get_deleted():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account information correct. Connected.')
+        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(folder='Deleted')
+        all_inbox_messages = imbox.messages(folder="Deleted")
         unread_msgs = imbox.messages(unread=True)
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -569,16 +631,17 @@ def get_deleted():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -587,17 +650,17 @@ def get_deleted():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(message.date),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(message.date),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -619,7 +682,53 @@ def get_deleted():
 
 @eel.expose
 def send_mail(account, to, subject, body, attach):
-    pass
+    # get user input
+    # input sender email address and password:
+    from_addr = backend_api.get_user_info("mail")
+    password = backend_api.get_user_info("password")
+    # input receiver email address.
+    to_addr = to
+    # input smtp server ip address:
+    smtp_server = backend_api.get_user_info("smtpserver")
+
+    # email object that has multiple part:
+    msg = MIMEMultipart()
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+    msg["Subject"] = Header(subject, "utf-8").encode()
+
+    # attache a MIMEText object to save email content
+    msg_content = MIMEText(body, "plain", "utf-8")
+    msg.attach(msg_content)
+
+    # to add an attachment is just add a MIMEBase object to read a picture locally.
+    # extracting list of attach from the attach object (vector)
+    """with open('/Users/jerry/img1.png', 'rb') as f:
+        # set attachment mime and file name, the image type is png
+        mime = MIMEBase('image', 'png', filename='img1.png')
+        # add required header data:
+        mime.add_header('Content-Disposition', 'attachment', filename='img1.png')
+        mime.add_header('X-Attachment-Id', '0')
+        mime.add_header('Content-ID', '<0>')
+        # read attachment file content into the MIMEBase object
+        mime.set_payload(f.read())
+        # encode with base64
+        encoders.encode_base64(mime)
+        # add MIMEBase object to MIMEMultipart object
+        msg.attach(mime)
+        
+        'smtp-mail.outlook.com'
+        """
+
+    mailServer = smtplib.SMTP(backend_api.get_user_info("imapserver"), 587)
+    mailServer.ehlo()
+    mailServer.starttls()
+    mailServer.ehlo()
+    mailServer.login(
+        backend_api.get_user_info("mail"), backend_api.get_user_info("password")
+    )
+    mailServer.sendmail(username, recipient, msg.as_string())
+    mailServer.close()
 
 
 @eel.expose
@@ -628,14 +737,16 @@ def get_flagged():
     username = backend_api.get_user_info("mail")
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(imapserver,
-               username=username,
-               password=passw,
-               ssl=True,
-               ssl_context=None,
-               starttls=False) as imbox:
+    with Imbox(
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
+    ) as imbox:
 
-        logging.info('Account information correct. Connected.')
+        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(flagged=True)
@@ -643,13 +754,13 @@ def get_flagged():
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug('Gathered all inbox messages')
+        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
-            sanitized_body = str(message.body['html'])
+            sanitized_body = str(message.body["html"])
             if sanitized_body == "[]":
-                sanitized_body = str(message.body['plain'])
+                sanitized_body = str(message.body["plain"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
             sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
@@ -658,16 +769,17 @@ def get_flagged():
             sanitized_body = sanitized_body.replace(r"\t", "")
             sanitized_body = sanitized_body.replace(r"['", "")
             sanitized_body = sanitized_body.replace(r"']", "")
+            sanitized_body = sanitized_body.replace(r"\u200", "")
 
             # Apply local time to base server time
-            from_name = message.sent_from[0]['name']
-            from_mail = message.sent_from[0]['email']
-            to_name = message.sent_to[0]['name']
-            to_mail = message.sent_to[0]['email']
+            from_name = message.sent_from[0]["name"]
+            from_mail = message.sent_from[0]["email"]
+            to_name = message.sent_to[0]["name"]
+            to_mail = message.sent_to[0]["email"]
 
             # If html body is empty, load the plain
             if sanitized_body == "[]":
-                sanitized_body = message.body['plain']
+                sanitized_body = message.body["plain"]
 
             if uid.decode() in unread_uid:
                 unread = False
@@ -676,17 +788,17 @@ def get_flagged():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
             appmails = {
-                'uid': uid.decode(),
-                'From_name': str(from_name),
-                'From_mail': str(from_mail),
-                'To_name': str(to_name),
-                'To_mail': str(to_mail),
-                'Subject': str(subject),
-                'bodyHTML': str(sanitized_body),
-                'bodyPLAIN': str(message.body['plain']),
-                'directory': "",
-                'datetimes': str(datetime.date(year, month, day)),
-                'readed': unread
+                "uid": uid.decode(),
+                "From_name": str(from_name),
+                "From_mail": str(from_mail),
+                "To_name": str(to_name),
+                "To_mail": str(to_mail),
+                "Subject": str(subject),
+                "bodyHTML": str(sanitized_body),
+                "bodyPLAIN": str(message.body["plain"]),
+                "directory": "",
+                "datetimes": str(datetime.date(year, month, day)),
+                "readed": unread,
             }
             mails.append(appmails)
 
@@ -714,11 +826,7 @@ def delete_mail(uid):
 
 @eel.expose
 def add_note(text, uid, attach):
-    db_api.insert("notes",
-                  {
-                      'uid': uid,
-                      'attach': attach
-                  })
+    db_api.insert("notes", {"uid": uid, "attach": attach})
 
 
 @eel.expose
@@ -728,14 +836,10 @@ def del_note(uid):
 
 @eel.expose
 def add_contact(name, surname, mail, note, nick):
-    db_api.insert("contact",
-                  {
-                      'name': name,
-                      'surname': surname,
-                      'mail': mail,
-                      'note': note,
-                      'nick': nick
-                  })
+    db_api.insert(
+        "contact",
+        {"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick},
+    )
 
 
 @eel.expose
@@ -750,25 +854,27 @@ def event():
 
 
 @eel.expose
-def other():
-    pass
+def set_user(name, nick, mail, passw, imapserver, smtpserver):
+    db_api.insert(
+        "user",
+        {
+            "name": name,
+            "surname": "",
+            "nickname": nick,
+            "bio": "",
+            "mail": mail,
+            "password": passw,
+            "profilepic": "",
+            "imapserver": imapserver,
+            "smtpserver": smtpserver,
+            "datetime": datetime.datetime.now(),
+        },
+    )
 
 
-@eel.expose
-def set_user(name, nick, mail, passw, imapserver):
-    db_api.insert("user",
-                  {
-                      'name': name,
-                      'surname': "",
-                      'nickname': nick,
-                      'bio': "",
-                      'mail': mail,
-                      'password': passw,
-                      'profilepic': "",
-                      'imapserver': imapserver,
-                      'smtpserver': "",
-                      'datetime': datetime.datetime.now(),
-                  })
+@eel.expose  # Expose this function to Javascript
+def say_hello_py(x):
+    print("Hello from %s" % x)
 
 @eel.expose
 def guess_server(mail):
@@ -808,16 +914,14 @@ def guess_server(mail):
                 return False
 
 
-@eel.expose  # Expose this function to Javascript
-def say_hello_py(x):
-    print('Hello from %s' % x)
 
+if __name__ == "__main__":
+    say_hello_py("Python World!")
+    eel.say_hello_js("Python World!")  # Call a Javascript function
 
-say_hello_py('Python World!')
-eel.say_hello_js('Python World!')  # Call a Javascript function
+    template = check_if_user_exists()
 
-template = check_if_user_exists()
+    eel.start(template, mode="electron")  # Start
 
-eel.start(template, mode='electron')  # Start
+    conn.close()
 
-conn.close()
