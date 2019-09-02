@@ -5,6 +5,8 @@ from __future__ import print_function  # For Py2/3 compatibility
 import eel
 import sqlite3
 import datetime
+import re
+import socket
 from imbox import Imbox
 
 from py_modules import db_api
@@ -770,10 +772,14 @@ def set_user(name, nick, mail, passw, imapserver):
 
 @eel.expose
 def guess_server(mail):
-    """This function tries to find the imap address from a list of known servers
+    """This function tries to find the imap/smtp address from a list of known servers
         or tries to guess the server from the e-mail address.
-        It checks if the server answers to socket call"""
-    domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+        It checks if the server answers to a socket call"""
+    if mail:
+        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+    else:
+        return False
     server = {'gmail': 'imap.gmail.com',
               'yahoo': 'imap.mail.yahoo.com',
               'aol': 'imap.aol.com',
@@ -785,21 +791,21 @@ def guess_server(mail):
     if domain in server.keys():
         return server[domain]
     else:
-        connection = False
         ip = None
         prefix = ['mail.', 'imap.', 'imap.mail.' ]
         for i in prefix:
             try:
-                connection = socket.create_connection((i+domain, 993), timeout=5)
+                connection = socket.create_connection((i+complete_domain, 993), timeout=2)
                 if connection:
-                    ip = i + domain
+                    ip = i + complete_domain
+                    connection.close()
+                    return ip
             except:
                 pass
-            finally:
-                if ip:
-                    return ip
-                else:
-                    return False
+            if ip:
+                return ip
+            else:
+                return False
 
 
 @eel.expose  # Expose this function to Javascript

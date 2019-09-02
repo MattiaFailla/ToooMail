@@ -23,11 +23,14 @@
       function verifyOnline() {
         toastr.info('Welcome in TooMail. We are online!');
       }
-
+      console.log("ciao");
       async function guessImap() {
         var dom = document.getElementById("email");
-        x = dom.value();
-        let imapSrv = await eel.guess_imap(x);
+        console.log(dom);
+        x = dom.value;
+        console.log(x);
+        let imapSrv = await eel.guess_server(x)();
+        console.log(imapSrv)
         if(imapSrv){
           document.getElementById("imap").value = imapSrv;
           }

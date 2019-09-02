@@ -1,8 +1,7 @@
 import threading
 from imbox import Imbox
 from py_modules import db_api
-import re
-import socket
+
 
 # from pynotifier import Notification
 
