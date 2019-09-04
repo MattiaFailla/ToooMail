@@ -162,42 +162,6 @@ def check_imap_connection(email, passw, imap):
         return False
 
 @eel.expose
-# debug.log(await eel.check_smtp_connection("mattiafailla@hotmail.it","marcofolla1","smtp.live.com")())
-def check_smtp_connection(email, passw, smtp):
-    try:
-        from_addr = email
-        password = passw
-        # input receiver email address.
-        to_addr = email
-        # input smtp server ip address:
-        smtp_server = smtp
-
-        # email object that has multiple part:
-        msg = MIMEMultipart()
-        msg['From'] = from_addr
-        msg['To'] = to_addr
-        msg['Subject'] = Header("Welcome in toooMail!", 'utf-8').encode()
-
-        # attache a MIMEText object to save email content
-        msg_content = MIMEText("Hey! We're glad you're here!", 'plain', 'utf-8')
-        msg.attach(msg_content)
-
-        #server = smtplib.SMTP(smtp_server, 25)
-        server = smtplib.SMTP(smtp, 25)
-        server.connect(smtp,465)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.set_debuglevel(1)
-        server.login(from_addr, password)
-        server.sendmail(from_addr, [to_addr], msg.as_string())
-        server.quit()
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-@eel.expose
 def get_mails(year, month, day):
     # Download all the mails from the DB
     # backend_api.get_mails(year,month,day)
