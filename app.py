@@ -5,7 +5,8 @@ from __future__ import print_function  # For Py2/3 compatibility
 import eel
 import sqlite3
 import datetime
-
+import re
+import socket
 # import python imaplib wrapper module
 from imbox import Imbox
 
@@ -877,6 +878,82 @@ def say_hello_py(x):
     print("Hello from %s" % x)
 
 
+@eel.expose
+def guess_imap(mail):
+    """This function tries to find the imap/smtp address from a list of known servers
+        or tries to guess the server from the e-mail address.
+        It checks if the server answers to a socket call"""
+    if mail:
+        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+    else:
+        return False
+    server = {'gmail': 'imap.gmail.com',
+              'yahoo': 'imap.mail.yahoo.com',
+              'aol': 'imap.aol.com',
+              'icloud': 'imap.mail.me.com',
+              'me': 'imap.mail.me.com',
+              'hotmail': 'imap-mail.outlook.com',
+              'live': 'imap-mail.outlook.com'
+              }
+    if domain in server.keys():
+        return server[domain]
+    else:
+        ip = None
+        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
+        for i in prefix:
+            try:
+                connection = socket.create_connection((i+complete_domain, 993), timeout=2)
+                if connection:
+                    ip = i + complete_domain
+                    connection.close()
+                    return ip
+            except:
+                pass
+            if ip:
+                return ip
+            else:
+                return False
+
+
+@eel.expose
+def guess_smtp(mail):
+    """This function tries to find the imap/smtp address from a list of known servers
+        or tries to guess the server from the e-mail address.
+        It checks if the server answers to a socket call"""
+    if mail:
+        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+    else:
+        return False
+    server = {'gmail': 'smtp.gmail.com',
+              'yahoo': 'smtp.mail.yahoo.com',
+              'aol': 'smtp.aol.com',
+              'icloud': 'smtp.mail.me.com',
+              'me': 'smtp.mail.me.com',
+              'hotmail': 'smtp-mail.outlook.com',
+              'live': 'smtp-mail.outlook.com'
+              }
+    if domain in server.keys():
+        return server[domain]
+    else:
+        ip = None
+        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
+        for i in prefix:
+            try:
+                connection = socket.create_connection((i+complete_domain, 465), timeout=2)
+                if connection:
+                    ip = i + complete_domain
+                    connection.close()
+                    return ip
+            except:
+                pass
+            if ip:
+                return ip
+            else:
+                return False
+
+
 if __name__ == "__main__":
     say_hello_py("Python World!")
     eel.say_hello_js("Python World!")  # Call a Javascript function
@@ -886,3 +963,4 @@ if __name__ == "__main__":
     eel.start(template, mode="electron")  # Start
 
     conn.close()
+
