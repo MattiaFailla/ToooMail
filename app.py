@@ -115,7 +115,7 @@ def mail_parsing(uid,message,unread_uid):
         "bodyHTML": str(sanitized_body),
         "bodyPLAIN": str(message.body["plain"]),
         "directory": "",
-        "datetimes": str(datetime.date(year, month, day)),
+        "datetimes": str(""),
         "readed": unread,
     }
     return appmails
