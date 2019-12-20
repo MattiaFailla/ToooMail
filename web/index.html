@@ -264,6 +264,19 @@ function show_mail(mailID) {
 
 };
 
+async function sendmailform(){
+  to = document.getElementById('toOut').value;
+  subject = document.getElementById('SubOut').value;
+  body = document.getElementById('bodyOut').value;
+  eel.send_mail('default', to, subject,body,attach);
+  Swal.fire({
+      type: 'success',
+      title: 'Yeah',
+      text: 'Your email has been sent!',
+      footer: '<a href>Would you like to view this discussion?</a>'
+    })
+}
+
 async function sendmail(account, to, subject, body, attach) {
     // pass arguments to python
     //eel.sendmail(account, to, subject,body,attach);
@@ -335,11 +348,11 @@ window.setInterval(function(){
               <div class="modal-title">New message<span class="modal-close"></span></div>
               <div class="modal-body">
                  <form class="modal-form" target="_self" action="#">
-                    <input type="text" placeholder="To" id="toOut" />
-                    <input type="text" placeholder="Subject" id="SubOut" />
-                    <textarea name="message" rows="5" id="bodyOut" placeholder="Your text"></textarea>
+                    <input type="text" placeholder="To" id="toOut" required="" />
+                    <input type="text" placeholder="Subject" id="SubOut" required="" />
+                    <textarea name="message" rows="5" id="bodyOut" placeholder="Your text" required=""></textarea>
                     <div class="modal-button">
-                       <button class="send" onclick="sendmail('a','a','a','a','a')">Send</button>
+                       <button class="send" onclick="sendmailform('a','a','a','a','a')">Send</button>
                     </div>
                  </form>
               </div>
@@ -595,7 +608,7 @@ Customer dialog on Skype.
             subject = document.getElementById('SubOut').value;
             body = document.getElementById('bodyOut').value;
 
-            sendmail('default',to,subject,body,false);
+            sendmailform('default',to,subject,body,false);
 
             $('.overlay').removeClass('is-open');
          });
