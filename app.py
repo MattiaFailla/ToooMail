@@ -532,6 +532,10 @@ def set_user(name, nick, mail, passw, imapserver, smtpserver):
     )
 
 
+@eel.expose
+def set_flag(uid):
+    return True
+
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
     print("Hello from %s" % x)
