@@ -4,3 +4,5 @@
 py_modules/__pycache__/
 
 .idea/
+
+web/img/loadmp3.pl
