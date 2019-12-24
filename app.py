@@ -63,6 +63,15 @@ INVECE DI COMUNICARE DIRETTAMENTE CON IL FRONTED PASSIAMO TUTTO AL DB
 eel.init("web")
 
 
+"""
+Devo scaricare lo UUID di tutte le mail per tutte le caselle e popolare il db
+
+
+"""
+
+
+
+
 def check_if_user_exists():
     # if user isn't logged -> start the "subscription app" the first time
     conn = sqlite3.connect("db/app.db")
@@ -618,8 +627,8 @@ def guess_smtp(mail):
 
 
 if __name__ == "__main__":
-    say_hello_py("Python World!")
-    eel.say_hello_js("Python World!")  # Call a Javascript function
+    say_hello_py("Server started.")
+    eel.say_hello_js("Server connected.")  # Call a Javascript function
 
     template = check_if_user_exists()
 
