@@ -218,6 +218,7 @@ def elaborate_new_mails(new_messages):
         sanitized_body = sanitized_body.replace(r"\t", "")
         sanitized_body = sanitized_body.replace(r"['", "")
         sanitized_body = sanitized_body.replace(r"']", "")
+        sanitized_body = sanitized_body.replace("\"]", "")
 
         # Apply local time to base server time
         from_name = message.sent_from[0]["name"]
