@@ -2,3 +2,5 @@
 *.pyc
 *.db
 py_modules/__pycache__/
+
+.idea/
