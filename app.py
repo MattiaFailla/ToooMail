@@ -74,7 +74,7 @@ Devo scaricare lo UUID di tutte le mail per tutte le caselle e popolare il db
 
 def check_if_user_exists():
     # if user isn't logged -> start the "subscription app" the first time
-    conn = sqlite3.connect("db/app.db")
+    conn = sqlite3.connect(".db/app.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM user;")
     # print(cursor.fetchall())
