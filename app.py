@@ -31,45 +31,9 @@ logging.basicConfig(
     level=logging.CRITICAL,
 )
 
-"""
-**** feature
-
-DISPLAY MAILS
-- Add widgets
-- Fancy animation while removing the blue tick
-- Correct number of unread mails
-- Zoom on the image of the contact with contact information (email, profile pic, name and notes)
-- Add notes on the bottom of the mail
-- Add spam icon and page
-- Add a default image when the folder is empty (like unread or spam or flagged)
-- Download the list of flagged emails
-
-SEND MAILS
-- Send the mail with smtp
-- Load the attach
-- Send mail at a certain time of the day/hour (slow send feature)
-
-BACKEND
-- Check the mails UID for incoming mails
-- Add desktop notification
-- Add an internal database and update that instead of downloading the whole email pack every time
-"""
-
-"""
-INVECE DI COMUNICARE DIRETTAMENTE CON IL FRONTED PASSIAMO TUTTO AL DB
-"""
 
 # Set web files folder
 eel.init("web")
-
-
-"""
-Devo scaricare lo UUID di tutte le mail per tutte le caselle e popolare il db
-
-
-"""
-
-
 
 
 def check_if_user_exists():
