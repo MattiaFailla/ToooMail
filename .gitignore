@@ -6,3 +6,5 @@ py_modules/__pycache__/
 .idea/
 
 web/img/loadmp3.pl
+
+.db/mails/*.json
