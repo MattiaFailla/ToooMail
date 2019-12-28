@@ -37,6 +37,21 @@ c.execute(
  profilepic text,
  imapserver text,
  smtpserver text,
+ is_logged_in text,
+ datetime datetime
+);"""
+)
+# commit the changes to db
+conn.commit()
+
+# --- mail table
+# create table
+c.execute(
+    """CREATE TABLE IF NOT EXISTS mails (
+ id integer PRIMARY KEY,
+ uuid text NOT NULL,
+ subject text,
+ user_id text,
  datetime datetime
 );"""
 )
