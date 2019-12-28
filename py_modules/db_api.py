@@ -43,7 +43,6 @@ c.execute(
 # commit the changes to db
 conn.commit()
 
-
 # --- notes table
 # create table
 c.execute(
@@ -58,7 +57,6 @@ c.execute(
 # commit the changes to db
 conn.commit()
 
-
 # --- contacts table
 # create table
 c.execute(
@@ -71,6 +69,23 @@ c.execute(
  note text,
  datetime datetime
 );"""
+)
+# commit the changes to db
+conn.commit()
+
+# --- files table
+# create table
+c.execute(
+    """CREATE TABLE IF NOT EXISTS files (
+         id integer PRIMARY KEY,
+         uuid text NOT NULL,
+         subject text,
+         real_filename text,
+         saved_as text,
+         user_id text,
+         deleted text,
+         datetime datetime
+    );"""
 )
 # commit the changes to db
 conn.commit()
@@ -98,7 +113,7 @@ def insert(table, data):
 
 
 def update(table, where, data):
-    pass
+    return
 
 
 def delete(table, where, what):
