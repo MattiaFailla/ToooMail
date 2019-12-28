@@ -7,6 +7,7 @@ import sqlite3
 import datetime
 import re
 import socket
+import json
 # import python imaplib wrapper module
 from imbox import Imbox
 
@@ -167,6 +168,10 @@ def get_mails(year, month, day):
 
         for uid, message in reversed(all_inbox_messages):
             mail = mail_parsing(uid, message, unread_uid)
+            # saving the mail in the local FS (file system)
+            with open('./.db/mails/'+str(uid.decode())+'.json', 'w') as file:
+                json.dump(mail, file)
+
             mails.append(mail)
 
         return mails
@@ -417,7 +422,7 @@ def send_mail(account, to, subject, body, attach):
     mailServer.login(
         backend_api.get_user_info("mail"), backend_api.get_user_info("password")
     )
-    mailServer.sendmail(username, recipient, msg.as_string())
+    mailServer.sendmail(account, to, msg.as_string())
     mailServer.close()
 
 
@@ -455,7 +460,7 @@ def get_flagged():
 
 @eel.expose
 def delete_mail(uid):
-    db_api.delete("mails", uid)
+    db_api.delete("mails", uid, "")
     backend_api.update_mails()
 
 
