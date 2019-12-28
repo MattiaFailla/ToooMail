@@ -1,4 +1,4 @@
-class downloadModule():
+class downloadModule:
     userId = 0
     userName = ""
 
@@ -24,4 +24,3 @@ class downloadModule():
 
         """
         return
-

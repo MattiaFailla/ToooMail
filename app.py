@@ -11,6 +11,7 @@ import datetime
 import re
 import socket
 import json
+
 # import python imaplib wrapper module
 from imbox import Imbox
 
@@ -88,16 +89,16 @@ def mail_parsing(uid, message, unread_uid, directory):
         attach_name = attach.get("filename")
         attach_names.append(attach_name)
         content = attach.get("content").read()
-        with open('.db/mails/attach/' + uid.decode() + '_' + attach_name, 'wb') as file:
+        with open(".db/mails/attach/" + uid.decode() + "_" + attach_name, "wb") as file:
             file.write(content)
         payload = {
             "uuid": uid.decode(),
             "subject": subject,
             "real_filename": attach_name,
-            "saved_as": uid.decode() + '_' + attach_name,
+            "saved_as": uid.decode() + "_" + attach_name,
             "user_id": "1",
             "deleted": "false",
-            "datetime": datetime.datetime.now()
+            "datetime": datetime.datetime.now(),
         }
         # saving the file information into the db
         db_api.insert("files", payload)
@@ -122,7 +123,7 @@ def mail_parsing(uid, message, unread_uid, directory):
         "uuid": uid.decode(),
         "subject": str(subject),
         "user_id": "1",
-        "datetime": datetime.datetime.now()
+        "datetime": datetime.datetime.now(),
     }
     db_api.insert("mails", mail_payload)
 
@@ -158,12 +159,12 @@ def check_smtp_connection(username, password, smtp):
 def check_imap_connection(email, passw, imap):
     try:
         with Imbox(
-                imap,
-                username=email,
-                password=passw,
-                ssl=True,
-                ssl_context=None,
-                starttls=False,
+            imap,
+            username=email,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
         ) as imbox:
             imbox.messages()
         return True
@@ -182,12 +183,12 @@ def get_mails(year, month, day):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -203,12 +204,13 @@ def get_mails(year, month, day):
         for uid, message in reversed(all_inbox_messages):
             mail = mail_parsing(uid, message, unread_uid, "inbox")
             # saving the mail in the local FS (file system)
-            with open('./.db/mails/' + str(uid.decode()) + '.json', 'w') as file:
+            with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
                 json.dump(mail, file)
 
             mails.append(mail)
 
         return mails
+
 
 @eel.expose
 def mark_as_seen(uid):
@@ -216,12 +218,12 @@ def mark_as_seen(uid):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
         imbox.mark_seen(uid)
 
@@ -232,12 +234,12 @@ def get_number_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
         logging.info("Account informations correct. Connected.")
 
@@ -255,12 +257,12 @@ def get_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -287,12 +289,12 @@ def get_starred():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -319,12 +321,12 @@ def get_sent():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -351,12 +353,12 @@ def get_unwanted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -383,12 +385,12 @@ def get_deleted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -466,12 +468,12 @@ def get_flagged():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -561,26 +563,29 @@ def guess_imap(mail):
         or tries to guess the server from the e-mail address.
         It checks if the server answers to a socket call"""
     if mail:
-        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+        domain = re.search(r"(@)(.*)(\.)", mail).group(2)
+        complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
     else:
         return False
-    server = {'gmail': 'imap.gmail.com',
-              'yahoo': 'imap.mail.yahoo.com',
-              'aol': 'imap.aol.com',
-              'icloud': 'imap.mail.me.com',
-              'me': 'imap.mail.me.com',
-              'hotmail': 'imap-mail.outlook.com',
-              'live': 'imap-mail.outlook.com'
-              }
+    server = {
+        "gmail": "imap.gmail.com",
+        "yahoo": "imap.mail.yahoo.com",
+        "aol": "imap.aol.com",
+        "icloud": "imap.mail.me.com",
+        "me": "imap.mail.me.com",
+        "hotmail": "imap-mail.outlook.com",
+        "live": "imap-mail.outlook.com",
+    }
     if domain in server.keys():
         return server[domain]
     else:
         ip = None
-        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
+        prefix = ["mail.", "imap.", "imap.mail.", "imap-mail."]
         for i in prefix:
             try:
-                connection = socket.create_connection((i + complete_domain, 993), timeout=2)
+                connection = socket.create_connection(
+                    (i + complete_domain, 993), timeout=2
+                )
                 if connection:
                     ip = i + complete_domain
                     connection.close()
@@ -599,26 +604,29 @@ def guess_smtp(mail):
         or tries to guess the server from the e-mail address.
         It checks if the server answers to a socket call"""
     if mail:
-        domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-        complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+        domain = re.search(r"(@)(.*)(\.)", mail).group(2)
+        complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
     else:
         return False
-    server = {'gmail': 'smtp.gmail.com',
-              'yahoo': 'smtp.mail.yahoo.com',
-              'aol': 'smtp.aol.com',
-              'icloud': 'smtp.mail.me.com',
-              'me': 'smtp.mail.me.com',
-              'hotmail': 'smtp-mail.outlook.com',
-              'live': 'smtp-mail.outlook.com'
-              }
+    server = {
+        "gmail": "smtp.gmail.com",
+        "yahoo": "smtp.mail.yahoo.com",
+        "aol": "smtp.aol.com",
+        "icloud": "smtp.mail.me.com",
+        "me": "smtp.mail.me.com",
+        "hotmail": "smtp-mail.outlook.com",
+        "live": "smtp-mail.outlook.com",
+    }
     if domain in server.keys():
         return server[domain]
     else:
         ip = None
-        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
+        prefix = ["mail.", "smtp.", "smtp.mail.", "smtp-mail."]
         for i in prefix:
             try:
-                connection = socket.create_connection((i + complete_domain, 465), timeout=2)
+                connection = socket.create_connection(
+                    (i + complete_domain, 465), timeout=2
+                )
                 if connection:
                     ip = i + complete_domain
                     connection.close()
@@ -637,30 +645,26 @@ def download_every_email():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+        imapserver,
+        username=username,
+        password=passw,
+        ssl=True,
+        ssl_context=None,
+        starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages()
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
         logging.debug("Downloading every mail from the server")
 
         i = 0
         for uid, message in reversed(all_inbox_messages):
             # Check if the mail exists in the local database
-            percentage = i/all_inbox_messages.__len__()
-            if not db_api.get("mails", "uuid", "WHERE uuid ="+uid.decode()):
-                mail_parsing(uid, message, unread_uid, "Inbox")
+            percentage = i / all_inbox_messages.__len__()
+            if not db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()):
+                mail_parsing(uid, message, "1", "Inbox")
 
 
 if __name__ == "__main__":
