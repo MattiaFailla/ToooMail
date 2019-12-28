@@ -31,7 +31,6 @@ logging.basicConfig(
     level=logging.CRITICAL,
 )
 
-
 # Set web files folder
 eel.init("web")
 
@@ -47,7 +46,8 @@ def check_if_user_exists():
     else:
         return "index.html"
 
-def mail_parsing(uid,message,unread_uid):
+
+def mail_parsing(uid, message, unread_uid):
     # print(message.attachments)
     sanitized_body = str(message.body["html"])
     if sanitized_body == "[]":
@@ -93,6 +93,7 @@ def mail_parsing(uid,message,unread_uid):
     }
     return appmails
 
+
 @eel.expose
 def check_smtp_connection(username, password, smtp):
     msg = MIMEMultipart()
@@ -122,17 +123,18 @@ def check_smtp_connection(username, password, smtp):
 def check_imap_connection(email, passw, imap):
     try:
         with Imbox(
-            imap,
-            username=email,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+                imap,
+                username=email,
+                password=passw,
+                ssl=True,
+                ssl_context=None,
+                starttls=False,
         ) as imbox:
             imbox.messages()
         return True
     except Exception as e:
         return False
+
 
 @eel.expose
 def get_mails(year, month, day):
@@ -145,12 +147,12 @@ def get_mails(year, month, day):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -164,7 +166,7 @@ def get_mails(year, month, day):
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -176,12 +178,12 @@ def mark_as_seen(uid):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
         imbox.mark_seen(uid)
 
@@ -192,12 +194,12 @@ def get_number_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
         logging.info("Account informations correct. Connected.")
 
@@ -215,12 +217,12 @@ def get_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -234,7 +236,7 @@ def get_unread():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -247,12 +249,12 @@ def get_starred():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -266,7 +268,7 @@ def get_starred():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -279,12 +281,12 @@ def get_sent():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -298,7 +300,7 @@ def get_sent():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -311,12 +313,12 @@ def get_unwanted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -330,7 +332,7 @@ def get_unwanted():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -343,12 +345,12 @@ def get_deleted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -362,7 +364,7 @@ def get_deleted():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -426,12 +428,12 @@ def get_flagged():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -445,7 +447,7 @@ def get_flagged():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid,message,unread_uid)
+            mail = mail_parsing(uid, message, unread_uid)
             mails.append(mail)
 
         return mails
@@ -509,6 +511,7 @@ def set_user(name, nick, mail, passw, imapserver, smtpserver):
 def set_flag(uid):
     return True
 
+
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
     print("Hello from %s" % x)
@@ -539,7 +542,7 @@ def guess_imap(mail):
         prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
         for i in prefix:
             try:
-                connection = socket.create_connection((i+complete_domain, 993), timeout=2)
+                connection = socket.create_connection((i + complete_domain, 993), timeout=2)
                 if connection:
                     ip = i + complete_domain
                     connection.close()
@@ -577,7 +580,7 @@ def guess_smtp(mail):
         prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
         for i in prefix:
             try:
-                connection = socket.create_connection((i+complete_domain, 465), timeout=2)
+                connection = socket.create_connection((i + complete_domain, 465), timeout=2)
                 if connection:
                     ip = i + complete_domain
                     connection.close()
@@ -597,6 +600,3 @@ if __name__ == "__main__":
     template = check_if_user_exists()
 
     eel.start(template, mode="electron")  # Start
-
-    conn.close()
-
