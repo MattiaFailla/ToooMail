@@ -48,7 +48,7 @@ def check_if_user_exists():
         return "index.html"
 
 
-def mail_parsing(uid, message, unread_uid):
+def mail_parsing(uid, message, unread_uid, directory):
     # print(message.attachments)
     sanitized_body = str(message.body["html"])
     if sanitized_body == "[]":
@@ -88,7 +88,7 @@ def mail_parsing(uid, message, unread_uid):
         "Subject": str(subject),
         "bodyHTML": str(sanitized_body),
         "bodyPLAIN": str(message.body["plain"]),
-        "directory": "",
+        "directory": directory,
         "datetimes": str(""),
         "readed": unread,
     }
@@ -167,7 +167,7 @@ def get_mails(year, month, day):
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "inbox")
             # saving the mail in the local FS (file system)
             with open('./.db/mails/'+str(uid.decode())+'.json', 'w') as file:
                 json.dump(mail, file)
@@ -241,7 +241,7 @@ def get_unread():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Unread")
             mails.append(mail)
 
         return mails
@@ -273,7 +273,7 @@ def get_starred():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Flagged")
             mails.append(mail)
 
         return mails
@@ -305,7 +305,7 @@ def get_sent():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Sent")
             mails.append(mail)
 
         return mails
@@ -337,7 +337,7 @@ def get_unwanted():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Junk")
             mails.append(mail)
 
         return mails
@@ -369,7 +369,7 @@ def get_deleted():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Deleted")
             mails.append(mail)
 
         return mails
@@ -452,7 +452,7 @@ def get_flagged():
         logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid)
+            mail = mail_parsing(uid, message, unread_uid, "Flagged")
             mails.append(mail)
 
         return mails
