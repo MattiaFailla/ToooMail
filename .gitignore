@@ -8,3 +8,5 @@ py_modules/__pycache__/
 web/img/loadmp3.pl
 
 .db/mails/*.json
+
+.db/mails/attach/*
