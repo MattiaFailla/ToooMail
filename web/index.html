@@ -188,10 +188,12 @@ setNumberUnread();
       document.getElementById('inbox').appendChild(li);
     }
     // Append to the bottom of inbox a button to load next mails
+    
     document.getElementById('inbox').innerHTML += `
-    <button class="more" style="vertical-align:middle;width:97%;position:center;" id="load_more"  onclick="get_other_mail(${anchor_number});"><span>Load more </span>
+    <input type="hidden" id="load_more" value="${anchor_number}">
       `;
 
+    document.getElementById("isLoading").value = "False";
 
 };
 
@@ -213,6 +215,8 @@ function get_other_mail(anchor_number) {
 
   var loading_more_button = document.getElementById("load_more");
       loading_more_button.parentNode.removeChild(loading_more_button);
+
+  document.getElementById("isLoading").value = "True";
 
   d.setDate(d.getDate() - anchor_number);
   let year = d.getFullYear();
@@ -391,6 +395,7 @@ window.setInterval(function(){
           
 
           <li class="inbox-item">
+            <input type="hidden" name="isLoading" id="isLoading" class="isLoading" value="true">
             <div class="inbox-sender">
             <div class="sender-name"> <a href="#">ToooMail </a></div>
             <div class="sender-date"><i class="sender-label"></i><span></span></div>
@@ -631,6 +636,23 @@ $('.closebttn').click(function() {
 });
   </script>
   <script>lazyload();</script>
+  <script> 
+        $('#GFG_UP').text('Scroll till bottom to get alert!'); 
+        jQuery(function($) { 
+            $('.inbox').on('scroll', function() { 
+                if ($(this).scrollTop() + 
+                    $(this).innerHeight() >=  
+                    $(this)[0].scrollHeight) { 
+                    // Calling the js function to load other emails
+                    var isLoading = $('#isLoading').val();
+                    if (isLoading === "False") {
+                      var anchor_number = $('#load_more').val();
+                      get_other_mail(anchor_number);
+                    }
+                } 
+            }); 
+        }); 
+    </script> 
 </body>
 </html>
 
