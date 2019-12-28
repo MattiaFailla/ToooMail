@@ -116,6 +116,16 @@ def mail_parsing(uid, message, unread_uid, directory):
         "datetimes": str(""),
         "readed": unread,
     }
+
+    # inserting the mail in the database
+    mail_payload = {
+        "uuid": uid.decode(),
+        "subject": str(subject),
+        "user_id": "1",
+        "datetime": datetime.datetime.now()
+    }
+    db_api.insert("mails", mail_payload)
+
     return appmails
 
 
@@ -199,7 +209,6 @@ def get_mails(year, month, day):
             mails.append(mail)
 
         return mails
-
 
 @eel.expose
 def mark_as_seen(uid):
@@ -620,6 +629,38 @@ def guess_smtp(mail):
                 return ip
             else:
                 return False
+
+
+# DA SPOSTARE SU THREAD DEDICATO
+def download_every_email():
+    username = backend_api.get_user_info("mail")
+    passw = backend_api.get_user_info("password")
+    imapserver = backend_api.get_user_info("imapserver")
+    with Imbox(
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
+    ) as imbox:
+
+        logging.info("Account information correct. Connected.")
+
+        # Gets all messages after the day x
+        all_inbox_messages = imbox.messages()
+        unread_msgs = imbox.messages(unread=True)
+        unread_uid = []
+        for uid, msg in unread_msgs:
+            unread_uid.append(uid.decode())
+        logging.debug("Downloading every mail from the server")
+
+        i = 0
+        for uid, message in reversed(all_inbox_messages):
+            # Check if the mail exists in the local database
+            percentage = i/all_inbox_messages.__len__()
+            if not db_api.get("mails", "uuid", "WHERE uuid ="+uid.decode()):
+                mail_parsing(uid, message, unread_uid, "Inbox")
 
 
 if __name__ == "__main__":
