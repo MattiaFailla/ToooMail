@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function  # For Py2/3 compatibility
+
+import os
+
 import eel
 import sqlite3
 import datetime
@@ -49,7 +52,6 @@ def check_if_user_exists():
 
 
 def mail_parsing(uid, message, unread_uid, directory):
-    # print(message.attachments)
     sanitized_body = str(message.body["html"])
     if sanitized_body == "[]":
         sanitized_body = str(message.body["plain"])
@@ -63,7 +65,6 @@ def mail_parsing(uid, message, unread_uid, directory):
     sanitized_body = sanitized_body.replace(r"']", "")
     sanitized_body = sanitized_body.replace(r"\u200", "")
 
-    # Apply local time to base server time
     from_name = message.sent_from[0]["name"]
     from_mail = message.sent_from[0]["email"]
     to_name = message.sent_to[0]["name"]
@@ -78,7 +79,29 @@ def mail_parsing(uid, message, unread_uid, directory):
     else:
         unread = True
 
+    # Getting the subject
     subject = str(message.subject) if str(message.subject) else "(No subject)"
+
+    # saving attach in the local disk and on the db
+    attach_names = []
+    for attach in message.attachments:
+        attach_name = attach.get("filename")
+        attach_names.append(attach_name)
+        content = attach.get("content").read()
+        with open('.db/mails/attach/' + uid.decode() + '_' + attach_name, 'wb') as file:
+            file.write(content)
+        payload = {
+            "uuid": uid.decode(),
+            "subject": subject,
+            "real_filename": attach_name,
+            "saved_as": uid.decode() + '_' + attach_name,
+            "user_id": "1",
+            "deleted": "false",
+            "datetime": datetime.datetime.now()
+        }
+        # saving the file information into the db
+        db_api.insert("files", payload)
+
     appmails = {
         "uid": uid.decode(),
         "From_name": str(from_name),
@@ -88,6 +111,7 @@ def mail_parsing(uid, message, unread_uid, directory):
         "Subject": str(subject),
         "bodyHTML": str(sanitized_body),
         "bodyPLAIN": str(message.body["plain"]),
+        "attach": attach_names,
         "directory": directory,
         "datetimes": str(""),
         "readed": unread,
@@ -169,7 +193,7 @@ def get_mails(year, month, day):
         for uid, message in reversed(all_inbox_messages):
             mail = mail_parsing(uid, message, unread_uid, "inbox")
             # saving the mail in the local FS (file system)
-            with open('./.db/mails/'+str(uid.decode())+'.json', 'w') as file:
+            with open('./.db/mails/' + str(uid.decode()) + '.json', 'w') as file:
                 json.dump(mail, file)
 
             mails.append(mail)
