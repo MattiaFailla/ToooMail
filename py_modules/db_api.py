@@ -1,17 +1,7 @@
 import sqlite3
 
 """
-Struttura db
---- EMAILS
-(uid)	from to subject bodyHTML bodyPLAIN datetime starred directory
-																|-> spam, deleted, starred, foldername
-
---- UNREADS
-(id)	uid
-
---- SENT
-(id)	to subject body attach datetime
-		 |-> it may be a tuple
+DB Structure
 
 --- USER
 (id)	name surname nickname bio mail password profilepic imapserver smtpserver
@@ -22,84 +12,16 @@ Struttura db
 --- CONTACTS
 (id)	name surname nick mail note datetime
 
---- LIST OF UIDS -> extract from the EMAILS table
---- NUMBER OF UNREAD -> count the number of entry in UNREADS table
---- LAST UID
-
-Api
----- DOWNLOAD NEW MAILS
-
----- READ A MAIL
-
----- SEND AN EMAIL
----- DELETE A MAIL
----- STAR A MAIL
-
----- ANSWER A MAIL
-
----- SAVE A CONTACT
----- DELETE A CONTACT
-
----- ADD A USER
----- DELETE A USER
-
----- SAVE A NOTE
----- DELETE A NOTE
 """
 
 ### CREATE ALL THE TABLES
-DB_LOCATION = "db/app.db"
+DB_LOCATION = ".db/app.db"
 
 conn = sqlite3.connect(DB_LOCATION)
 # c = conn.cursor()
 
 conn = sqlite3.connect(DB_LOCATION)
 c = conn.cursor()
-
-# --- emails table
-# create table
-c.execute(
-    """CREATE TABLE IF NOT EXISTS emails (
- uid integer PRIMARY KEY,
- from_name text NOT NULL,
- from_mail text NOT NULL,
- to_name text NOT NULL,
- to_mail text,
- subject text,
- bodyHTML text,
- bodyPLAIN text,
- directory text,
- datetimes datetime);"""
-)
-# commit the changes to db
-conn.commit()
-
-
-# --- unreads table
-# create table
-c.execute(
-    """CREATE TABLE IF NOT EXISTS unreads (
- id integer PRIMARY KEY,
- uid int NOT NULL);"""
-)
-# commit the changes to db
-conn.commit()
-
-
-# --- sent table
-# create table
-c.execute(
-    """CREATE TABLE IF NOT EXISTS sent (
- id integer PRIMARY KEY,
- to_mail text NOT NULL,
- subject text,
- body text,
- attach text,
- datetimes datetime);"""
-)
-# commit the changes to db
-conn.commit()
-
 
 # --- user table
 # create table
@@ -152,34 +74,6 @@ c.execute(
 )
 # commit the changes to db
 conn.commit()
-
-
-# --- emails table
-# create table
-c.execute(
-    """CREATE TABLE IF NOT EXISTS last_uid (
- uid integer PRIMARY KEY);"""
-)
-# commit the changes to db
-conn.commit()
-
-
-# --- emails table
-# create table
-c.execute(
-    """CREATE TABLE IF NOT EXISTS starred (
- uid integer PRIMARY KEY);"""
-)
-# commit the changes to db
-conn.commit()
-"""
-FIRST RUN
-Registration -> download of the whole postal -> save on the db
-
-OTHER RUN
-Check for new mails -> send in-app notification -> save in the db -> notify the frontend 
-"""
-
 
 # close the connection
 # conn.close()
