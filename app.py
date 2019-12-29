@@ -53,23 +53,17 @@ def check_if_user_exists():
 
 
 def mail_parsing(uid, message, unread_uid, directory):
-    sanitized_body = str(message.body["html"])
+    sanitized_body = str(message.body["html"][0])
     if sanitized_body == "[]":
-        sanitized_body = str(message.body["plain"])
-    sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
-    sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
-    sanitized_body = sanitized_body.replace(r"\r\n", "&#13;")
-    sanitized_body = sanitized_body.replace(r"\r", "&#13;")
-    sanitized_body = sanitized_body.replace(r"\n", "&#13;")
-    sanitized_body = sanitized_body.replace(r"\t", "")
-    sanitized_body = sanitized_body.replace(r"['", "")
-    sanitized_body = sanitized_body.replace(r"']", "")
-    sanitized_body = sanitized_body.replace(r"\u200", "")
+        sanitized_body = str(message.body["plain"][0])
+    
 
-    from_name = message.sent_from[0]["name"]
-    from_mail = message.sent_from[0]["email"]
-    to_name = message.sent_to[0]["name"]
-    to_mail = message.sent_to[0]["email"]
+    from_name = message.sent_from[0]["name"] if message.sent_from else ''
+    from_mail = message.sent_from[0]["email"] if message.sent_from else ''
+    to_name = message.sent_to[0]['name'] if message.sent_to else ''
+    to_mail = message.sent_to[0]["email"] if message.sent_to else ''
+
+    date_message = message.date
 
     # If html body is empty, load the plain
     if sanitized_body == "[]":
@@ -89,6 +83,10 @@ def mail_parsing(uid, message, unread_uid, directory):
         attach_name = attach.get("filename")
         attach_names.append(attach_name)
         content = attach.get("content").read()
+
+        if not attach_name or not content: 
+            return
+
         with open(".db/mails/attach/" + uid.decode() + "_" + attach_name, "wb") as file:
             file.write(content)
         payload = {
@@ -98,7 +96,7 @@ def mail_parsing(uid, message, unread_uid, directory):
             "saved_as": uid.decode() + "_" + attach_name,
             "user_id": "1",
             "deleted": "false",
-            "datetime": datetime.datetime.now(),
+            "datetime": date_message,
         }
         # saving the file information into the db
         db_api.insert("files", payload)
@@ -123,7 +121,7 @@ def mail_parsing(uid, message, unread_uid, directory):
         "uuid": uid.decode(),
         "subject": str(subject),
         "user_id": "1",
-        "datetime": datetime.datetime.now(),
+        "datetime": date_message,
     }
     db_api.insert("mails", mail_payload)
 
@@ -660,15 +658,25 @@ def download_every_email():
         logging.debug("Downloading every mail from the server")
 
         i = 0
+        print(all_inbox_messages.__len__())
         for uid, message in reversed(all_inbox_messages):
             # Check if the mail exists in the local database
             percentage = i / all_inbox_messages.__len__()
-            if not db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()):
-                mail_parsing(uid, message, "1", "Inbox")
+            print(percentage*100)
+            print(i)
+            print(db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()))
+            i = i+1
+            query = db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode())
+            if not query:
+                try:
+                    print("DOWNLOADING THE MAIL")
+                    mail_parsing(uid, message, "1", "Inbox")
+                except Exception as e:
+                    pass
 
 
 if __name__ == "__main__":
-    say_hello_py("Server started.")
+    say_hello_py("Server.")
     eel.say_hello_js("Server connected.")  # Call a Javascript function
 
     template = check_if_user_exists()
