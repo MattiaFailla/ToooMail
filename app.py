@@ -53,9 +53,11 @@ def check_if_user_exists():
 
 
 def mail_parsing(uid, message, unread_uid, directory):
-    sanitized_body = str(message.body["html"][0])
-    if sanitized_body == "[]":
+    if (len(message.body["html"]) < 1):
         sanitized_body = str(message.body["plain"][0])
+    else:
+        sanitized_body = str(message.body["html"][0])
+
     
 
     from_name = message.sent_from[0]["name"] if message.sent_from else ''
