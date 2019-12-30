@@ -1,4 +1,5 @@
 import sqlite3
+import json
 
 """
 DB Structure
@@ -50,13 +51,12 @@ conn.commit()
 c.execute(
     """CREATE TABLE IF NOT EXISTS mail_server_settings (
  id integer PRIMARY KEY,
- ServiceName text NOT NULL,
+ service_name text NOT NULL,
  server_smtp text,
  server_imap text,
  ssl text,
  ssl_context text,
- starttls text,
- datetime datetime
+ starttls text
 );"""
 )
 # commit the changes to db
@@ -171,3 +171,11 @@ def get(table, field, expressions):
         data.append(row)
 
     return data
+
+
+""" UPLOADING APP SETTINGS """
+with open(".db/mail_server.json", 'r') as f:
+    datastore = json.load(f)
+
+    for setting in datastore:
+        insert("mail_server_settings", setting)
