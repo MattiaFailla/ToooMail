@@ -38,6 +38,24 @@ c.execute(
  imapserver text,
  smtpserver text,
  is_logged_in text,
+ mail_server_setting,
+ datetime datetime
+);"""
+)
+# commit the changes to db
+conn.commit()
+
+# --- mail_server_settings table
+# create table
+c.execute(
+    """CREATE TABLE IF NOT EXISTS mail_server_settings (
+ id integer PRIMARY KEY,
+ ServiceName text NOT NULL,
+ server_smtp text,
+ server_imap text,
+ ssl text,
+ ssl_context text,
+ starttls text,
  datetime datetime
 );"""
 )
