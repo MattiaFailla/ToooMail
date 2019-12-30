@@ -10,8 +10,11 @@ from py_modules.db_api import DBApi
 
 def get_user_info(what):
     data = DBApi("user").get(what, "WHERE ID = 1")
-    p = data[0]
-    return p[0]
+    try:
+        p = data[0]
+    except IndexError:
+        p = None
+    return p
 
 
 def get_user_connection_data():

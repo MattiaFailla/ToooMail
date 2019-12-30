@@ -2,6 +2,7 @@
 *.pyc
 app.db
 py_modules/__pycache__/
+__pycache__
 
 .idea/
 
@@ -10,3 +11,4 @@ web/img/loadmp3.pl
 .db/mails/*.json
 
 .db/mails/attach/*
+.db/mails/*/*

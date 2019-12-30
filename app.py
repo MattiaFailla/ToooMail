@@ -21,6 +21,7 @@ from imbox import Imbox
 from py_modules import backend_api
 from py_modules.db_api import DBApi
 from py_modules.user_api import UserApi
+from py_modules.decorators import check_is_logged_in
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s",
@@ -30,6 +31,19 @@ logging.basicConfig(
 
 # Set web files folder
 eel.init("web")
+
+
+@check_is_logged_in
+def check_if_user_exists():
+    # if user isn't logged -> start the "subscription app" the first time
+    conn = sqlite3.connect(".db/app.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM user;")
+    # # print(cursor.fetchall())
+    # if not cursor.fetchall():
+    #     return "registration.html"
+    # else:
+    #     return "index.html"
 
 
 def mail_parsing(uid, message, unread_uid, directory):
@@ -506,6 +520,7 @@ def event():
 
 @eel.expose
 def set_user(name, nick, mail, passw, imapserver, smtpserver):
+<<<<<<< HEAD
     DBApi("user").insert(data={
         "name": name,
         "surname": "",
@@ -518,6 +533,24 @@ def set_user(name, nick, mail, passw, imapserver, smtpserver):
         "smtpserver": smtpserver,
         "datetime": datetime.datetime.now(),
     })
+=======
+    db_api.insert(
+        "user",
+        {
+            "name": name,
+            "surname": "",
+            "nickname": nick,
+            "bio": "",
+            "mail": mail,
+            "password": passw,
+            "profilepic": "",
+            "imapserver": imapserver,
+            "smtpserver": smtpserver,
+            "datetime": datetime.datetime.now(),
+            "is_logged_in": "true",
+        },
+    )
+>>>>>>> Adds new decorator to check if a user is logged in or not
 
 
 @eel.expose
@@ -639,9 +672,15 @@ def download_every_email():
             percentage = i / all_inbox_messages.__len__()
             print(percentage * 100)
             print(i)
+<<<<<<< HEAD
             print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
             i = i + 1
             query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
+=======
+            print(db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()))
+            i = i + 1
+            query = db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode())
+>>>>>>> Adds new decorator to check if a user is logged in or not
             if not query:
                 try:
                     print("DOWNLOADING THE MAIL")
