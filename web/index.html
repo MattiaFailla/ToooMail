@@ -31,8 +31,79 @@
 
 <link rel="stylesheet" href="https://anandchowdhary.github.io/ionicons-3-cdn/icons.css" integrity="sha384-+iqgM+tGle5wS+uPwXzIjZS5v6VkqCUV7YQ/e/clzRHAxYbzpUJ+nldylmtBWCP0" crossorigin="anonymous">
 
-<!-- LAZY LOAD -->
+  <!-- LAZY LOAD -->
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+
+  <!-- APPS -->
+  <!--<script src="js/apps.js"></script>-->
+  <link rel="stylesheet" href="css/fancy/fancyapp.css">
+  <style type="text/css">
+    /* Styling for fancyBox demo pages */
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700');
+
+
+.fancybox-slide > div > h2:first-child {
+  margin-top: 10px;
+}
+
+.btn {
+  background: #FF6666;
+  border-width: 0;
+  color: #fff;
+  text-decoration: none;
+  padding: 7px 20px;
+  line-height: 1.5;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 80%;
+  font-weight: 700;
+  margin: 5px 5px 5px 0;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  transition: all .2s ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:hover, .btn:focus {
+  color: #fff;
+}
+
+.imglist a {
+  display: inline-block;
+}
+
+.imglist img {
+  height: 160px;
+  margin-bottom: 4px;
+}
+
+.tright {
+  text-align: right;
+}
+
+.tright .btn {
+  margin-left: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.grid {
+  float: left;
+  width: 30%;
+  padding: 20px;
+  background: #eee;
+  margin: 0 20px 20px 0;
+}
+
+  </style>
 
 
   <link rel="stylesheet" href="css/base.css">
@@ -436,6 +507,12 @@ window.setInterval(function(){
               </div>
             </div>
 
+            <p>
+              <a data-morphing id="morphing" data-src="#morphing-content" href="#remodal" class="btn">
+                Open demo
+              </a>
+            </p>
+
               <div class="card 2">
               <div class="card_image">
                 <img class="lazyload" src="img/wheel.gif" data-src="https://media.giphy.com/media/WirhZMBF1AZVK/giphy.gif" />
@@ -599,6 +676,26 @@ Customer dialog on Skype.
 
         </div>
   </div>
+
+  <!-- APPS CONTENT - MORPHING-->
+<div id="morphing-content" class="hidden">
+  <p>
+    APP CONTENT.
+  </p>
+  <p>
+    Nam vitae suscipit metus, eget volutpat quam. Ut et sem nunc. Vivamus erat leo, auctor in neque non, malesuada consectetur neque. Ut ac purus est. Quisque molestie pharetra sem sit amet ornare. Nam eu felis in nisl lacinia iaculis. Pellentesque ut lobortis lacus. Etiam ut eros non dui ultrices imperdiet.
+  </p>
+  <p>
+    Ut pulvinar sem gravida porta ullamcorper. Pellentesque laoreet tellus eu egestas tempor. Ut nec lobortis nulla. Aenean tincidunt eu eros eget tincidunt. Vivamus ac lacinia mi, ut varius justo. Praesent eu ante vel velit iaculis aliquam sit amet vestibulum purus. Fusce molestie enim eros. Pellentesque justo sem, pharetra vel ligula non, euismod elementum tortor. Morbi dui ligula, rhoncus nec dignissim a, malesuada feugiat massa.
+  </p>
+  <p>
+    Cras non lobortis mauris. Maecenas id placerat est, ac lobortis nisi. Aenean dapibus arcu commodo magna tristique, et facilisis diam aliquam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce a vestibulum erat, nec ornare libero. Proin aliquam, neque vel mattis euismod, tortor lacus tempus turpis, ac vulputate augue nisl eget sem. Integer in porttitor mauris.
+  </p>
+</div>
+
+
+
+
   <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
   <script id="rendered-js">
      $(document).ready(function () {
@@ -636,23 +733,180 @@ $('.closebttn').click(function() {
 });
   </script>
   <script>lazyload();</script>
+
+  <script src="js/fancy/fancyapp.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
   <script> 
-        $('#GFG_UP').text('Scroll till bottom to get alert!'); 
-        jQuery(function($) { 
-            $('.inbox').on('scroll', function() { 
-                if ($(this).scrollTop() + 
-                    $(this).innerHeight() >=  
-                    $(this)[0].scrollHeight) { 
-                    // Calling the js function to load other emails
-                    var isLoading = $('#isLoading').val();
-                    if (isLoading === "False") {
-                      var anchor_number = $('#load_more').val();
-                      get_other_mail(anchor_number);
-                    }
-                } 
-            }); 
-        }); 
-    </script> 
+        // Step 1: Create jQuery plugin
+// ============================
+
+$.fn.fancyMorph = function( opts ) {
+
+  var Morphing = function( $btn, opts ) {
+    var self = this;
+
+    self.opts = $.extend({
+      animationEffect : false,
+      infobar    : false,
+      buttons    : ['close'],
+      smallBtn   : false,
+      touch      : false,
+      baseClass  : 'fancybox-morphing',
+      afterClose : function() {
+        self.close();
+      }
+    }, opts);
+
+    self.init( $btn );
+  };
+
+  Morphing.prototype.init = function( $btn ) {
+    var self = this;
+
+    self.$btn = $btn.addClass('morphing-btn');
+
+    self.$clone = $('<div class="morphing-btn-clone" />')
+      .hide()
+      .insertAfter( $btn );
+
+    // Add wrapping element and set initial width used for positioning
+    $btn.wrap( '<span class="morphing-btn-wrap"></span>' ).on('click', function(e) {
+      e.preventDefault();
+
+      self.start();
+    });
+
+  };
+
+  Morphing.prototype.start = function() {
+    var self = this;
+
+    if ( self.$btn.hasClass('morphing-btn_circle') ) {
+      return;
+    }
+
+    // Set initial width, because it is not possible to start CSS transition from "auto"
+    self.$btn.width( self.$btn.width() ).parent().width( self.$btn.outerWidth() );
+
+    self.$btn.off('.fm').on("transitionend.fm webkitTransitionEnd.fm oTransitionEnd.fm MSTransitionEnd.fm", function(e) {
+
+      if ( e.originalEvent.propertyName === 'width' ) {
+        self.$btn.off('.fm');
+
+        self.animateBg();
+      }
+
+    }).addClass('morphing-btn_circle');
+
+  };
+
+  Morphing.prototype.animateBg = function() {
+    var self = this;
+
+    self.scaleBg();
+
+    self.$clone.show();
+
+    // Trigger repaint
+    self.$clone[0].offsetHeight;
+
+    self.$clone.off('.fm').on("transitionend.fm webkitTransitionEnd.fm oTransitionEnd.fm MSTransitionEnd.fm", function(e) {
+      self.$clone.off('.fm');
+
+      self.complete();
+
+    }).addClass('morphing-btn-clone_visible');
+  };
+
+  Morphing.prototype.scaleBg = function() {
+    var self = this;
+
+    var $clone = self.$clone;
+    var scale  = self.getScale();
+    var $btn   = self.$btn;
+    var pos    = $btn.offset();
+
+    $clone.css({
+      top       : pos.top  + $btn.outerHeight() * 0.5 - ( $btn.outerHeight() * scale * 0.5 ) - $(window).scrollTop(),
+      left      : pos.left + $btn.outerWidth()  * 0.5 - ( $btn.outerWidth()  * scale * 0.5 ) - $(window).scrollLeft(),
+      width     : $btn.outerWidth()  * scale,
+      height    : $btn.outerHeight() * scale,
+      transform : 'scale(' + ( 1 / scale ) + ')'
+    });
+  };
+
+  Morphing.prototype.getScale = function() {
+    var $btn    = this.$btn,
+        radius  = $btn.outerWidth() * 0.5,
+        left    = $btn.offset().left + radius - $(window).scrollLeft(),
+        top     = $btn.offset().top  + radius - $(window).scrollTop(),
+        windowW = $(window).width(),
+        windowH = $(window).height();
+
+    var maxDistHor  = ( left > windowW / 2 ) ? left : ( windowW - left ),
+        maxDistVert = ( top > windowH / 2 )  ? top  : ( windowH - top );
+
+    return Math.ceil(Math.sqrt( Math.pow( maxDistHor, 2 ) + Math.pow( maxDistVert, 2 ) ) / radius );
+  };
+
+  Morphing.prototype.complete = function() {
+    var self = this;
+    var $btn = self.$btn;
+
+    $.fancybox.open({ src : $btn.data('src') || $btn.attr('href') }, self.opts);
+
+    $(window).on('resize.fm', function() {
+      //self.scaleBg();
+    });
+  };
+
+  Morphing.prototype.close = function() {
+    var self   = this;
+    var $clone = self.$clone;
+
+    self.scaleBg();
+
+    $clone.one('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e) {
+      $clone.hide();
+
+      self.$btn.removeClass('morphing-btn_circle');
+    });
+
+    $clone.removeClass('morphing-btn-clone_visible');
+
+    $(window).off('resize.fm');
+  };
+
+  // Init
+  this.each(function() {
+    var $this = $(this);
+
+    if ( !$this.data("morphing") ) {
+      $this.data( "morphing", new Morphing( $this, opts ) );
+    }
+
+  });
+
+  return this;
+};
+
+
+// Step 2: Start using it!
+// =======================
+
+$("[data-morphing]").fancyMorph({
+  hash : 'morphing'
+});
+
+
+
+
+    </script>
 </body>
 </html>
 
