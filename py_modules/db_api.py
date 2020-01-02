@@ -174,7 +174,7 @@ def get(table, field, expressions):
 
 
 """ UPLOADING APP SETTINGS """
-with open(".db/mail_server.json", 'r') as f:
+with open(".db/mail_server.json", "r") as f:
     datastore = json.load(f)
 
     for setting in datastore:
