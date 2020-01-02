@@ -3,32 +3,23 @@
 
 from __future__ import print_function  # For Py2/3 compatibility
 
-import os
+import datetime
+import json
+import logging
+import re
+# import python smtplib module
+import smtplib
+import socket
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 import eel
-import sqlite3
-import datetime
-import re
-import socket
-import json
-
 # import python imaplib wrapper module
 from imbox import Imbox
 
-from email import encoders
-from email.header import Header
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.utils import parseaddr, formataddr
-
-# import python smtplib module
-import smtplib
-
-from py_modules import db_api
 from py_modules import backend_api
-
-import logging
+from py_modules import db_api
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s",
@@ -40,16 +31,7 @@ logging.basicConfig(
 eel.init("web")
 
 
-def check_if_user_exists():
-    # if user isn't logged -> start the "subscription app" the first time
-    conn = sqlite3.connect(".db/app.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM user;")
-    # print(cursor.fetchall())
-    if not cursor.fetchall():
-        return "registration.html"
-    else:
-        return "index.html"
+
 
 
 def mail_parsing(uid, message, unread_uid, directory):
