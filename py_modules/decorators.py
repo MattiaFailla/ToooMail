@@ -5,11 +5,14 @@ from py_modules import backend_api
 def check_is_logged_in(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        status = {
+            0: "registration.html",
+            1: "index.html",
+        }
+
         try:
-            if backend_api.get_user_info("is_logged_in") == "true":
-                return "index.html"
+            return status[backend_api.get_user_info("is_logged_in")]
         except TypeError:
             return "registration.html"
-        return "registration.html"
-
+            
     return wrapper

@@ -520,7 +520,6 @@ def event():
 
 @eel.expose
 def set_user(name, nick, mail, passw, imapserver, smtpserver):
-<<<<<<< HEAD
     DBApi("user").insert(data={
         "name": name,
         "surname": "",
@@ -532,25 +531,8 @@ def set_user(name, nick, mail, passw, imapserver, smtpserver):
         "imapserver": imapserver,
         "smtpserver": smtpserver,
         "datetime": datetime.datetime.now(),
+        "is_logged_in": 1,
     })
-=======
-    db_api.insert(
-        "user",
-        {
-            "name": name,
-            "surname": "",
-            "nickname": nick,
-            "bio": "",
-            "mail": mail,
-            "password": passw,
-            "profilepic": "",
-            "imapserver": imapserver,
-            "smtpserver": smtpserver,
-            "datetime": datetime.datetime.now(),
-            "is_logged_in": "true",
-        },
-    )
->>>>>>> Adds new decorator to check if a user is logged in or not
 
 
 @eel.expose
@@ -672,15 +654,9 @@ def download_every_email():
             percentage = i / all_inbox_messages.__len__()
             print(percentage * 100)
             print(i)
-<<<<<<< HEAD
             print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
             i = i + 1
             query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
-=======
-            print(db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()))
-            i = i + 1
-            query = db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode())
->>>>>>> Adds new decorator to check if a user is logged in or not
             if not query:
                 try:
                     print("DOWNLOADING THE MAIL")
