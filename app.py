@@ -135,19 +135,20 @@ def check_smtp_connection(username, password, smtp):
 
 
 @eel.expose
-def check_imap_connection(email, passw, imap):
+def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, starttls_field):
     try:
         with Imbox(
                 imap,
                 username=email,
                 password=passw,
-                ssl=True,
-                ssl_context=None,
-                starttls=False,
+                ssl=ssl_field,
+                ssl_context=ssl_context_field,
+                starttls=starttls_field,
         ) as imbox:
             imbox.messages()
         return True
     except Exception as e:
+        print(e)
         return False
 
 
@@ -505,20 +506,28 @@ def event():
 
 
 @eel.expose
-def set_user(name, nick, mail, passw, imapserver, smtpserver):
+def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
+    # Regular user registration
+    print(mail_server_id)
     DBApi("user").insert(data={
         "name": name,
         "surname": "",
-        "nickname": nick,
+        "nickname": "",
         "bio": "",
         "mail": mail,
         "password": passw,
         "profilepic": "",
         "imapserver": imapserver,
         "smtpserver": smtpserver,
+        "is_logged_in": True,
+        "mail_server_setting": mail_server_id,
         "datetime": datetime.datetime.now(),
     })
 
+
+@eel.expose
+def custom_user_registrarion(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
+    return True
 
 @eel.expose
 def set_flag(uid):
@@ -528,6 +537,38 @@ def set_flag(uid):
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
     print("Hello from %s" % x)
+
+@eel.expose
+def get_email_platform_settings(id):
+    result = DBApi("mail_server_settings").get(field="*", expression="WHERE ID = "+str(id))
+    fe_data = []
+    for data in result:
+        fe_data.append(
+            {
+                "id": data[0],
+                "name": data[1],
+                "smtp": data[2],
+                "imap": data[3],
+                "ssl": data[4],
+                "sslcontext": data[5],
+                "starttls": data[6],
+            }
+        )
+    return fe_data
+
+@eel.expose
+def get_email_platform():
+    # Getting vendors with ID
+    result = DBApi("mail_server_settings").get(field="id, service_name", expression="")
+    fe_data = []
+    for data in result:
+        fe_data.append(
+            {
+                "id": data[0],
+                "name": data[1]
+            }
+        )
+    return fe_data
 
 
 @eel.expose
