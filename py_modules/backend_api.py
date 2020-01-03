@@ -9,7 +9,7 @@ from py_modules.db_api import DBApi
 
 
 def get_user_info(what):
-    data = DBApi("user").get(what, "WHERE ID = 1")
+    data = DBApi("user").get(what, "WHERE is_logged_in = 1")
     p = data[0]
     return p[0]
 
