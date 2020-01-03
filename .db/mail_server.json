@@ -30,7 +30,7 @@
   },
   {
     "service_name":"hotmail",
-    "server_smtp": "imap-mail.outlook.com",
+    "server_smtp": "smtp-mail.outlook.com",
     "server_imap": "imap-mail.outlook.com",
     "ssl": "True",
     "ssl_context": "None",
