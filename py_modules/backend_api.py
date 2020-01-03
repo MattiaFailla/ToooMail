@@ -1,6 +1,6 @@
-import threading
+import datetime
 from imbox import Imbox
-from py_modules import db_api
+from py_modules.db_api import DBApi
 
 
 # from pynotifier import Notification
@@ -9,7 +9,7 @@ from py_modules import db_api
 
 
 def get_user_info(what):
-    data = db_api.get("user", what, "WHERE ID = 1")
+    data = DBApi("user").get(what, "WHERE ID = 1")
     p = data[0]
     return p[0]
 
@@ -29,13 +29,11 @@ def get_user_connection_data():
 def update_starred():
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account informations correct. Connected.")
 
         # Gets all messages after the day x
 
         # to get the mails of today:
         all_inbox_messages = imbox.messages(flagged=True)
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
@@ -57,8 +55,7 @@ def update_starred():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
 
-            db_api.insert(
-                "emails",
+            DBApi("emails").insert(
                 {
                     "uid": uid.decode(),
                     "from_name": str(from_name),
@@ -70,7 +67,7 @@ def update_starred():
                     "bodyPLAIN": str(message.body["plain"]),
                     "directory": "",
                     "datetimes": datetime.date(year, month, day),
-                },
+                }
             )
 
 
@@ -80,13 +77,11 @@ def get_mails(year, month, day):
 
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account information correct. Connected.")
 
         # Gets all messages after the day x
 
         # to get the mails of today:
         all_inbox_messages = imbox.messages(date__on=datetime.date(year, month, day))
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
@@ -108,8 +103,7 @@ def get_mails(year, month, day):
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
 
-            db_api.insert(
-                "emails",
+            DBApi("emails").insert(
                 {
                     "uid": uid.decode(),
                     "from_name": str(from_name),
@@ -143,12 +137,10 @@ def first_download():
     """
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account information correct.")
 
         # Gets all messages from the inbox
         all_inbox_messages = imbox.messages()
         print(len(all_inbox_messages))
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
             # print(message.attachments)
