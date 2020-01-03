@@ -22,13 +22,14 @@ class DBApi:
         self.conn.commit()
         return
 
-    def get(self, field="", expression=""):
+    def get(self, field: object = "", expression: object = "") -> object:
         cur = self.conn.cursor()
-        cur.execute('SELECT "{0}" FROM "{1}" "{2}"'.format(field, self.table, expression))
+        cur.execute("SELECT " + field + " FROM " + self.table + " " + expression + "")
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
+
         return data
 
     def drop(self):
