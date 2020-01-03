@@ -61,7 +61,7 @@ c.execute(
  profilepic text,
  imapserver text,
  smtpserver text,
- is_logged_in text,
+ is_logged_in integer,
  mail_server_setting,
  datetime datetime
 );"""
