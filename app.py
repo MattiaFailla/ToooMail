@@ -19,7 +19,8 @@ import eel
 from imbox import Imbox
 
 from py_modules import backend_api
-from py_modules import db_api
+from py_modules.db_api import DBApi
+from py_modules.user_api import UserApi
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s",
@@ -29,9 +30,6 @@ logging.basicConfig(
 
 # Set web files folder
 eel.init("web")
-
-
-
 
 
 def mail_parsing(uid, message, unread_uid, directory):
@@ -81,7 +79,7 @@ def mail_parsing(uid, message, unread_uid, directory):
             "datetime": date_message,
         }
         # saving the file information into the db
-        db_api.insert("files", payload)
+        DBApi("files").insert(data=payload)
 
     appmails = {
         "uid": uid.decode(),
@@ -105,7 +103,8 @@ def mail_parsing(uid, message, unread_uid, directory):
         "user_id": "1",
         "datetime": date_message,
     }
-    db_api.insert("mails", mail_payload)
+
+    DBApi("mails").insert(data=mail_payload)
 
     return appmails
 
@@ -139,12 +138,12 @@ def check_smtp_connection(username, password, smtp):
 def check_imap_connection(email, passw, imap):
     try:
         with Imbox(
-            imap,
-            username=email,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
+                imap,
+                username=email,
+                password=passw,
+                ssl=True,
+                ssl_context=None,
+                starttls=False,
         ) as imbox:
             imbox.messages()
         return True
@@ -163,12 +162,12 @@ def get_mails(year, month, day):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -198,12 +197,12 @@ def mark_as_seen(uid):
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
         imbox.mark_seen(uid)
 
@@ -214,12 +213,12 @@ def get_number_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
         logging.info("Account informations correct. Connected.")
 
@@ -237,12 +236,12 @@ def get_unread():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account informations correct. Connected.")
@@ -269,12 +268,12 @@ def get_starred():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -301,12 +300,12 @@ def get_sent():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -333,12 +332,12 @@ def get_unwanted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -365,12 +364,12 @@ def get_deleted():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -448,12 +447,12 @@ def get_flagged():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -475,26 +474,23 @@ def get_flagged():
 
 @eel.expose
 def delete_mail(uid):
-    db_api.delete("mails", uid, "")
+    DBApi("mails").delete(what=uid, where="")
     backend_api.update_mails()
 
 
 @eel.expose
 def add_note(text, uid, attach):
-    db_api.insert("notes", {"uid": uid, "attach": attach})
+    DBApi("notes").insert({"uid": uid, "attach": attach})
 
 
 @eel.expose
 def del_note(uid):
-    db_api.delete("notes", uid)
+    DBApi("notes").delete(what=uid, where="")
 
 
 @eel.expose
 def add_contact(name, surname, mail, note, nick):
-    db_api.insert(
-        "contact",
-        {"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick},
-    )
+    DBApi("contact").insert({"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick})
 
 
 @eel.expose
@@ -510,21 +506,18 @@ def event():
 
 @eel.expose
 def set_user(name, nick, mail, passw, imapserver, smtpserver):
-    db_api.insert(
-        "user",
-        {
-            "name": name,
-            "surname": "",
-            "nickname": nick,
-            "bio": "",
-            "mail": mail,
-            "password": passw,
-            "profilepic": "",
-            "imapserver": imapserver,
-            "smtpserver": smtpserver,
-            "datetime": datetime.datetime.now(),
-        },
-    )
+    DBApi("user").insert(data={
+        "name": name,
+        "surname": "",
+        "nickname": nick,
+        "bio": "",
+        "mail": mail,
+        "password": passw,
+        "profilepic": "",
+        "imapserver": imapserver,
+        "smtpserver": smtpserver,
+        "datetime": datetime.datetime.now(),
+    })
 
 
 @eel.expose
@@ -625,12 +618,12 @@ def download_every_email():
     passw = backend_api.get_user_info("password")
     imapserver = backend_api.get_user_info("imapserver")
     with Imbox(
-        imapserver,
-        username=username,
-        password=passw,
-        ssl=True,
-        ssl_context=None,
-        starttls=False,
+            imapserver,
+            username=username,
+            password=passw,
+            ssl=True,
+            ssl_context=None,
+            starttls=False,
     ) as imbox:
 
         logging.info("Account information correct. Connected.")
@@ -646,9 +639,9 @@ def download_every_email():
             percentage = i / all_inbox_messages.__len__()
             print(percentage * 100)
             print(i)
-            print(db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode()))
+            print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
             i = i + 1
-            query = db_api.get("mails", "uuid", "WHERE uuid =" + uid.decode())
+            query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
             if not query:
                 try:
                     print("DOWNLOADING THE MAIL")
@@ -661,6 +654,6 @@ if __name__ == "__main__":
     say_hello_py("Server.")
     eel.say_hello_js("Server connected.")  # Call a Javascript function
 
-    template = check_if_user_exists()
+    template = UserApi.check_if_user_exists()
 
     eel.start(template, mode="electron")  # Start

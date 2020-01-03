@@ -1,19 +1,42 @@
 import sqlite3
 import json
 
-"""
-DB Structure
 
---- USER
-(id)	name surname nickname bio mail password profilepic imapserver smtpserver
+class DBApi:
+    def __init__(self, table):
+        self.table = table
+        self.DB_LOCATION = ".db/app.db"
+        self.conn = sqlite3.connect(DB_LOCATION)
 
---- NOTES
-(id)	UID note datetime
+    def insert(self, data):
+        cols = ", ".join('"{}"'.format(col) for col in data.keys())
+        vals = ", ".join(":{}".format(col) for col in data.keys())
+        sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(self.table, cols, vals)
+        self.conn.cursor().execute(sql, data)
+        self.conn.commit()
+        return True
 
---- CONTACTS
-(id)	name surname nick mail note datetime
+    def delete(self, where, what):
+        cur = self.conn.cursor()
+        cur.execute("DELETE FROM ? WHERE ? LIKE %?%", self.table, where, what)
+        self.conn.commit()
+        return
 
-"""
+    def get(self, field = "", expression = ""):
+        cur = self.conn.cursor()
+        cur.execute("SELECT ? FROM ? ?", field, self.table, expression)
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+    def drop(self):
+        return
+
+    def update(self):
+        return
+
 
 ### CREATE ALL THE TABLES
 DB_LOCATION = ".db/app.db"
@@ -129,53 +152,10 @@ conn.commit()
 """ BASIC SQLITE FUNCTIONS """
 
 
-def insert(table, data):
-    cols = ", ".join('"{}"'.format(col) for col in data.keys())
-    vals = ", ".join(":{}".format(col) for col in data.keys())
-    sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(table, cols, vals)
-    conn.cursor().execute(sql, data)
-    conn.commit()
-    return True
-    """example
-	sqlite_insert(conn, 'stocks', {
-		'created_at': '2016-04-17',
-		'type': 'BUY',
-		'amount': 500,
-		'price': 45.00})
-	"""
-
-
-def update(table, where, data):
-    return
-
-
-def delete(table, where, what):
-    cur = conn.cursor()
-    cur.execute("DELETE FROM " + table + " WHERE " + where + " LIKE %" + what + "%")
-    cur.commit()
-
-
-def drop(table):
-    cur = conn.cursor()
-    cur.execute("DROP TABLE " + table + "")
-    cur.commit()
-
-
-def get(table, field, expressions):
-    cur = conn.cursor()
-    cur.execute("SELECT " + field + " FROM " + table + " " + expressions + "")
-
-    rows = cur.fetchall()
-    data = []
-    for row in rows:
-        data.append(row)
-
-    return data
-
-
 """ UPLOADING APP SETTINGS """
 with open(".db/mail_server.json", "r") as f:
     datastore = json.load(f)
 
     for setting in datastore:
-        insert("mail_server_settings", setting)
+        DBApi("mail_server_settings").insert(setting)
+
