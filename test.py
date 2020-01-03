@@ -1,7 +1,7 @@
 import unittest
 from app import *
 
-from py_modules import db_api
+from py_modules.db_api import DBApi
 from py_modules.user_api import UserApi
 
 
@@ -13,7 +13,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(UserApi.check_if_user_exists(), "registration.html")
 
     def test__data_get(self):
-        self.assertEqual(db_api.get("user", "id", "WHERE ID = 1"), [])
+        self.assertEqual(DBApi("user").get("id", "WHERE ID = 1"), [])
 
 
 if __name__ == "__main__":

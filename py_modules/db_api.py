@@ -18,13 +18,13 @@ class DBApi:
 
     def delete(self, where, what):
         cur = self.conn.cursor()
-        cur.execute("DELETE FROM ? WHERE ? LIKE %?%", self.table, where, what)
+        cur.execute('DELETE FROM "{0}" WHERE "{1}" LIKE %"{2}"%'.format(self.table, where, what))
         self.conn.commit()
         return
 
-    def get(self, field = "", expression = ""):
+    def get(self, field="", expression=""):
         cur = self.conn.cursor()
-        cur.execute("SELECT ? FROM ? ?", field, self.table, expression)
+        cur.execute('SELECT "{0}" FROM "{1}" "{2}"'.format(field, self.table, expression))
         rows = cur.fetchall()
         data = []
         for row in rows:
@@ -151,11 +151,9 @@ conn.commit()
 
 """ BASIC SQLITE FUNCTIONS """
 
-
 """ UPLOADING APP SETTINGS """
 with open(".db/mail_server.json", "r") as f:
     datastore = json.load(f)
 
     for setting in datastore:
         DBApi("mail_server_settings").insert(setting)
-
