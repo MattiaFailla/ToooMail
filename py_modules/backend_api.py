@@ -20,6 +20,13 @@ def get_user_id():
     return p[0]
 
 
+def get_user_server_config(what):
+    config_id = get_user_info("mail_server_setting")
+    data = DBApi("mail_server_settings").get(what, "WHERE id = " + str(config_id))
+    p = data[0]
+    return p[0]
+
+
 def get_user_connection_data():
     data = [
         "imap-mail.outlook.com",
