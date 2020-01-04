@@ -20,7 +20,10 @@ from imbox import Imbox
 
 from py_modules import backend_api
 from py_modules.db_api import DBApi
+from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
+
+import multiprocessing
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s",
@@ -105,6 +108,9 @@ def mail_parsing(uid, message, unread_uid, directory):
     }
 
     DBApi("mails").insert(data=mail_payload)
+
+    with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
+        json.dump(appmails, file)
 
     return appmails
 
@@ -496,20 +502,21 @@ def add_contact(name, surname, mail, note, nick):
 
 @eel.expose
 def get_contacts():
+    # @todo: get the contacts list
     pass
 
 
 @eel.expose
 def event():
     # notify the frontend for incoming events
+    # @todo: send a notification
     pass
 
 
 @eel.expose
 def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
     # Regular user registration
-    print(mail_server_id)
-    DBApi("user").insert(data={
+    data = {
         "name": name,
         "surname": "",
         "nickname": "",
@@ -522,12 +529,15 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
         "is_logged_in": True,
         "mail_server_setting": mail_server_id,
         "datetime": datetime.datetime.now(),
-    })
+    }
+    UserApi.user_registration(datagram=data)
 
 
 @eel.expose
 def custom_user_registrarion(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
+    # @todo set custom imap settings on the server and get id
     return True
+
 
 @eel.expose
 def set_flag(uid):
@@ -538,9 +548,10 @@ def set_flag(uid):
 def say_hello_py(x):
     print("Hello from %s" % x)
 
+
 @eel.expose
 def get_email_platform_settings(id):
-    result = DBApi("mail_server_settings").get(field="*", expression="WHERE ID = "+str(id))
+    result = DBApi("mail_server_settings").get(field="*", expression="WHERE ID = " + str(id))
     fe_data = []
     for data in result:
         fe_data.append(
@@ -555,6 +566,7 @@ def get_email_platform_settings(id):
             }
         )
     return fe_data
+
 
 @eel.expose
 def get_email_platform():
@@ -577,8 +589,11 @@ def guess_imap(mail):
         or tries to guess the server from the e-mail address.
         It checks if the server answers to a socket call"""
     if mail:
-        domain = re.search(r"(@)(.*)(\.)", mail).group(2)
-        complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+        try:
+            domain = re.search(r"(@)(.*)(\.)", mail).group(2)
+            complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+        except Exception as e:
+            return False
     else:
         return False
     server = {
@@ -618,8 +633,11 @@ def guess_smtp(mail):
         or tries to guess the server from the e-mail address.
         It checks if the server answers to a socket call"""
     if mail:
-        domain = re.search(r"(@)(.*)(\.)", mail).group(2)
-        complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+        try:
+            domain = re.search(r"(@)(.*)(\.)", mail).group(2)
+            complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+        except Exception as e:
+            return False
     else:
         return False
     server = {
@@ -653,42 +671,8 @@ def guess_smtp(mail):
                 return False
 
 
-# DA SPOSTARE SU THREAD DEDICATO
-def download_every_email():
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account information correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages()
-        logging.debug("Downloading every mail from the server")
-
-        i = 0
-        print(all_inbox_messages.__len__())
-        for uid, message in reversed(all_inbox_messages):
-            # Check if the mail exists in the local database
-            percentage = i / all_inbox_messages.__len__()
-            print(percentage * 100)
-            print(i)
-            print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
-            i = i + 1
-            query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
-            if not query:
-                try:
-                    print("DOWNLOADING THE MAIL")
-                    mail_parsing(uid, message, "1", "Inbox")
-                except Exception as e:
-                    pass
+def sync():
+    SYNCApi().download_new_mails_from_server()
 
 
 if __name__ == "__main__":
@@ -697,4 +681,7 @@ if __name__ == "__main__":
 
     template = UserApi.check_if_user_exists()
 
-    eel.start(template, mode="electron")  # Start
+    p = multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=())
+    p.start()
+
+    eel.start(template, mode="electron", block=True)  # Start
