@@ -91,7 +91,7 @@ class ImapApi:
             "To_mail": str(to_mail),
             "Subject": str(subject),
             "bodyHTML": str(sanitized_body),
-            "bodyPLAIN": str(message.body["plain"]),
+            "bodyPLAIN": str(message.body["plain"][0]),
             "attach": attach_names,
             "directory": directory,
             "datetimes": str(""),
@@ -103,6 +103,7 @@ class ImapApi:
             "uuid": uid.decode(),
             "subject": str(subject),
             "user_id": str(self.userId),
+            "folder": directory,
             "opened": unread,
             "datetime": date_message,
         }
@@ -321,7 +322,6 @@ class ImapApi:
         ) as imbox:
             imbox.delete(uuid)
             return True
-
 
     def download_all_mailbox(self):
         with Imbox(
