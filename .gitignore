@@ -10,3 +10,5 @@ web/img/loadmp3.pl
 .db/mails/*.json
 
 .db/mails/attach/*
+
+venv/
