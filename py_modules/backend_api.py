@@ -14,6 +14,12 @@ def get_user_info(what):
     return p[0]
 
 
+def get_user_id():
+    data = DBApi("user").get("id", "WHERE is_logged_in = 1")
+    p = data[0]
+    return p[0]
+
+
 def get_user_connection_data():
     data = [
         "imap-mail.outlook.com",
@@ -29,7 +35,6 @@ def get_user_connection_data():
 def update_starred():
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-
         # Gets all messages after the day x
 
         # to get the mails of today:
@@ -77,7 +82,6 @@ def get_mails(year, month, day):
 
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-
         # Gets all messages after the day x
 
         # to get the mails of today:
@@ -137,7 +141,6 @@ def first_download():
     """
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-
         # Gets all messages from the inbox
         all_inbox_messages = imbox.messages()
         print(len(all_inbox_messages))
