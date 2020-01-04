@@ -57,6 +57,16 @@ class DBApi:
             for setting in datastore:
                 DBApi("mail_server_settings").insert(setting)
 
+    def get_next_uuid_set(self, uid, user_id, folder):
+        cur = self.conn.cursor()
+        cur.execute("SELECT uuid FROM mails WHERE uuid > "+str(uid)+" AND user_id = "+str(user_id)+" AND folder_name = "+folder+" ORDER BY uuid LIMIT 30")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+
 
 ### CREATE ALL THE TABLES
 
@@ -98,6 +108,7 @@ queries = {"create_table":
             uuid text NOT NULL, -- the mail uuid
             subject text, -- the mail subject
             user_id text, -- the user id
+            folder text, -- the folder name
             opened integer, -- flag to check if email has been opened
             datetime datetime -- datetime from the imap server
            );""",
