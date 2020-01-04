@@ -1,24 +1,16 @@
 import sqlite3
 
-from py_modules import backend_api
+from py_modules.db_api import DBApi
 
 
 class UserApi:
-    userId = ""
-    userName = ""
+    def __init__(self):
+        self.userId = self.get_user_id()
+        self.userName = self.get_username()
 
-    def __init__(self, userId, userName):
-        self.userId = userId
-        self.userName = userName
-
-    def get_username(self):
-        if self.userId:
-            return self.userId
-        else:
-            return backend_api.get_user_info("mail")
-    
-    def get_user_id(self):
-        return self.userId
+    @staticmethod
+    def user_registration(datagram):
+        DBApi("user").insert(data=datagram)
 
     @staticmethod
     def check_if_user_exists():
@@ -28,7 +20,20 @@ class UserApi:
         cursor.execute("SELECT id FROM user;")
         # print(cursor.fetchall())
         if not cursor.fetchall():
+            # UPLOADING THE CONFIG IN THE DB
+            DBApi.upload_config()
             return "registration.html"
         else:
             return "index.html"
 
+    @staticmethod
+    def get_user_id():
+        data = DBApi("user").get("id", "WHERE is_logged_in = 1")
+        p = data[0]
+        return p[0]
+
+    @staticmethod
+    def get_username():
+        data = DBApi("user").get("name", "WHERE is_logged_in = 1")
+        p = data[0]
+        return p[0]
