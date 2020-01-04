@@ -1,100 +1,118 @@
 import datetime
+import json
 
 from imbox import Imbox
 
+from py_modules import backend_api
 from py_modules.db_api import DBApi
 
 
-def mail_parsing_from_server(uid, message, unread_uid, directory):
-    """
-    This function clean, parse and save a mail in the local filesystem.
-    """
-    if len(message.body["html"]) < 1:
-        sanitized_body = str(message.body["plain"][0])
-    else:
-        sanitized_body = str(message.body["html"][0])
+class ImapApi:
+    def __init__(self):
+        self.userId = backend_api.get_user_id()
+        self.userName = backend_api.get_user_info("mail")
+        self.password = backend_api.get_user_info("password")
+        self.server = backend_api.get_user_server_config("server_imap")
+        # Getting the imap configuration
 
-    from_name = message.sent_from[0]["name"] if message.sent_from else ""
-    from_mail = message.sent_from[0]["email"] if message.sent_from else ""
-    to_name = message.sent_to[0]["name"] if message.sent_to else ""
-    to_mail = message.sent_to[0]["email"] if message.sent_to else ""
+        ## Converting
+        if backend_api.get_user_server_config("ssl") == "True":
+            self.ssl = True
+        else:
+            self.ssl = False
 
-    date_message = message.date
+        if backend_api.get_user_server_config("ssl_context") == "True":
+            self.ssl_context = True
+        else:
+            self.ssl_context = None
 
-    # If html body is empty, load the plain
-    if sanitized_body == "[]":
-        sanitized_body = message.body["plain"]
+        if backend_api.get_user_server_config("starttls") == "True":
+            self.starttls = True
+        else:
+            self.starttls = False
 
-    if uid.decode() in unread_uid:
-        unread = False
-    else:
-        unread = True
+    def mail_parsing_from_server(self, uid, message, unread_uid, directory):
+        """
+        This function clean, parse and save a mail in the local filesystem.
+        """
+        if len(message.body["html"]) < 1:
+            sanitized_body = str(message.body["plain"][0])
+        else:
+            sanitized_body = str(message.body["html"][0])
 
-    # Getting the subject
-    subject = str(message.subject) if str(message.subject) else "(No subject)"
+        from_name = message.sent_from[0]["name"] if message.sent_from else ""
+        from_mail = message.sent_from[0]["email"] if message.sent_from else ""
+        to_name = message.sent_to[0]["name"] if message.sent_to else ""
+        to_mail = message.sent_to[0]["email"] if message.sent_to else ""
 
-    # saving attach in the local disk and on the db
-    attach_names = []
-    for attach in message.attachments:
-        attach_name = attach.get("filename")
-        attach_names.append(attach_name)
-        content = attach.get("content").read()
+        date_message = message.date
 
-        if not attach_name or not content:
-            return
+        # If html body is empty, load the plain
+        if sanitized_body == "[]":
+            sanitized_body = message.body["plain"]
 
-        with open(".db/mails/attach/" + uid.decode() + "_" + attach_name, "wb") as file:
-            file.write(content)
-        payload = {
+        if uid.decode() in unread_uid:
+            unread = False
+        else:
+            unread = True
+
+        # Getting the subject
+        subject = str(message.subject) if str(message.subject) else "(No subject)"
+
+        # saving attach in the local disk and on the db
+        attach_names = []
+        for attach in message.attachments:
+            attach_name = attach.get("filename")
+            attach_names.append(attach_name)
+            content = attach.get("content").read()
+
+            if not attach_name or not content:
+                return
+
+            with open(".db/mails/attach/" + uid.decode() + "_" + attach_name, "wb") as file:
+                file.write(content)
+            payload = {
+                "uuid": uid.decode(),
+                "subject": subject,
+                "real_filename": attach_name,
+                "saved_as": uid.decode() + "_" + attach_name,
+                "user_id": "1",
+                "deleted": "false",
+                "datetime": date_message,
+            }
+            # saving the file information into the db
+            DBApi("files").insert(data=payload)
+
+        appmails = {
+            "uid": uid.decode(),
+            "From_name": str(from_name),
+            "from_mail": str(from_mail),
+            "To_name": str(to_name),
+            "To_mail": str(to_mail),
+            "Subject": str(subject),
+            "bodyHTML": str(sanitized_body),
+            "bodyPLAIN": str(message.body["plain"]),
+            "attach": attach_names,
+            "directory": directory,
+            "datetimes": str(""),
+            "readed": unread,
+        }
+
+        # inserting the mail in the database
+        mail_payload = {
             "uuid": uid.decode(),
-            "subject": subject,
-            "real_filename": attach_name,
-            "saved_as": uid.decode() + "_" + attach_name,
-            "user_id": "1",
-            "deleted": "false",
+            "subject": str(subject),
+            "user_id": str(self.userId),
+            "opened": unread,
             "datetime": date_message,
         }
-        # saving the file information into the db
-        DBApi("files").insert(data=payload)
 
-    appmails = {
-        "uid": uid.decode(),
-        "From_name": str(from_name),
-        "from_mail": str(from_mail),
-        "To_name": str(to_name),
-        "To_mail": str(to_mail),
-        "Subject": str(subject),
-        "bodyHTML": str(sanitized_body),
-        "bodyPLAIN": str(message.body["plain"]),
-        "attach": attach_names,
-        "directory": directory,
-        "datetimes": str(""),
-        "readed": unread,
-    }
+        DBApi("mails").insert(data=mail_payload)
 
-    # inserting the mail in the database
-    mail_payload = {
-        "uuid": uid.decode(),
-        "subject": str(subject),
-        "user_id": "1",
-        "datetime": date_message,
-    }
+        with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
+            json.dump(appmails, file)
 
-    DBApi("mails").insert(data=mail_payload)
-
-    return appmails
-
-
-class ImapApi:
-    def __init__(self, userId, userName, password, server):
-        self.userId = userId
-        self.userName = userName
-        self.password = password
-        self.server = server
-        # Getting the imap configuration
-        self.ssl = True
-        self.ssl_context = None
-        self.starttls = False
+        return appmails
 
     def check_imap_connection(self):
         """
@@ -191,7 +209,28 @@ class ImapApi:
                 unread_uid.append(uid.decode())
 
             for uid, message in reversed(all_inbox_messages):
-                mail = mail_parsing_from_server(uid, message, unread_uid, "Unread")
+                mail = self.mail_parsing_from_server(uid, message, unread_uid, "Unread")
+                mails.append(mail)
+
+            return mails
+
+    def save_greater_than_uuid_from_server(self, uuid):
+        """
+        Getting messaged greater than the given uuid
+        """
+        mails = []
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            all_inbox_messages = imbox.messages(uid__range=str(uuid) + ':*')
+
+            for uid, message in (all_inbox_messages):
+                mail = self.mail_parsing_from_server(uid, message, "1", "Inbox")
                 mails.append(mail)
 
             return mails
@@ -226,7 +265,7 @@ class ImapApi:
             parsed_mails = []
             mails = imbox.messages(subject=given_subject)
             for uid, mail in mails:
-                parsed_mails.append(mail_parsing_from_server(uid, mail, "1", ""))
+                parsed_mails.append(self.mail_parsing_from_server(uid, mail, "1", ""))
 
             return parsed_mails
 
@@ -245,7 +284,7 @@ class ImapApi:
             parsed_mails = []
             mails = imbox.messages(date__on=datetime.date(year, month, day))
             for uid, mail in mails:
-                parsed_mails.append(mail_parsing_from_server(uid, mail, "1", ""))
+                parsed_mails.append(self.mail_parsing_from_server(uid, mail, "1", ""))
 
             return parsed_mails
 
@@ -264,7 +303,7 @@ class ImapApi:
             parsed_mails = []
             mails = imbox.messages(flagged=True)
             for uid, mail in mails:
-                parsed_mails.append(mail_parsing_from_server(uid, mail, "1", "Flagged"))
+                parsed_mails.append(self.mail_parsing_from_server(uid, mail, "1", "Flagged"))
 
             return parsed_mails
 
@@ -282,3 +321,33 @@ class ImapApi:
         ) as imbox:
             imbox.delete(uuid)
             return True
+
+
+    def download_all_mailbox(self):
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+
+            # Gets all messages after the day x
+            all_inbox_messages = imbox.messages()
+
+            i = 0
+            print(all_inbox_messages.__len__())
+            for uid, message in reversed(all_inbox_messages):
+                # Check if the mail exists in the local database
+                percentage = i / all_inbox_messages.__len__()
+                print(percentage * 100)
+                print(i)
+                print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
+                i = i + 1
+                query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
+                if not query:
+                    try:
+                        self.mail_parsing_from_server(uid, message, "1", "Inbox")
+                    except Exception as e:
+                        pass
