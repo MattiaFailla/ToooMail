@@ -3,7 +3,7 @@ import json
 
 
 class DBApi:
-    def __init__(self, table):
+    def __init__(self, table = None):
         self.table = table
         self.DB_LOCATION = ".db/app.db"
         self.conn = sqlite3.connect(DB_LOCATION)
@@ -37,6 +37,25 @@ class DBApi:
 
     def update(self):
         return
+
+    def get_last_email_id(self, user_id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT uuid FROM mails WHERE user_id = "+str(user_id)+" ORDER BY ID DESC LIMIT 1")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+
+        return data
+
+    @staticmethod
+    def upload_config():
+        """ UPLOADING APP SETTINGS """
+        with open(".db/mail_server.json", "r") as f:
+            datastore = json.load(f)
+
+            for setting in datastore:
+                DBApi("mail_server_settings").insert(setting)
 
 
 ### CREATE ALL THE TABLES
@@ -120,9 +139,4 @@ for query in queries.items():
 # saves result
 conn.commit()
 
-""" UPLOADING APP SETTINGS """
-with open(".db/mail_server.json", "r") as f:
-    datastore = json.load(f)
 
-    for setting in datastore:
-        DBApi("mail_server_settings").insert(setting)
