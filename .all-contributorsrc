@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "SimoPP",
+      "name": "SimoPP",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/36734723?v=4",
+      "profile": "https://github.com/SimoPP",
+      "contributions": [
+        "ideas",
+        "infra",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "ToooMail",
+  "projectOwner": "MattiaFailla",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
