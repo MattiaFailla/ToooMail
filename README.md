@@ -30,6 +30,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
+    <td align="center"><a href="https://github.com/SimoPP"><img src="https://avatars0.githubusercontent.com/u/36734723?v=4" width="100px;" alt=""/><br /><sub><b>SimoPP</b></sub></a><br /><a href="#ideas-SimoPP" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-SimoPP" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/MattiaFailla/ToooMail/commits?author=SimoPP" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/iflare3g"><img src="https://avatars1.githubusercontent.com/u/15129491?v=4" width="100px;" alt=""/><br /><sub><b>Mirco Grillo</b></sub></a><br /><a href="https://github.com/MattiaFailla/ToooMail/commits?author=iflare3g" title="Code">💻</a> <a href="#infra-iflare3g" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#platform-iflare3g" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
