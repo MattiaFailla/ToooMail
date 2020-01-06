@@ -15,7 +15,23 @@
         "plugin",
         "question",
         "tool",
-        "test"
+        "test"],
+      "login": "SimoPP",
+      "name": "SimoPP",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/36734723?v=4",
+      "profile": "https://github.com/SimoPP",
+      "contributions": [
+        "ideas",
+        "infra",
+        "code"],
+      "login": "iflare3g",
+      "name": "Mirco Grillo",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15129491?v=4",
+      "profile": "https://github.com/iflare3g",
+      "contributions": [
+        "code",
+        "infra",
+        "platform"
       ]
     }
   ],
