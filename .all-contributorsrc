@@ -6,6 +6,17 @@
   "commit": false,
   "contributors": [
     {
+      "login": "MattiaFailla",
+      "name": "itsMett",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/11872425?v=4",
+      "profile": "https://github.com/MattiaFailla",
+      "contributions": [
+        "code",
+        "ideas",
+        "infra",
+        "maintenance",
+        "design",
+        "content"],
       "login": "basic-ph",
       "name": "Pietro Fumiani",
       "avatar_url": "https://avatars2.githubusercontent.com/u/35763852?v=4",
