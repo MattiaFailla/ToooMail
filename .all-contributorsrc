@@ -1,0 +1,28 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "basic-ph",
+      "name": "Pietro Fumiani",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/35763852?v=4",
+      "profile": "https://github.com/basic-ph",
+      "contributions": [
+        "platform",
+        "plugin",
+        "question",
+        "tool",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "ToooMail",
+  "projectOwner": "MattiaFailla",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
