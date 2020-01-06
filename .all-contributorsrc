@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "MattiaFailla",
+      "name": "itsMett",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/11872425?v=4",
+      "profile": "https://github.com/MattiaFailla",
+      "contributions": [
+        "code",
+        "ideas",
+        "infra",
+        "maintenance",
+        "design",
+        "content"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "ToooMail",
+  "projectOwner": "MattiaFailla",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
