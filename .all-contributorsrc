@@ -6,6 +6,16 @@
   "commit": false,
   "contributors": [
     {
+      "login": "basic-ph",
+      "name": "Pietro Fumiani",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/35763852?v=4",
+      "profile": "https://github.com/basic-ph",
+      "contributions": [
+        "platform",
+        "plugin",
+        "question",
+        "tool",
+        "test"],
       "login": "SimoPP",
       "name": "SimoPP",
       "avatar_url": "https://avatars0.githubusercontent.com/u/36734723?v=4",
