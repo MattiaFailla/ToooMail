@@ -6,46 +6,6 @@
   "commit": false,
   "contributors": [
     {
-      "login": "Kavuti",
-      "name": "Christian Cavuti",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/38943854?v=4",
-      "profile": "https://github.com/Kavuti",
-      "contributions": [
-        "code",
-        "design",
-        "infra",
-        "ideas",
-        "platform",
-        "tool"],
-      "login": "MattiaFailla",
-      "name": "itsMett",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/11872425?v=4",
-      "profile": "https://github.com/MattiaFailla",
-      "contributions": [
-        "code",
-        "ideas",
-        "infra",
-        "maintenance",
-        "design",
-        "content"],
-      "login": "basic-ph",
-      "name": "Pietro Fumiani",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/35763852?v=4",
-      "profile": "https://github.com/basic-ph",
-      "contributions": [
-        "platform",
-        "plugin",
-        "question",
-        "tool",
-        "test"],
-      "login": "SimoPP",
-      "name": "SimoPP",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/36734723?v=4",
-      "profile": "https://github.com/SimoPP",
-      "contributions": [
-        "ideas",
-        "infra",
-        "code"],
       "login": "iflare3g",
       "name": "Mirco Grillo",
       "avatar_url": "https://avatars1.githubusercontent.com/u/15129491?v=4",
@@ -54,6 +14,17 @@
         "code",
         "infra",
         "platform"
+      ]
+    },
+    {
+      "login": "nocturn9x",
+      "name": "Mattia",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/23456189?v=4",
+      "profile": "https://fiveshots.tech",
+      "contributions": [
+        "code",
+        "security",
+        "ideas"
       ]
     }
   ],
