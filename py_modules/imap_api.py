@@ -1,5 +1,7 @@
 import datetime
 import json
+import os.path
+from os import path
 
 from imbox import Imbox
 
@@ -35,6 +37,10 @@ class ImapApi:
         """
         This function clean, parse and save a mail in the local filesystem.
         """
+        # CHECK IF FILE EXIST
+        if path.exists("./.db/mails/" + str(uid.decode()) + ".json"):
+            return
+
         if len(message.body["html"]) < 1:
             sanitized_body = str(message.body["plain"][0])
         else:
@@ -78,7 +84,7 @@ class ImapApi:
                 "saved_as": uid.decode() + "_" + attach_name,
                 "user_id": "1",
                 "deleted": "false",
-                "datetime": date_message,
+                "added": date_message,
             }
             # saving the file information into the db
             DBApi("files").insert(data=payload)
@@ -91,7 +97,7 @@ class ImapApi:
             "To_mail": str(to_mail),
             "Subject": str(subject),
             "bodyHTML": str(sanitized_body),
-            "bodyPLAIN": str(message.body["plain"][0]),
+            "bodyPLAIN": str(message.body["plain"]),
             "attach": attach_names,
             "directory": directory,
             "datetimes": str(""),
@@ -105,12 +111,12 @@ class ImapApi:
             "user_id": str(self.userId),
             "folder": directory,
             "opened": unread,
-            "datetime": date_message,
+            "received": date_message,
         }
 
         DBApi("mails").insert(data=mail_payload)
 
-        with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
+        with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
             json.dump(appmails, file)
 
         return appmails
@@ -132,6 +138,33 @@ class ImapApi:
                 return True
         except Exception as e:
             return False, e
+
+    def get_today_mails(self):
+        """
+        Getting inbox messages from the server
+        """
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            # Gets all messages
+            now = datetime.datetime.now()
+            new_messagers = imbox.messages(date__on=datetime.date(now.year, now.month, now.day))
+            unread_msgs = imbox.messages(unread=True)
+            unread_uid = []
+            for uid, msg in unread_msgs:
+                unread_uid.append(uid.decode())
+
+            for uid, message in reversed(new_messagers):
+                mail = self.mail_parsing_from_server(uid, message, unread_uid, "inbox")
+                # saving the mail in the local FS (file system)
+                with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
+                    json.dump(mail, file)
+            return True
 
     def get_inbox_from_server(self):
         """
@@ -230,7 +263,7 @@ class ImapApi:
         ) as imbox:
             all_inbox_messages = imbox.messages(uid__range=str(uuid) + ':*')
 
-            for uid, message in (all_inbox_messages):
+            for uid, message in reversed(all_inbox_messages):
                 mail = self.mail_parsing_from_server(uid, message, "1", "Inbox")
                 mails.append(mail)
 
@@ -351,3 +384,52 @@ class ImapApi:
                         self.mail_parsing_from_server(uid, message, "1", "Inbox")
                     except Exception as e:
                         pass
+
+    def get_starred_from_server(self):
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            all_inbox_messages = imbox.messages(flagged=True)
+            unread_msgs = imbox.messages(unread=True)
+            unread_uid = []
+            for uid, msg in unread_msgs:
+                unread_uid.append(uid.decode())
+
+            for uid, message in reversed(all_inbox_messages):
+                self.mail_parsing_from_server(uid, message, unread_uid, "Starred")
+
+    def get_sent(self):
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            all_inbox_messages = imbox.messages(sent_from=self.userName)
+            unread_msgs = imbox.messages(unread=True)
+            unread_uid = []
+            for uid, msg in unread_msgs:
+                unread_uid.append(uid.decode())
+
+            for uid, message in reversed(all_inbox_messages):
+                self.mail_parsing_from_server(uid, message, unread_uid, "Sent")
+
+    def mark_as_seen(self, uid):
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            imbox.mark_seen(uid)
+
+
