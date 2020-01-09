@@ -49,13 +49,11 @@ class DBApi:
 
         return data
 
-    def get_mail(self, date=None, user_id=0, folder="Inbox"):
-        if date is not None:
+    def get_mail(self, step=None, user_id=0, folder="Inbox"):
+        if step is not None:
             cur = self.conn.cursor()
-            date = date.date()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND received BETWEEN '" + str(
-                    date) + "' AND '" + str(date) + "' AND folder LIKE '%" + folder + "%'")
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND id < "+str(step)+"")
             rows = cur.fetchall()
             data = []
             for row in rows:

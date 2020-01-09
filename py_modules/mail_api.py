@@ -28,45 +28,48 @@ class MailApi:
             })
         return files
 
-    def get_mails(self, days):
-        if days == 0:
+    def get_mails(self, step):
+        if step == 0:
             ImapApi().get_today_mails()
 
         # return mails day by day
-        d = datetime.today() - timedelta(days=days)
-        mails: List[Any] = DBApi("mails").get_mail(date=d, user_id=self.userId)
+        step = step+60
+        mails: List[Any] = DBApi("mails").get_mail(step=step, user_id=self.userId)
 
         # now we need to create the dict
         dict_mails = []
         for mail in mails:
             # Getting json info
             # read file
-            with open(".db/mails/" + str(mail[1]) + ".json", "r") as myfile:
-                data = myfile.read()
+            try:
+                with open(".db/mails/" + str(mail[1]) + ".json", "r") as myfile:
+                    data = myfile.read()
 
-            # parse file
-            obj = json.loads(data)
+                # parse file
+                obj = json.loads(data)
 
-            # getting attach info
-            self.get_attach_info_from_db(mail[0])
+                # getting attach info
+                self.get_attach_info_from_db(mail[1])
+                print(mail[1])
+                # Creating the dict
+                tempmail = {
+                    "uid": mail[1],
+                    "From_name": str(obj['From_name']),
+                    "from_mail": str(obj['from_mail']),
+                    "To_name": str(obj['To_name']),
+                    "To_mail": str(obj['To_mail']),
+                    "Subject": str(mail[2]),
+                    "bodyHTML": str(obj['bodyHTML']),
+                    "bodyPLAIN": str(obj['bodyPLAIN']),
+                    "attach": str(obj['attach']),
+                    "directory": str(mail[4]),
+                    "datetimes": str(mail[6]),
+                    "readed": str(mail[5]),
+                }
 
-            # Creating the dict
-            tempmail = {
-                "uid": mail[1],
-                "From_name": str(obj['From_name']),
-                "from_mail": str(obj['from_mail']),
-                "To_name": str(obj['To_name']),
-                "To_mail": str(obj['To_mail']),
-                "Subject": str(mail[2]),
-                "bodyHTML": str(obj['bodyHTML']),
-                "bodyPLAIN": str(obj['bodyPLAIN']),
-                "attach": str(obj['attach']),
-                "directory": str(mail[4]),
-                "datetimes": str(mail[6]),
-                "readed": str(mail[5]),
-            }
-
-            dict_mails.append(tempmail)
+                dict_mails.append(tempmail)
+            except Exception as e:
+                pass
 
         return dict_mails
 

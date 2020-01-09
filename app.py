@@ -161,9 +161,9 @@ def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, star
 
 
 @eel.expose
-def get_mails(days):
+def get_mails(step):
     # days -> number of days to be - from today
-    return MailApi().get_mails(days=days)
+    return MailApi().get_mails(step=step)
 
 
 @eel.expose
