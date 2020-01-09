@@ -20,6 +20,8 @@ from imbox import Imbox
 
 from py_modules import backend_api
 from py_modules.db_api import DBApi
+from py_modules.imap_api import ImapApi
+from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
 
@@ -104,7 +106,7 @@ def mail_parsing(uid, message, unread_uid, directory):
         "uuid": uid.decode(),
         "subject": str(subject),
         "user_id": "1",
-        "datetime": date_message,
+        "readed": date_message,
     }
 
     DBApi("mails").insert(data=mail_payload)
@@ -159,81 +161,20 @@ def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, star
 
 
 @eel.expose
-def get_mails(year, month, day):
-    # Download all the mails from the DB
-    # backend_api.get_mails(year,month,day)
-    # mails = db_api.get("emails","*","WHERE datetimes = "+datetime.date(year, month, day))
-
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account informations correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(date__on=datetime.date(year, month, day))
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
-
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "inbox")
-            # saving the mail in the local FS (file system)
-            with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
-                json.dump(mail, file)
-
-            mails.append(mail)
-
-        return mails
+def get_mails(days):
+    # days -> number of days to be - from today
+    return MailApi().get_mails(days=days)
 
 
 @eel.expose
 def mark_as_seen(uid):
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-        imbox.mark_seen(uid)
+    SYNCApi.mark_as_seen(uid=uid)
+    return True
 
 
 @eel.expose
 def get_number_unread():
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-        logging.info("Account informations correct. Connected.")
-
-        # Gets all messages after the day x
-
-        # to get the mails of today:
-        all_unread_message = imbox.messages(unread=True)
-        return len(all_unread_message)
+    return SYNCApi().get_number_unread()
 
 
 @eel.expose
@@ -268,132 +209,102 @@ def get_unread():
         return mails
 
 
+# FROM FOLDER
 @eel.expose
 def get_starred():
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account information correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(flagged=True)
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
-
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Flagged")
-            mails.append(mail)
-
-        return mails
-
-
-@eel.expose
-def get_sent():
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account information correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(sent_from=username)
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
-
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Sent")
-            mails.append(mail)
-
-        return mails
+    SYNCApi.get_folder(foldername="Starred")
+    return MailApi().get_folder("Starred")
 
 
 @eel.expose
 def get_unwanted():
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account information correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(folder="Junk")
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
-
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Junk")
-            mails.append(mail)
-
-        return mails
+    SYNCApi.get_folder(foldername="Junk")
+    return MailApi().get_folder("Junk")
 
 
 @eel.expose
 def get_deleted():
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
+    SYNCApi.get_folder(foldername="Deleted")
+    return MailApi().get_folder("Deleted")
 
-        logging.info("Account information correct. Connected.")
 
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(folder="Deleted")
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
+# FROM :SPECIFICS:
+@eel.expose
+def get_flagged():
+    SYNCApi.get_flagged()
+    return MailApi().get_folder("Flagged")
 
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Deleted")
-            mails.append(mail)
 
-        return mails
+@eel.expose
+def get_sent():
+    SYNCApi.get_sent()
+    return MailApi().get_folder("Sent")
+
+
+@eel.expose
+def delete_mail(uid):
+    # @todo: delete the mail both local and remote
+    DBApi("mails").delete(what=uid, where="")
+
+
+@eel.expose
+def add_note(text, uid, attach):
+    DBApi("notes").insert({"uid": uid, "attach": attach, "text": text})
+
+
+@eel.expose
+def del_note(uid):
+    DBApi("notes").delete(what=uid, where="")
+
+
+@eel.expose
+def add_contact(name, surname, mail, note, nick):
+    DBApi("contact").insert({"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick})
+
+
+@eel.expose
+def get_contacts():
+    # @todo: get the contacts list
+    pass
+
+
+@eel.expose
+def event():
+    # notify the frontend for incoming events
+    # @todo: send a notification
+    pass
+
+
+@eel.expose
+def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
+    # Regular user registration
+    data = {
+        "name": name,
+        "surname": "",
+        "nickname": "",
+        "bio": "",
+        "mail": mail,
+        "password": passw,
+        "profilepic": "",
+        "imapserver": imapserver,
+        "smtpserver": smtpserver,
+        "is_logged_in": True,
+        "mail_server_setting": mail_server_id,
+        "datetime": datetime.datetime.now(),
+    }
+    UserApi.user_registration(datagram=data)
+
+
+@eel.expose
+def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
+    # @todo set custom imap settings on the server and get id
+    return True
+
+
+@eel.expose
+def set_flag(uid):
+    # @todo: set flag remote and local!
+    return True
 
 
 @eel.expose
@@ -445,103 +356,6 @@ def send_mail(account, to, subject, body, attach):
     )
     mailServer.sendmail(account, to, msg.as_string())
     mailServer.close()
-
-
-@eel.expose
-def get_flagged():
-    mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
-    with Imbox(
-            imapserver,
-            username=username,
-            password=passw,
-            ssl=True,
-            ssl_context=None,
-            starttls=False,
-    ) as imbox:
-
-        logging.info("Account information correct. Connected.")
-
-        # Gets all messages after the day x
-        all_inbox_messages = imbox.messages(flagged=True)
-        unread_msgs = imbox.messages(unread=True)
-        unread_uid = []
-        for uid, msg in unread_msgs:
-            unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
-
-        for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Flagged")
-            mails.append(mail)
-
-        return mails
-
-
-@eel.expose
-def delete_mail(uid):
-    DBApi("mails").delete(what=uid, where="")
-    backend_api.update_mails()
-
-
-@eel.expose
-def add_note(text, uid, attach):
-    DBApi("notes").insert({"uid": uid, "attach": attach})
-
-
-@eel.expose
-def del_note(uid):
-    DBApi("notes").delete(what=uid, where="")
-
-
-@eel.expose
-def add_contact(name, surname, mail, note, nick):
-    DBApi("contact").insert({"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick})
-
-
-@eel.expose
-def get_contacts():
-    # @todo: get the contacts list
-    pass
-
-
-@eel.expose
-def event():
-    # notify the frontend for incoming events
-    # @todo: send a notification
-    pass
-
-
-@eel.expose
-def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
-    # Regular user registration
-    data = {
-        "name": name,
-        "surname": "",
-        "nickname": "",
-        "bio": "",
-        "mail": mail,
-        "password": passw,
-        "profilepic": "",
-        "imapserver": imapserver,
-        "smtpserver": smtpserver,
-        "is_logged_in": True,
-        "mail_server_setting": mail_server_id,
-        "datetime": datetime.datetime.now(),
-    }
-    UserApi.user_registration(datagram=data)
-
-
-@eel.expose
-def custom_user_registrarion(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
-    # @todo set custom imap settings on the server and get id
-    return True
-
-
-@eel.expose
-def set_flag(uid):
-    return True
 
 
 @eel.expose  # Expose this function to Javascript
@@ -680,8 +494,9 @@ if __name__ == "__main__":
     eel.say_hello_js("Server connected.")  # Call a Javascript function
 
     template = UserApi.check_if_user_exists()
-
-    p = multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=())
-    p.start()
+    if template == "index.html":
+        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
+        for p in processes:
+            p.start()
 
     eel.start(template, mode="electron", block=True)  # Start
