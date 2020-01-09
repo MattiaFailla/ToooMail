@@ -3,10 +3,11 @@ import json
 
 
 class DBApi:
-    def __init__(self, table = None):
+    def __init__(self, table=None):
         self.table = table
         self.DB_LOCATION = ".db/app.db"
-        self.conn = sqlite3.connect(DB_LOCATION)
+        self.conn = sqlite3.connect(DB_LOCATION, detect_types=sqlite3.PARSE_DECLTYPES |
+                                                              sqlite3.PARSE_COLNAMES)
 
     def insert(self, data):
         cols = ", ".join('"{}"'.format(col) for col in data.keys())
@@ -40,13 +41,35 @@ class DBApi:
 
     def get_last_email_id(self, user_id):
         cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE user_id = "+str(user_id)+" ORDER BY ID DESC LIMIT 1")
+        cur.execute("SELECT uuid FROM mails WHERE user_id = " + str(user_id) + " ORDER BY uuid DESC LIMIT 1")
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
 
         return data
+
+    def get_mail(self, date=None, user_id=0, folder="Inbox"):
+        if date is not None:
+            cur = self.conn.cursor()
+            date = date.date()
+            cur.execute(
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND received BETWEEN '" + str(
+                    date) + "' AND '" + str(date) + "' AND folder LIKE '%" + folder + "%'")
+            rows = cur.fetchall()
+            data = []
+            for row in rows:
+                data.append(row)
+            return data
+        else:
+            cur = self.conn.cursor()
+            cur.execute(
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND folder LIKE '%" + folder + "%'")
+            rows = cur.fetchall()
+            data = []
+            for row in rows:
+                data.append(row)
+            return data
 
     @staticmethod
     def upload_config():
@@ -59,13 +82,35 @@ class DBApi:
 
     def get_next_uuid_set(self, uid, user_id, folder):
         cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE uuid > "+str(uid)+" AND user_id = "+str(user_id)+" AND folder_name = "+folder+" ORDER BY uuid LIMIT 30")
+        cur.execute("SELECT uuid FROM mails WHERE uuid > " + str(uid) + " AND user_id = " + str(
+            user_id) + " AND folder = '" + folder + "' ORDER BY uuid LIMIT 30")
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
         return data
 
+    def get_files_information(self, uid, user_id):
+        cur = self.conn.cursor()
+        cur.execute(
+            "SELECT real_filename, deleted FROM files WHERE uuid = " + str(uid) + " AND user_id = " + str(user_id) + "")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+    def mark_as_seen(self, uid):
+        cur = self.conn.cursor()
+        cur.execute(
+            "UPDATE mails SET opened = 1 WHERE uuid = " + str(uid) + "")
+        self.conn.commit()
+
+    def get_unopened(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM mails WHERE opened = 0")
+        (number_of_rows,) = cur.fetchone()
+        return number_of_rows
 
 
 ### CREATE ALL THE TABLES
@@ -110,7 +155,7 @@ queries = {"create_table":
             user_id text, -- the user id
             folder text, -- the folder name
             opened integer, -- flag to check if email has been opened
-            datetime datetime -- datetime from the imap server
+            received datetime -- datetime from the imap server
            );""",
            "notes_table":
                """CREATE TABLE IF NOT EXISTS notes (
@@ -118,7 +163,7 @@ queries = {"create_table":
             uuid text NOT NULL, -- the mail uuid
             note text, -- the note body
             files text, -- attached file, must contain fs reference
-            datetime datetime -- datetime of the last saved note
+            saved datetime -- datetime of the last saved note
            );""",
            "contacts_table":
                """CREATE TABLE IF NOT EXISTS contacts (
@@ -128,7 +173,7 @@ queries = {"create_table":
             nick text,
             mail text NOT NULL,
             note text,
-            datetime datetime
+            added datetime
            );""",
            "files_table":
                """CREATE TABLE IF NOT EXISTS files (
@@ -139,7 +184,7 @@ queries = {"create_table":
                     saved_as text, -- filename in the local fs
                     user_id text, -- the user id (owner of the file)
                     deleted text, -- flag to indicate if the file has been gracefully deleted
-                    datetime datetime -- datetime from server
+                    added datetime -- datetime from server
                );"""
            }
 
@@ -149,5 +194,3 @@ for query in queries.items():
 
 # saves result
 conn.commit()
-
-
