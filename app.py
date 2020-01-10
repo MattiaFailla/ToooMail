@@ -482,6 +482,10 @@ def guess_smtp(mail):
             else:
                 return False
 
+@eel.expose
+def get_username():
+    return UserApi.get_username()
+
 
 def sync():
     SYNCApi().download_new_mails_from_server()
