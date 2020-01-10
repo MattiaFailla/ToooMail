@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="apple-touch-icon" type="image/png" href="https://static.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
-    <meta name="apple-mobile-web-app-title" content="CodePen">
-    <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
-    <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
     <title>Session Locked</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Heebo:300" rel="stylesheet">
@@ -18,8 +14,10 @@
             height: 100%;
             width: 100%;
             background-image: url(img/lock.jpg);
+            background-position: center center;
             background-size: cover;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             color: white;
         }
 
@@ -55,7 +53,7 @@
             width: 80px;
             height: 80px;
             border-radius: 100%;
-            background-image: url(https://images.unsplash.com/photo-1486578077620-8a022ddd481f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60);
+            background-image: url(img/user.png);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -78,7 +76,7 @@
         #password {
             font-size: 17px;
             color: white;
-            background-color: hsla(0, 0%, 45%, 90%);
+            background-color: hsla(0, 0%, 45%, 0.7);
             border: none;
             border-radius: 5px;
             height: 30px;
@@ -106,7 +104,7 @@
             align-items: center;
             background-color: rgb(170,170,170);
             border: none;
-            color: rgba(0,0,0,.7);
+            color: rgba(0,0,0,0.7);
             padding: 3px;
             margin-left: 5px;
             margin-right: -35px;
@@ -169,7 +167,7 @@
         </button>
     </div>
 </div>
-<a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@shotbycerqueira?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Shot by Cerqueira"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Shot by Cerqueira</span></a>
+<p style="text-align: center;">Photo by NASA on Unsplash</p>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script>
@@ -206,8 +204,8 @@
 
     $('.arrow').on('click', () => {
         if ($('#password').val().toUpperCase() === password) {
-            $('.content').slideUp();
-            $('.tbar').css('color', 'black').css('background-color', 'rgb(200,200,200)');
+            $("html").fadeOut(800);
+
             // REDIRECT
         } else {
             $('#password').effect("shake");}
