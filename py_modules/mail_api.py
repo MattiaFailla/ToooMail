@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+import dateutil.parser
 from typing import List, Any
 
 from py_modules import backend_api
@@ -29,11 +30,10 @@ class MailApi:
         return files
 
     def get_mails(self, step):
-        if step == 0:
-            ImapApi().get_today_mails()
+        ImapApi().get_today_mails()
 
         # return mails day by day
-        step = step+60
+        step = step + 60
         mails: List[Any] = DBApi("mails").get_mail(step=step, user_id=self.userId)
 
         # now we need to create the dict
@@ -49,8 +49,13 @@ class MailApi:
                 obj = json.loads(data)
 
                 # getting attach info
-                self.get_attach_info_from_db(mail[1])
+                shipped_with = self.get_attach_info_from_db(mail[1])
                 print(mail[1])
+                # parsing datetime
+                received = mail[6]
+                strdate = dateutil.parser.parse(received)
+                strdate = strdate.strftime("%d/%m/%Y %H:%M:%S")
+
                 # Creating the dict
                 tempmail = {
                     "uid": mail[1],
@@ -63,18 +68,19 @@ class MailApi:
                     "bodyPLAIN": str(obj['bodyPLAIN']),
                     "attach": str(obj['attach']),
                     "directory": str(mail[4]),
-                    "datetimes": str(mail[6]),
+                    "datetimes": str(strdate),
                     "readed": str(mail[5]),
                 }
 
                 dict_mails.append(tempmail)
             except Exception as e:
+                print("Errore elaborazione: ")
+                print(e)
                 pass
 
         return dict_mails
 
-
-    def get_folder(self, foldername = "Inbox"):
+    def get_folder(self, foldername="Inbox"):
         mails: List[Any] = DBApi("mails").get_mail(user_id=self.userId, folder=foldername)
 
         # now we need to create the dict
@@ -110,4 +116,3 @@ class MailApi:
             dict_mails.append(tempmail)
 
         return dict_mails
-

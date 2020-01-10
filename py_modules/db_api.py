@@ -53,7 +53,7 @@ class DBApi:
         if step is not None:
             cur = self.conn.cursor()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND id < "+str(step)+"")
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " ORDER BY received DESC LIMIT 100")
             rows = cur.fetchall()
             data = []
             for row in rows:
@@ -62,7 +62,7 @@ class DBApi:
         else:
             cur = self.conn.cursor()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND folder LIKE '%" + folder + "%'")
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " AND folder LIKE '%" + folder + "%' ORDER BY received DESC")
             rows = cur.fetchall()
             data = []
             for row in rows:
@@ -153,7 +153,7 @@ queries = {"create_table":
             user_id text, -- the user id
             folder text, -- the folder name
             opened integer, -- flag to check if email has been opened
-            received datetime -- datetime from the imap server
+            received text -- datetime from the imap server
            );""",
            "notes_table":
                """CREATE TABLE IF NOT EXISTS notes (
@@ -161,7 +161,7 @@ queries = {"create_table":
             uuid text NOT NULL, -- the mail uuid
             note text, -- the note body
             files text, -- attached file, must contain fs reference
-            saved datetime -- datetime of the last saved note
+            saved text -- datetime of the last saved note
            );""",
            "contacts_table":
                """CREATE TABLE IF NOT EXISTS contacts (
@@ -171,7 +171,7 @@ queries = {"create_table":
             nick text,
             mail text NOT NULL,
             note text,
-            added datetime
+            added text
            );""",
            "files_table":
                """CREATE TABLE IF NOT EXISTS files (
@@ -182,7 +182,7 @@ queries = {"create_table":
                     saved_as text, -- filename in the local fs
                     user_id text, -- the user id (owner of the file)
                     deleted text, -- flag to indicate if the file has been gracefully deleted
-                    added datetime -- datetime from server
+                    added text -- datetime from server
                );"""
            }
 

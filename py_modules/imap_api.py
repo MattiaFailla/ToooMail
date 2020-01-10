@@ -1,6 +1,7 @@
 import datetime
+from email.utils import parsedate_to_datetime
 import json
-import os.path
+import re
 from os import path
 
 from imbox import Imbox
@@ -52,6 +53,9 @@ class ImapApi:
         to_mail = message.sent_to[0]["email"] if message.sent_to else ""
 
         date_message = message.date
+        date_time_obj = parsedate_to_datetime(date_message)
+
+        iso_date = date_time_obj.isoformat()
 
         # If html body is empty, load the plain
         if sanitized_body == "[]":
@@ -84,7 +88,7 @@ class ImapApi:
                 "saved_as": uid.decode() + "_" + attach_name,
                 "user_id": "1",
                 "deleted": "false",
-                "added": date_message,
+                "added": str(iso_date),
             }
             # saving the file information into the db
             DBApi("files").insert(data=payload)
@@ -100,7 +104,7 @@ class ImapApi:
             "bodyPLAIN": str(message.body["plain"]),
             "attach": attach_names,
             "directory": directory,
-            "datetimes": str(""),
+            "datetimes": str(iso_date),
             "readed": unread,
         }
 
@@ -111,7 +115,7 @@ class ImapApi:
             "user_id": str(self.userId),
             "folder": directory,
             "opened": unread,
-            "received": date_message,
+            "received": str(iso_date),
         }
 
         DBApi("mails").insert(data=mail_payload)
@@ -160,7 +164,7 @@ class ImapApi:
                 unread_uid.append(uid.decode())
 
             for uid, message in reversed(new_messagers):
-                mail = self.mail_parsing_from_server(uid, message, unread_uid, "inbox")
+                mail = self.mail_parsing_from_server(uid, message, unread_uid, "Inbox")
                 # saving the mail in the local FS (file system)
                 with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
                     json.dump(mail, file)
@@ -431,5 +435,3 @@ class ImapApi:
                 starttls=self.starttls,
         ) as imbox:
             imbox.mark_seen(uid)
-
-
