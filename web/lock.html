@@ -18,6 +18,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.5);
             color: white;
         }
 
@@ -78,7 +79,7 @@
             color: white;
             background-color: hsla(0, 0%, 45%, 0.7);
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             height: 30px;
             padding: 0 5px;
 
@@ -116,7 +117,7 @@
 
         button:active {
             border: none;
-            background-color: hsla(0, 0%, 75%, 90%);
+            background-color: hsla(0, 0%, 75%, 0.7);
         }
 
         .toolbar > div > i {
@@ -147,7 +148,7 @@
         }
     </script>
 </head>
-<body translate="no" onload="startTime()">
+<body translate="no" onload="setUsername()">
 <nav class='tbar'>
     <span class='percent'>ToooMail</span>
     <i class="fas fa-envelope">
@@ -160,7 +161,7 @@
     <div class='input-wrap'>
         <div class='pic'></div>
         <div class='wrap'>
-            <h3 class='name' id="name">...</h3>
+            <h3 class='name' id="username">...</h3>
         </div>
         <input type='password' id='password' placeholder='Enter Password' autocomplete='off'>
         <button class='arrow'><i class="fas fa-arrow-right"></i>
@@ -175,10 +176,10 @@
         let userName = await eel.get_username()();
         let userNameField = document.getElementById("username");
         userNameField.innerHTML = userName;
+        startTime();
     }
 
     function startTime() {
-        setUsername();
         let today = new Date();
         let h = today.getHours();
         let m = today.getMinutes();
@@ -204,9 +205,13 @@
 
     $('.arrow').on('click', () => {
         if ($('#password').val().toUpperCase() === password) {
-            $("html").fadeOut(800);
-
-            // REDIRECT
+            $("content").fadeOut(800);
+            $("html").fadeOut(2800);
+            $("html").promise().done(function(){
+                // will be called when all the animations on the queue finish
+                // REDIRECT
+                window.location.href = "/index.html";
+            });
         } else {
             $('#password').effect("shake");}
     });

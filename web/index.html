@@ -301,6 +301,14 @@ async function sendmail(account, to, subject, body, attach) {
     })
 }
 
+ async function lockSession() {
+     // pass arguments to python
+     //eel.lock_screen;
+
+     // redirect to lock page
+     window.location.href = "/lock.html";
+ }
+
 // Change page
 function change_page(page) {
   /*if ($("#progress").length === 0) {
@@ -395,6 +403,7 @@ window.setInterval(function(){
             <!-- @todo add custom pages -->
            <div class="user-profile"><i class="fa fa-user"></i>
             <i class="fa fa-cog"></i>
+               <i class="fa fa-lock" onclick="lockSession()"></i>
             <i class="fa fa-sign-out"></i></div>
         </aside>
 
