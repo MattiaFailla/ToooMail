@@ -10,7 +10,12 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MattiaFailla/Jelly/master/docs/img/jellyserver.gif" alt="Demo-server" width="800" />
+
+<video width="100%" controls>
+  <source src="https://github.com/MattiaFailla/ToooMail/blob/master/docs/tooomail.mp4" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
 </p>
 
 * **Simple**: Extremely simple to use - so simple that it almost feels like magic!
