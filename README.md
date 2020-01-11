@@ -48,7 +48,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 Follow these instructions to make ToooMail operative.
 
 ### Prerequisites
-Jelly is written with Python 3.6+ so make sure you have installed this version or above
+ToooMail is written with Python 3.6+ so make sure you have installed this version or above
 
 Clone this repo on your pc, then install requirements.
 
@@ -81,11 +81,6 @@ If you have any problems, please read our wiki here.
 [![-----------------------------------------------------](https://raw.githubusercontent.com/MattiaFailla/Jelly/master/docs/img/colored.png)](#contribute)
 ## What we are working on:
 Please refer to the [issue page](https://github.com/MattiaFailla/ToooMail/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License ![alt text](https://img.shields.io/npm/l/express.svg)
 [MIT](https://choosealicense.com/licenses/mit/)
