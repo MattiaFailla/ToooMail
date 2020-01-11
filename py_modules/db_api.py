@@ -132,7 +132,7 @@ queries = {"create_table":
             smtpserver text, -- smtp server address
             is_logged_in integer, -- flag to check if the user is logged in the app
             mail_server_setting, -- external id (mail_server_settings)
-            datetime datetime -- datetime of the user registration
+            created text -- datetime of the user registration
            );""",
 
            "mail_server_settings":
