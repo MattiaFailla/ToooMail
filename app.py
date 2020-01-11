@@ -288,7 +288,7 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
         "smtpserver": smtpserver,
         "is_logged_in": True,
         "mail_server_setting": mail_server_id,
-        "created": datetime.datetime.now(),
+        "created": datetime.datetime.now().isoformat(),
     }
     UserApi.user_registration(datagram=data)
 
