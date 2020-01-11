@@ -23,10 +23,7 @@ class MailApi:
         datastream: List[Any] = DBApi("attach").get_files_information(uid=uid, user_id=self.userId)
         files = []
         for file in datastream:
-            files.append({
-                "filename": file[0],
-                "deleted": file[1]
-            })
+            files.append(file[0])
         return files
 
     def get_mails(self, step):
@@ -66,7 +63,7 @@ class MailApi:
                     "Subject": str(mail[2]),
                     "bodyHTML": str(obj['bodyHTML']),
                     "bodyPLAIN": str(obj['bodyPLAIN']),
-                    "attach": str(obj['attach']),
+                    "attach": obj['attach'],
                     "directory": str(mail[4]),
                     "datetimes": str(strdate),
                     "readed": str(mail[5]),

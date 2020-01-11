@@ -501,7 +501,8 @@ if __name__ == "__main__":
         for p in processes:
             p.start()
         eel.start(template, mode="electron", block=True)  # Start
-        for p in processes:
-            p.terminate()
+        for proc in processes:
+            print("Closing process")
+            proc.close()
     else:
         eel.start(template, mode="electron", block=True)  # Start
