@@ -1,6 +1,7 @@
 import sqlite3
 import json
 
+DB_LOCATION = ".db/app.db"
 
 class DBApi:
     def __init__(self, table=None):

@@ -498,11 +498,8 @@ if __name__ == "__main__":
     template = UserApi.check_if_user_exists()
     if template == "index.html":
         processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
-        for p in processes:
-            p.start()
+        #for p in processes:
+        #    p.start()
         eel.start(template, mode="electron", block=True)  # Start
-        for proc in processes:
-            print("Closing process")
-            proc.close()
     else:
         eel.start(template, mode="electron", block=True)  # Start
