@@ -4,7 +4,7 @@
     "server_imap": "imap.gmail.com",
     "ssl": "True",
     "ssl_context": "None",
-    "starttls": "True"
+    "starttls": "False"
   },{
     "service_name":"yahoo",
     "server_smtp": "smtp.mail.yahoo.com",
