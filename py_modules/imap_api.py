@@ -123,6 +123,7 @@ class ImapApi:
         with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
             json.dump(appmails, file)
 
+        print(appmails)
         return appmails
 
     def check_imap_connection(self):
@@ -166,8 +167,9 @@ class ImapApi:
             for uid, message in reversed(new_messagers):
                 mail = self.mail_parsing_from_server(uid, message, unread_uid, "Inbox")
                 # saving the mail in the local FS (file system)
-                with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
-                    json.dump(mail, file)
+                if mail:
+                    with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
+                        json.dump(mail, file)
             return True
 
     def get_inbox_from_server(self):
