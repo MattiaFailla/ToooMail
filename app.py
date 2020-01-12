@@ -500,6 +500,6 @@ if __name__ == "__main__":
         processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
         #for p in processes:
         #    p.start()
-        eel.start(template, mode="electron", block=True)  # Start
+        eel.start(template, block=True)  # Start
     else:
-        eel.start(template, mode="electron", block=True)  # Start
+        eel.start(template, block=True)  # Start
