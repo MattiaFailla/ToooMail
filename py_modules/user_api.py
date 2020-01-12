@@ -15,16 +15,24 @@ class UserApi:
     @staticmethod
     def check_if_user_exists():
         # if user isn't logged -> start the "subscription app" the first time
-        conn = sqlite3.connect(".db/app.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT id FROM user;")
-        # print(cursor.fetchall())
-        if not cursor.fetchall():
-            # UPLOADING THE CONFIG IN THE DB
-            DBApi.upload_config()
-            return "registration.html"
-        else:
-            return "index.html"
+        try:
+            # Creating the sqlite3 database
+            DBApi.create_database()
+
+            conn = sqlite3.connect(".db/app.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM user;")
+            if not cursor.fetchall():
+                # UPLOADING THE CONFIG IN THE DB
+                DBApi.upload_config()
+                return "registration.html"
+            else:
+                return "index.html"
+        except sqlite3.OperationalError as error:
+            print("IL FILE DB NON ESISTE, ERRORE FATALE")
+            print(error)
+
+
 
     @staticmethod
     def get_user_id():
