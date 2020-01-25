@@ -85,15 +85,18 @@ class DBApi:
     def update(self):
         return
 
+    def __del__(self):
+        self.conn.close()
+
 
 class Migration:
     def __init__(self, file_name):
         self.file_name = file_name
-        result = re.search(MIGRATION_FILE_PATTERN, file_name)
-        if result:
-            self.date_string = result.group(1)
-            self.progressive_number = result.group(4)
-            self.name = result.group(5)
+        regex_result = re.search(MIGRATION_FILE_PATTERN, file_name)
+        if regex_result:
+            self.date_string = regex_result.group(1)
+            self.progressive_number = regex_result.group(4)
+            self.name = regex_result.group(5)
             self.date_millis = int((datetime.strptime(self.date_string, "%Y-%m-%d") -
                                     datetime.utcfromtimestamp(0)).total_seconds())
             spec = importlib.util.spec_from_file_location(file_name.replace('.py', ''),
@@ -114,20 +117,21 @@ class Migration:
             raise MigrationException("There are two migrations with same date and progressive number")
 
 
-def validate_migration_execution(current_migration, connection):
+def validate_migration_execution(current_migration, current_connection):
     current_query = "select * from migrations where date_string = ? and progressive_number = ? limit 1"
-    cursor = connection.execute(current_query, (current_migration.date_string, current_migration.progressive_number))
+    cursor = current_connection.execute(current_query,
+                                        (current_migration.date_string, current_migration.progressive_number))
     value = cursor.fetchone()
     if value:
         if value[5] != current_migration.checksum:
-            raise DifferentChecksumMigrationException(
-                f'The migration has been executed with checksum {value[5]} but the value '
-                f'{current_migration.checksum} was found.')
+            exception_message = f'The migration {current_migration.file_name} has been executed with checksum ' \
+                                f'{value[5]} but the value {current_migration.checksum} was found.'
+            raise DifferentChecksumMigrationException(exception_message)
         else:
             raise AlreadyMigratedException(f'The migration {current_migration.file_name} has already been executed.')
 
     current_query = "select * from migrations where date_millis > ? order by date_millis limit 1"
-    cursor = connection.execute(current_query, (current_migration.date_millis,))
+    cursor = current_connection.execute(current_query, (current_migration.date_millis,))
     value = cursor.fetchone()
     if value:
         raise OldStateMigrationException(
@@ -172,10 +176,13 @@ for migration in migrations_list:
         pass
 
 connection.commit()
-
+connection.close()
 
 """ UPLOADING APP SETTINGS """
 with open(".db/mail_server.json", "r") as file:
     for setting in json.load(file):
-        print(setting)
-        # DBApi("mail_server_settings").insert(setting)
+        api = DBApi("mail_server_settings")
+        result = [existing[1] for existing in api.get('*')]
+        # , f'where service_name like \'{setting["service_name"]}\'')
+        if not (setting['service_name'] in result):
+            api.insert(setting)

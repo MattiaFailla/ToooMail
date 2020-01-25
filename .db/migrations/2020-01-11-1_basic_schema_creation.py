@@ -17,31 +17,31 @@ def update():
     );
     
     CREATE TABLE IF NOT EXISTS mail_server_settings (
-        id integer PRIMARY KEY,         -- unique setting entry id
-        service_name text NOT NULL,     -- display name of the service
-        server_smtp text,               -- smtp server address
-        server_imap text,               -- imap server address
-        ssl text,                       -- ssl setting
-        ssl_context text,               -- ssl_context setting
-        starttls text                   -- starttls setting
+        id integer PRIMARY KEY,
+        service_name text NOT NULL,
+        server_smtp text,
+        server_imap text,
+        ssl text,
+        ssl_context text,
+        starttls text
     );
     
     CREATE TABLE IF NOT EXISTS mails (
-        id integer PRIMARY KEY,         -- the entry id
-        uuid text NOT NULL,             -- the mail uuid
-        subject text,                   -- the mail subject
-        user_id text,                   -- the user id
-        folder text,                    -- the folder name
-        opened integer,                 -- flag to check if email has been opened
-        received text                   -- datetime from the imap server
+        id integer PRIMARY KEY,
+        uuid text NOT NULL,
+        subject text,
+        user_id text,
+        folder text,
+        opened integer,
+        received text
     );
     
     CREATE TABLE IF NOT EXISTS notes (
-        id integer PRIMARY KEY,         -- the note entry id
-        uuid text NOT NULL,             -- the mail uuid
-        note text,                      -- the note body
-        files text,                     -- attached file, must contain fs reference
-        saved text                      -- datetime of the last saved note
+        id integer PRIMARY KEY,
+        uuid text NOT NULL,
+        note text,
+        files text,
+        saved text
     );
     
     CREATE TABLE IF NOT EXISTS contacts (
@@ -56,12 +56,12 @@ def update():
     
     CREATE TABLE IF NOT EXISTS files (
         id integer PRIMARY KEY,
-        uuid text NOT NULL,             -- the mail uuid
-        subject text,                   -- the mail subject (redundant)
-        real_filename text,             -- real filename
-        saved_as text,                  -- filename in the local fs
-        user_id text,                   -- the user id (owner of the file)
-        deleted text,                   -- flag to indicate if the file has been gracefully deleted
-        added text                      -- datetime from server
+        uuid text NOT NULL,
+        subject text,
+        real_filename text,
+        saved_as text,
+        user_id text,
+        deleted text,
+        added text
     );"""
 
