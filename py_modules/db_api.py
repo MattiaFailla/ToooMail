@@ -56,9 +56,9 @@ class DBApi:
         self.conn.close()
 
     def insert(self, data):
-        cols = ", ".join('"{}"'.format(col) for col in data.keys())
-        vals = ", ".join(":{}".format(col) for col in data.keys())
-        sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(self.table, cols, vals)
+        columns = ", ".join('"{}"'.format(col) for col in data.keys())
+        values = ", ".join(":{}".format(col) for col in data.keys())
+        sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(self.table, columns, values)
         self.conn.cursor().execute(sql, data)
         self.conn.commit()
         return True
@@ -80,10 +80,18 @@ class DBApi:
         return data
 
     def drop(self):
-        return
+        """
+        TODO Implement drop method.
+        :return:
+        """
+        pass
 
     def update(self):
-        return
+        """
+        TODO Implement update method.
+        :return:
+        """
+        pass
 
     def get_last_email_id(self, user_id):
         cur = self.conn.cursor()
@@ -156,6 +164,7 @@ class DBApi:
         cur.execute("SELECT COUNT(*) FROM mails WHERE opened = 0")
         (number_of_rows,) = cur.fetchone()
         return number_of_rows
+
 
 class Migration:
     def __init__(self, file_name):
