@@ -47,36 +47,36 @@ class OldStateMigrationException(MigrationException):
 
 class DBApi:
 
-    def __init__(self, table):
+    def __init__(self, table=None):
         self.table = table
         self.DB_LOCATION = ".db/app.db"
-        self.conn = sqlite3.connect(DB_LOCATION)
+        self.conn = sqlite3.connect(DB_LOCATION, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+
+    def __del__(self):
+        self.conn.close()
 
     def insert(self, data):
         cols = ", ".join('"{}"'.format(col) for col in data.keys())
         vals = ", ".join(":{}".format(col) for col in data.keys())
-        sql = 'INSERT INTO ? ('
-        sql += '?, ' * len(cols.strip().split(",")) - 1
-        sql += '?)'
-        sql += '?, ' * len(vals.strip().split(",")) - 1
-        sql += '?)'
-        self.conn.cursor().execute(sql, (self.table, self.cols, self.vals))
+        sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(self.table, cols, vals)
+        self.conn.cursor().execute(sql, data)
         self.conn.commit()
         return True
 
     def delete(self, where, what):
         cur = self.conn.cursor()
-        cur.execute('DELETE FROM ? WHERE ? LIKE %?%', (self.table, where, what))
+        cur.execute('DELETE FROM "{0}" WHERE "{1}" LIKE %"{2}"%'.format(self.table, where, what))
         self.conn.commit()
         return
 
-    def get(self, field="", expression=""):
+    def get(self, field: object = "", expression: object = "") -> object:
         cur = self.conn.cursor()
-        cur.execute('SELECT ? FROM ? ?', (field, self.table, expression))
+        cur.execute("SELECT " + field + " FROM " + self.table + " " + expression + "")
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
+
         return data
 
     def drop(self):
@@ -85,9 +85,77 @@ class DBApi:
     def update(self):
         return
 
-    def __del__(self):
-        self.conn.close()
+    def get_last_email_id(self, user_id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT uuid FROM mails WHERE user_id = " + str(user_id) + " ORDER BY uuid DESC LIMIT 1")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
 
+        return data
+
+    def get_mail(self, step=None, user_id=0, folder="Inbox"):
+        if step is not None:
+            cur = self.conn.cursor()
+            cur.execute(
+                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " ORDER BY received DESC LIMIT 100")
+            rows = cur.fetchall()
+            data = []
+            for row in rows:
+                data.append(row)
+            return data
+        else:
+            cur = self.conn.cursor()
+            cur.execute(
+                "SELECT * FROM mails WHERE user_id = " + str(
+                    user_id) + " AND folder LIKE '%" + folder + "%' ORDER BY received DESC")
+            rows = cur.fetchall()
+            data = []
+            for row in rows:
+                data.append(row)
+            return data
+
+    @staticmethod
+    def upload_config():
+        """ UPLOADING APP SETTINGS """
+        with open(".db/mail_server.json", "r") as f:
+            datastore = json.load(f)
+
+            for setting in datastore:
+                DBApi("mail_server_settings").insert(setting)
+
+    def get_next_uuid_set(self, uid, user_id, folder):
+        cur = self.conn.cursor()
+        cur.execute("SELECT uuid FROM mails WHERE uuid > " + str(uid) + " AND user_id = " + str(
+            user_id) + " AND folder = '" + folder + "' ORDER BY uuid LIMIT 30")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+    def get_files_information(self, uid, user_id):
+        cur = self.conn.cursor()
+        cur.execute(
+            "SELECT real_filename, deleted FROM files WHERE uuid = " + str(uid) + " AND user_id = " + str(user_id) + "")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+    def mark_as_seen(self, uid):
+        cur = self.conn.cursor()
+        cur.execute(
+            "UPDATE mails SET opened = 1 WHERE uuid = " + str(uid) + "")
+        self.conn.commit()
+
+    def get_unopened(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM mails WHERE opened = 0")
+        (number_of_rows,) = cur.fetchone()
+        return number_of_rows
 
 class Migration:
     def __init__(self, file_name):
