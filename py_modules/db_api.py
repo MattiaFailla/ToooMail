@@ -207,12 +207,15 @@ def validate_migration_execution(current_migration, current_connection):
         else:
             raise AlreadyMigratedException(f'The migration {current_migration.file_name} has already been executed.')
 
-    current_query = "select * from migrations where date_millis > ? order by date_millis limit 1"
-    cursor = current_connection.execute(current_query, (current_migration.date_millis,))
+    current_query = "select * from migrations where date_millis >= ? and progressive_number >= ? " \
+                    "order by date_millis limit 1"
+    cursor = current_connection.execute(current_query, (current_migration.date_millis,
+                                                        current_migration.progressive_number))
     value = cursor.fetchone()
     if value:
         raise OldStateMigrationException(
-            f'There current migration state ({value[2]}) is more recent than {current_migration.date_string}')
+            f'There current migration state ({value[1]}/{value[3]}) is more recent than '
+            f'{current_migration.date_string}/{current_migration.progressive_number}')
 
 
 def get_sorted_migrations(current_directory):
