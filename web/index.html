@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToooMail</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
+  <script src="https://use.typekit.net/hoy3lrg.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body translate="no">
+<div id="window">
+
+  <!-- LATERAL MENU -->
+
+
+  <section id="menu">
+    <div class="header">
+      <div class="logo-wrap">
+        <img src="img/icons/aperture.svg" alt="Notifications" class="svg">
+        ToooMail
+      </div>
+      <div class="icon-wrap">
+        <span class="tooltip" data-title="Notifications">
+        <img src="img/icons/bell.svg" alt="Notifications" class="svg">
+        </span>
+      </div>
+    </div>
+    <div class="content">
+      <button>
+        New message
+      </button>
+      <ul id="categories">
+        <li class="selected">
+          <img src="img/icons/inbox.svg" alt="Inbox" class="svg">
+          Inbox
+          <span class="badge">3</span>
+        </li>
+        <li>
+          <img src="img/icons/star.svg" alt="Marked" class="svg">
+          Marked
+        </li>
+        <li>
+          <img src="img/icons/edit-2.svg" alt="Drafts" class="svg">
+          Drafts
+          <span class="badge">2</span>
+        </li>
+        <li>
+          <img src="img/icons/trash-2.svg" alt="Deleted" class="svg">
+          Deleted
+        </li>
+      </ul>
+      <ul id="custom-categories">
+        <li>Personal</li>
+        <li>Work</li>
+        <li><span>Add category</span></li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- EMAIL ROW -->
+
+
+  <section id="emails">
+    <div class="header">
+      <div class="icon-wrap">
+<span class="tooltip" data-title="Remove">
+<img class="svg tooltip" src="img/icons/trash-2.svg" alt="Remove">
+</span>
+        <span class="tooltip" data-title="Search">
+<img class="svg tooltip" src="img/icons/search.svg" alt="Search" title="Search">
+</span>
+        <span class="tooltip" data-title="Move to folder">
+<img class="svg tooltip" src="img/icons/folder.svg" alt="Move to folder" title="Move to folder">
+</span>
+      </div>
+    </div>
+    <div class="content">
+      <ul id="emails-list">
+        <li class="selected">
+          <div class="left-col">
+            <div class="avatar">M</div>
+            <span class="tooltip" data-title="More">
+              <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
+              </span>
+          </div>
+          <div class="right-col">
+            <img class="svg" src="img/icons/star.svg" alt="More">
+            <p class="sender">Melvin Arnold</p>
+            <h4 class="title">Do Androids Dream of Electric Sheep?</h4>
+            <p class="bread-text-preview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est.</p>
+            <p class="recieved">3 min ago</p>
+          </div>
+        </li>
+        <li class="marked">
+          <div class="left-col">
+            <div class="avatar">J</div>
+            <span class="tooltip" data-title="More">
+                <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
+                </span>
+          </div>
+          <div class="right-col">
+            <img class="svg" src="img/icons/star.svg" alt="More">
+            <p class="sender">Jason Owens</p>
+            <h4 class="title">I Was Told There'd Be Cake</h4>
+            <p class="bread-text-preview">Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est.</p>
+            <p class="recieved">1 day ago</p>
+          </div>
+        </li>
+        <li>
+          <div class="left-col">
+            <div class="avatar">E</div>
+            <span class="tooltip" data-title="More">
+<img class="svg" src="img/icons/more-horizontal.svg" alt="More">
+</span>
+          </div>
+          <div class="right-col">
+            <img class="svg" src="img/icons/star.svg" alt="More">
+            <p class="sender">Edward Michael</p>
+            <h4 class="title">Extremely Loud and Incredibly Close</h4>
+            <p class="bread-text-preview">Nullam a lacus cursus, tincidunt orci in, mattis ipsum. Quisque volutpat ultricies pretium.</p>
+            <p class="recieved">2 days ago</p>
+          </div>
+        </li>
+        <li>
+          <div class="left-col">
+            <div class="avatar">C</div>
+            <span class="tooltip" data-title="More">
+<img class="svg" src="img/icons/more-horizontal.svg" alt="More">
+</span>
+          </div>
+          <div class="right-col">
+            <img class="svg" src="img/icons/star.svg" alt="More">
+            <p class="sender">Carolyn Hardin</p>
+            <h4 class="title">Brave New World </h4>
+            <p class="bread-text-preview">Maecenas non leo vel ante porta posuere. Proin sed efficitur odio.</p>
+            <p class="recieved">2 days ago</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EMAIL BODY -->
+
+  <section id="preview">
+    <div class="header">
+      <div class="icon-wrap">
+        <span class="tooltip" data-title="More">
+        <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
+        </span>
+      </div>
+    </div>
+    <div class="content-wrap">
+      <div class="actions">
+        <button class="primary">Reply</button>
+        <button class="secondary">Forward</button>
+      </div>
+      <div class="quick-actions">
+        <span class="tooltip" data-title="Tag">
+        <img src="img/icons/star.svg" alt="Star" class="svg">
+        </span>
+        <span class="tooltip" data-title="Tag">
+        <img src="img/icons/tag.svg" alt="Tag" class="svg">
+        </span>
+                <span class="tooltip" data-title="Print">
+        <img src="img/icons/printer.svg" alt="Print" class="svg">
+        </span>
+      </div>
+      <div class="content">
+        <div class="content-box">
+          <p class="date">1st February 2018</p>
+          <h2>Do Androids Dream of Electric Sheep?</h2>
+          <p class="bread-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
+            Cheers,
+            <span class="sender">Melvin Arnold</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://use.fontawesome.com/15af25ac7b.js'></script>
+<script id="rendered-js">
+  /*
+   * Replace all SVG images with inline SVG
+   */
+  jQuery('img.svg').each(function () {
+    var $img = jQuery(this);
+    var imgID = $img.attr('id');
+    var imgClass = $img.attr('class');
+    var imgURL = $img.attr('src');
+
+    jQuery.get(imgURL, function (data) {
+      // Get the SVG tag, ignore the rest
+      var $svg = jQuery(data).find('svg');
+
+      // Add replaced image's ID to the new SVG
+      if (typeof imgID !== 'undefined') {
+        $svg = $svg.attr('id', imgID);
+      }
+      // Add replaced image's classes to the new SVG
+      if (typeof imgClass !== 'undefined') {
+        $svg = $svg.attr('class', imgClass + ' replaced-svg');
+      }
+
+      // Remove any invalid XML tags as per http://validator.w3.org
+      $svg = $svg.removeAttr('xmlns:a');
+
+      // Check if the viewport is set, if the viewport is not set the SVG wont't scale.
+      if (!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
+        $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'));
+      }
+
+      // Replace image with new SVG
+      $img.replaceWith($svg);
+
+    }, 'xml');
+
+  });
+  //# sourceURL=pen.js
+</script>
+</body>
+</html>
