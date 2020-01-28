@@ -1,8 +1,52 @@
 import sqlite3
 import json
+import os
+import re
+import hashlib
+import importlib
+from datetime import datetime
+
+
+class MigrationException(Exception):
+    """
+    This exception represents a generic error in the execution of the code of a migration.
+    """
+    pass
+
+
+class NotAMigrationException(MigrationException):
+    """
+    This exception is triggered any time a Migration class is built over a file that doesn't respect the naming
+    convention for ToooMail migrations (yyyy-MM-dd-n-migrationName.py).
+    """
+    pass
+
+
+class AlreadyMigratedException(MigrationException):
+    """
+    This exception is triggered when the system tries to execute a migration that has already been executed.
+    """
+    pass
+
+
+class DifferentChecksumMigrationException(MigrationException):
+    """
+    This exception is triggered when the system finds a migration which name or content has been modified since its
+    execution.
+    """
+    pass
+
+
+class OldStateMigrationException(MigrationException):
+    """
+    This exception is triggered when the system finds a not executed migration that has a date older than the last
+    executed migration.
+    """
+    pass
 
 
 class DBApi:
+
     def __init__(self, table):
         self.table = table
         self.DB_LOCATION = ".db/app.db"
@@ -42,90 +86,89 @@ class DBApi:
         return
 
 
-### CREATE ALL THE TABLES
+class Migration:
+    def __init__(self, file_name):
+        self.file_name = file_name
+        result = re.search(MIGRATION_FILE_PATTERN, file_name)
+        if result:
+            self.date_string = result.group(1)
+            self.progressive_number = result.group(4)
+            self.name = result.group(5)
+            self.date_millis = int((datetime.strptime(self.date_string, "%Y-%m-%d") -
+                                    datetime.utcfromtimestamp(0)).total_seconds())
+            module = importlib.import_module('.db.migrations.'+file_name.replace('.py', ''))
+            self.sql_script = module.update().replace('\r\n', '').replace('\n', '')
+            self.checksum = hashlib.md5((self.file_name+self.sql_script).encode()).hexdigest()
+        else:
+            raise NotAMigrationException('The given name does not represent a valid migration')
 
+    def compare_to(self, other):
+        if self.date_millis - other.date_millis != 0:
+            return self.date_millis - other.date_millis
+        elif self.progressive_number - other.progressive_number != 0:
+            return self.progressive_number - other.progressive_number
+        else:
+            raise MigrationException("There are two migrations with same date and progressive number")
+
+
+def validate_migration_execution(current_migration, connection):
+    current_query = "select * from migrations where date_string = ? and progressive_number = ? limit 1"
+    cursor = connection.execute(current_query, (current_migration.date_string, current_migration.progressive_number))
+    value = cursor.fetchone()
+    if value:
+        if value[5] != current_migration.checksum:
+            raise DifferentChecksumMigrationException(
+                f'The migration has been executed with checksum {value[5]} but the value '
+                f'{current_migration.checksum} was found.')
+        else:
+            raise AlreadyMigratedException(f'The migration {current_migration.file_name} has already been executed.')
+
+    current_query = "select * from migrations where date_millis > ? order by date_millis limit 1"
+    cursor = connection.execute(current_query, (current_migration.date_millis,))
+    value = cursor.fetchone()
+    if value:
+        raise OldStateMigrationException(
+            f'There current migration state ({value[2]}) is more recent than {current_migration.date_string}')
+
+
+def get_sorted_migrations(current_directory):
+    migrations = []
+    for file_name in current_directory:
+        try:
+            migrations.append(Migration(file_name))
+        except NotAMigrationException:
+            pass
+    migrations.sort(key=lambda x: (x.date_millis, x.progressive_number))
+    return migrations
+
+
+# EXECUTING MIGRATIONS
+MIGRATION_FILE_PATTERN = r'([0-9]{4}-([0][0-9](?=)|[1][0-2])-([0,1,2][0-9](?=)|[3][0,1]))-([0-9]+)_([a-zA-Z0-9_-]+)\.py'
 DB_LOCATION = ".db/app.db"
-conn = sqlite3.connect(DB_LOCATION)
-c = conn.cursor()
+connection = sqlite3.connect(DB_LOCATION)
+connection.execute('create table if not exists migrations('
+                   'id integer primary key,'
+                   'date_string text,'
+                   'date_millis integer,'
+                   'progressive_number integer,'
+                   'file_name text,'
+                   'checksum text);')
+connection.commit()
+directory = os.listdir('./db/migrations')
+migrations_list = get_sorted_migrations(directory)
+for migration in migrations_list:
+    try:
+        validate_migration_execution(migration, connection)
+        connection.execute(migration.sql_script)
 
-queries = {"create_table":
-    """CREATE TABLE IF NOT EXISTS user (
- id integer PRIMARY KEY,
- name text NOT NULL,
- surname text,
- nickname text,
- bio text,
- mail text,
- password text,
- profilepic text,
- imapserver text,
- smtpserver text,
- is_logged_in text,
- mail_server_setting,
- datetime datetime
-);""",
+        query = 'insert into migrations values ( ( select coalesce(max(id), 0)+1 from migrations ), ?, ?, ?, ?, ?);'
+        connection.execute(query, (migration.date_string, migration.date_millis, migration.progressive_number,
+                                   migration.name, migration.checksum))
+    except AlreadyMigratedException:
+        pass
 
-"mail_server_settings":
-    """CREATE TABLE IF NOT EXISTS mail_server_settings (
- id integer PRIMARY KEY,
- service_name text NOT NULL,
- server_smtp text,
- server_imap text,
- ssl text,
- ssl_context text,
- starttls text
-);""",
-"emails_table":
-    """CREATE TABLE IF NOT EXISTS mails (
- id integer PRIMARY KEY,
- uuid text NOT NULL,
- subject text,
- user_id text,
- datetime datetime
-);""",
-"notes_table":
-    """CREATE TABLE IF NOT EXISTS notes (
- id integer PRIMARY KEY,
- uid text NOT NULL,
- note text,
- files text,
- datetime datetime
-);""",
-"contacts_table":
-    """CREATE TABLE IF NOT EXISTS contacts (
- id integer PRIMARY KEY,
- name text NOT NULL,
- surname text,
- nick text,
- mail text NOT NULL,
- note text,
- datetime datetime
-);""",
-"files_table":
-    """CREATE TABLE IF NOT EXISTS files (
-         id integer PRIMARY KEY,
-         uuid text NOT NULL,
-         subject text,
-         real_filename text,
-         saved_as text,
-         user_id text,
-         deleted text,
-         datetime datetime
-    );"""
-}
+connection.commit()
 
-# execute queries
-for query in queries.items():
-    c.execute(query[1])
-
-# saves result
-conn.commit()
-
-# close the connection
-#conn.close()
-
-
-""" BASIC SQLITE FUNCTIONS """
 
 """ UPLOADING APP SETTINGS """
 with open(".db/mail_server.json", "r") as f:
