@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ToooMail - Loading</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<style>
+.container {
+  width: 100%;
+  height: 100vh;
+  background-image: radial-gradient(circle, white, lightgray);
+}
+
+svg {
+  display: block;
+  width: 600px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+p {
+  display: block;
+  width: 400px;
+  position: absolute;
+  top: 20%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  font-family: 'Monsterrat', Arial, sans-serif;
+  opacity: 0;
+  font-weight: 500;
+  animation: fadeInText 3s 2s ease-out forwards;
+}
+
+@keyframes fadeInText {
+    100% {
+        opacity: 1;
+    }
+}
+
+svg {
+  -webkit-animation: 2s envelope-enter, 2s envelope-pulse 2.75s infinite;
+          animation: 2s envelope-enter, 2s envelope-pulse 2.75s infinite;
+}
+
+#letter-top {
+  -webkit-animation: 1.75s letter-top ease-out;
+          animation: 1.75s letter-top ease-out;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 50% 32%;
+          transform-origin: 50% 32%;
+}
+
+#letter-top-2 {
+  -webkit-animation: 1.75s letter-top-2 ease-out;
+          animation: 1.75s letter-top-2 ease-out;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 50% 32%;
+          transform-origin: 50% 32%;
+}
+
+#letter-bottom {
+  -webkit-animation: 2s letter-bottom;
+          animation: 2s letter-bottom;
+  -webkit-animation-delay: 1s;
+          animation-delay: 1s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+#envelope-back {
+  -webkit-animation: 1s envelope-back;
+          animation: 1s envelope-back;
+  -webkit-animation-delay: 1.5s;
+          animation-delay: 1.5s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+#envelope-top {
+  -webkit-animation: 1.25s envelope-top ease-in-out;
+          animation: 1.25s envelope-top ease-in-out;
+  -webkit-animation-delay: 2s;
+          animation-delay: 2s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 50% 30%;
+          transform-origin: 50% 30%;
+}
+
+#envelope-top-shadow {
+  -webkit-animation: 1.25s envelope-top-shadow;
+          animation: 1.25s envelope-top-shadow;
+  -webkit-animation-delay: 2s;
+          animation-delay: 2s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 50% 30%;
+          transform-origin: 50% 30%;
+}
+
+#envelope-right {
+  -webkit-animation: 1.25s envelope-right ease-in-out;
+          animation: 1.25s envelope-right ease-in-out;
+  -webkit-animation-delay: 2s;
+          animation-delay: 2s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 69.5% 50%;
+          transform-origin: 69.5% 50%;
+}
+
+#envelope-left {
+  -webkit-animation: 1.25s envelope-left ease-in-out;
+          animation: 1.25s envelope-left ease-in-out;
+  -webkit-animation-delay: 1.6s;
+          animation-delay: 1.6s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 30.5% 50%;
+          transform-origin: 30.5% 50%;
+}
+
+#envelope-bottom {
+  -webkit-animation: 1.25s envelope-bottom ease-in-out;
+          animation: 1.25s envelope-bottom ease-in-out;
+  -webkit-animation-delay: 2s;
+          animation-delay: 2s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-transform-origin: 50% 70%;
+          transform-origin: 50% 70%;
+}
+
+@-webkit-keyframes letter-top {
+  0% {
+    -webkit-transform: scaleY(-1) skewX(0deg);
+            transform: scaleY(-1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+  50% {
+    -webkit-transform: scaleY(0) skewX(-10deg);
+            transform: scaleY(0) skewX(-10deg);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #f3f3f3;
+  }
+  100% {
+    -webkit-transform: scaleY(1) skewX(0deg);
+            transform: scaleY(1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+}
+
+@keyframes letter-top {
+  0% {
+    -webkit-transform: scaleY(-1) skewX(0deg);
+            transform: scaleY(-1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+  50% {
+    -webkit-transform: scaleY(0) skewX(-10deg);
+            transform: scaleY(0) skewX(-10deg);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #f3f3f3;
+  }
+  100% {
+    -webkit-transform: scaleY(1) skewX(0deg);
+            transform: scaleY(1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+}
+@-webkit-keyframes letter-top-2 {
+  0% {
+    -webkit-transform: scaleY(-1) skewX(0deg);
+            transform: scaleY(-1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+  50% {
+    -webkit-transform: scaleY(0) skewX(10deg);
+            transform: scaleY(0) skewX(10deg);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #f3f3f3;
+  }
+  100% {
+    -webkit-transform: scaleY(1) skewX(0deg);
+            transform: scaleY(1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+}
+@keyframes letter-top-2 {
+  0% {
+    -webkit-transform: scaleY(-1) skewX(0deg);
+            transform: scaleY(-1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+  50% {
+    -webkit-transform: scaleY(0) skewX(10deg);
+            transform: scaleY(0) skewX(10deg);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #f3f3f3;
+  }
+  100% {
+    -webkit-transform: scaleY(1) skewX(0deg);
+            transform: scaleY(1) skewX(0deg);
+    fill: #e6e6e6;
+  }
+}
+@-webkit-keyframes letter-bottom {
+  from {
+    fill: #e6e6e6;
+  }
+  to {
+    fill: #cdcdcd;
+  }
+}
+@keyframes letter-bottom {
+  from {
+    fill: #e6e6e6;
+  }
+  to {
+    fill: #cdcdcd;
+  }
+}
+@-webkit-keyframes envelope-back {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes envelope-back {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes envelope-enter {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes envelope-enter {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@-webkit-keyframes envelope-pulse {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  25% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes envelope-pulse {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  25% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@-webkit-keyframes envelope-top {
+  0% {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+    fill: #ff6666;
+  }
+  50% {
+    -webkit-transform: scaleY(-1);
+            transform: scaleY(-1);
+    fill: #ff3333;
+  }
+  60% {
+    fill: #990000;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    fill: #ff3333;
+  }
+}
+@keyframes envelope-top {
+  0% {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+    fill: #ff6666;
+  }
+  50% {
+    -webkit-transform: scaleY(-1);
+            transform: scaleY(-1);
+    fill: #ff3333;
+  }
+  60% {
+    fill: #990000;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    fill: #ff3333;
+  }
+}
+@-webkit-keyframes envelope-top-shadow {
+  0% {
+    opacity: 0;
+  }
+  65% {
+    opacity: 0;
+    -webkit-transform: scaleY(1.5);
+            transform: scaleY(1.5);
+  }
+  100% {
+    opacity: .25;
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+  }
+}
+@keyframes envelope-top-shadow {
+  0% {
+    opacity: 0;
+  }
+  65% {
+    opacity: 0;
+    -webkit-transform: scaleY(1.5);
+            transform: scaleY(1.5);
+  }
+  100% {
+    opacity: .25;
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+  }
+}
+@-webkit-keyframes envelope-right {
+  0% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    fill: white;
+  }
+  50% {
+    -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+    fill: #ccc;
+  }
+  60% {
+    fill: #999999;
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    fill: #ccc;
+  }
+}
+@keyframes envelope-right {
+  0% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    fill: white;
+  }
+  50% {
+    -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+    fill: #ccc;
+  }
+  60% {
+    fill: #999999;
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    fill: #ccc;
+  }
+}
+@-webkit-keyframes envelope-left {
+  0% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    fill: white;
+  }
+  50% {
+    -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+    fill: #ccc;
+  }
+  60% {
+    fill: #999999;
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    fill: #ccc;
+  }
+}
+@keyframes envelope-left {
+  0% {
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    fill: white;
+  }
+  50% {
+    -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+    fill: #ccc;
+  }
+  60% {
+    fill: #999999;
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    fill: #ccc;
+  }
+}
+@-webkit-keyframes envelope-bottom {
+  0% {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+    fill: gray;
+  }
+  50% {
+    -webkit-transform: scaleY(-1);
+            transform: scaleY(-1);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #e6e6e6;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    fill: #b3b3b3;
+  }
+}
+@keyframes envelope-bottom {
+  0% {
+    -webkit-transform: scaleY(0);
+            transform: scaleY(0);
+    fill: gray;
+  }
+  50% {
+    -webkit-transform: scaleY(-1);
+            transform: scaleY(-1);
+    fill: #b3b3b3;
+  }
+  60% {
+    fill: #e6e6e6;
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+            transform: scaleY(1);
+    fill: #b3b3b3;
+  }
+}
+</style>
+<script>
+  window.console = window.console || function(t) {};
+</script>
+<script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+</head>
+<body translate="no">
+<div class="container">
+<svg id="envelope" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500">
+<style>
+    .st0{fill:#b3b3b3}.st1{fill:#e6e6e6}.st2{fill:#ccc}
+  </style>
+<path class="st0" d="M440 350H200c-2.8 0-5-2.2-5-5V155c0-2.8 2.2-5 5-5h240c2.8 0 5 2.2 5 5v190c0 2.8-2.2 5-5 5z" id="envelope-back" />
+<path id="letter-bottom" class="st1" d="M198 156h243v189H198z" />
+<path id="letter-top" class="st1" d="M198 156h243v189H198z" />
+<path id="letter-top-2" class="st1" d="M198 156h243v189H198z" />
+<path class="st2" d="M332.2 244.7c2-11.9 109-93.7 109-93.7 2.1 0 3.8 1.5 3.8 3.3v191.9c0 1.8-1.7 3.3-3.8 3.3 0 0-108.2-79.4-109-94.2-.1-2.1-.3-8.6 0-10.6z" id="envelope-right" />
+<path class="st2" d="M307.8 255.8c-2 11.9-109 93.7-109 93.7-2.1 0-3.8-1.5-3.8-3.3V154.3c0-1.8 1.7-3.3 3.8-3.3 0 0 108.2 79.4 109 94.2.1 2.1.3 8.6 0 10.6z" id="envelope-left" />
+<path class="st0" d="M327 249.3c15 1.7 118 97.3 118 97.3 0 1.9-1.9 3.4-4.2 3.4H199.2c-2.3 0-4.2-1.5-4.2-3.4 0 0 100-96.6 118.6-97.3 2.7-.2 10.9-.3 13.4 0z" id="envelope-bottom" />
+<path d="M319.4 295c-3.1 0-7.6-.6-11.1-4.1C274 257 195 154.3 195 154.3c0-2.4 1.9-4.3 4.2-4.3h241.6c2.3 0 4.2 1.9 4.2 4.3 0 0-82 103.6-115.5 136.6-3.1 3-7.1 4.1-10.1 4.1z" fill="gray" id="envelope-top-shadow" />
+<path class="st1" d="M319.4 291c-3.1 0-7.6-.5-11.1-4C274 254 195 154.2 195 154.2c0-2.3 1.9-4.2 4.2-4.2h241.6c2.3 0 4.2 1.9 4.2 4.2 0 0-82 100.8-115.5 132.8-3.1 2.9-7.1 4-10.1 4z" id="envelope-top" />
+</svg>
+<p>ToooMail</p>
+</div>
+</body>
+</html>
