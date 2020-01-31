@@ -6,8 +6,6 @@ from py_modules.imap_api import ImapApi
 
 
 class SYNCApi:
-    __userId = 1
-
     def __init__(self):
         """SYNCApi - Sync between local db and remote server.
         This utility must run
@@ -52,8 +50,8 @@ class SYNCApi:
         DBApi().mark_as_seen(uid=uid)
 
     @staticmethod
-    def get_folder(foldername):
-        ImapApi().get_folder_mails_from_server(folder_name=foldername)
+    def get_folder(folder_name):
+        ImapApi().get_folder_mails_from_server(folder_name=folder_name)
 
     @staticmethod
     def get_flagged():

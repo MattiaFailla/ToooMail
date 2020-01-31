@@ -1,7 +1,6 @@
 import datetime
 from email.utils import parsedate_to_datetime
 import json
-import re
 from os import path
 
 from imbox import Imbox
