@@ -5,6 +5,9 @@ import re
 import hashlib
 import importlib.util
 from datetime import datetime
+import configuration
+
+current_configuration = configuration.get_current()
 
 
 class MigrationException(Exception):
@@ -49,8 +52,8 @@ class DBApi:
 
     def __init__(self, table=None):
         self.table = table
-        self.DB_LOCATION = ".db/app.db"
-        self.conn = sqlite3.connect(DB_LOCATION, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        self.conn = sqlite3.connect(current_configuration.db_location,
+                                    detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 
     def __del__(self):
         self.conn.close()
@@ -127,11 +130,12 @@ class DBApi:
     @staticmethod
     def upload_config():
         """ UPLOADING APP SETTINGS """
-        with open(".db/mail_server.json", "r") as f:
-            datastore = json.load(f)
-
-            for setting in datastore:
-                DBApi("mail_server_settings").insert(setting)
+        for setting in current_configuration.mail_server_settings:
+            api = DBApi("mail_server_settings")
+            result = [existing[1] for existing in api.get('*')]
+            # , f'where service_name like \'{setting["service_name"]}\'')
+            if not (setting['service_name'] in result):
+                api.insert(setting)
 
     def get_next_uuid_set(self, uid, user_id, folder):
         cur = self.conn.cursor()
@@ -231,9 +235,8 @@ def get_sorted_migrations(current_directory):
 
 # EXECUTING MIGRATIONS
 MIGRATION_FILE_PATTERN = r'([0-9]{4}-([0][0-9](?=)|[1][0-2])-([0,1,2][0-9](?=)|[3][0,1]))-([0-9]+)_([a-zA-Z0-9_-]+)\.py'
-DB_LOCATION = ".db/app.db"
 MIGRATIONS_LOCATION = './.db/migrations'
-connection = sqlite3.connect(DB_LOCATION)
+connection = sqlite3.connect(current_configuration.db_location)
 connection.execute('create table if not exists migrations('
                    'id integer primary key,'
                    'date_string text,'
@@ -242,7 +245,7 @@ connection.execute('create table if not exists migrations('
                    'file_name text,'
                    'checksum text);')
 connection.commit()
-directory = os.listdir(MIGRATIONS_LOCATION)
+directory = os.listdir(current_configuration.migrations_location)
 migrations_list = get_sorted_migrations(directory)
 for migration in migrations_list:
     try:
@@ -259,10 +262,9 @@ connection.commit()
 connection.close()
 
 """ UPLOADING APP SETTINGS """
-with open(".db/mail_server.json", "r") as file:
-    for setting in json.load(file):
-        api = DBApi("mail_server_settings")
-        result = [existing[1] for existing in api.get('*')]
-        # , f'where service_name like \'{setting["service_name"]}\'')
-        if not (setting['service_name'] in result):
-            api.insert(setting)
+for setting in current_configuration.mail_server_settings:
+    api = DBApi("mail_server_settings")
+    result = [existing[1] for existing in api.get('*')]
+    # , f'where service_name like \'{setting["service_name"]}\'')
+    if not (setting['service_name'] in result):
+        api.insert(setting)
