@@ -12,3 +12,4 @@ web/img/loadmp3.pl
 .db/mails/attach/*
 
 venv/
+/Pipfile
