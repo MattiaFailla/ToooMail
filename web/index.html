@@ -1,232 +1,728 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="">
 <head>
   <meta charset="UTF-8">
   <title>ToooMail</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
-  <script src="https://use.typekit.net/hoy3lrg.js"></script>
-  <script>try{Typekit.load({ async: true });}catch(e){}</script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body translate="no">
-<div id="window">
-
-  <!-- LATERAL MENU -->
-
-
-  <section id="menu">
-    <div class="header">
-      <div class="logo-wrap">
-        <img src="img/icons/aperture.svg" alt="Notifications" class="svg">
-        ToooMail
+<div class="tooomail-page">
+  <div class="tab-bar">
+    <div class="left">
+      <div class="logo-wrapper">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <rect width="36" height="36" fill="url(#pattern0)" />
+          <defs>
+            <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+              <use xlink:href="#image0" transform="scale(0.005)" />
+            </pattern>
+            <image id="image0" width="200" height="200" xlink:href="data:image/png;base64,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" />
+          </defs>
+        </svg>
+        <p>ToooMail</p>
       </div>
-      <div class="icon-wrap">
-        <span class="tooltip" data-title="Notifications">
-        <img src="img/icons/bell.svg" alt="Notifications" class="svg">
-        </span>
+      <div class="search-area">
+        <button>
+          <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.258 11.667h.659l4.158 4.166-1.242 1.242-4.166-4.158v-.659l-.225-.233a5.393 5.393 0 0 1-3.525 1.308 5.417 5.417 0 1 1 5.416-5.416 5.393 5.393 0 0 1-1.308 3.525l.233.225zm-8.091-3.75a3.745 3.745 0 0 0 3.75 3.75 3.745 3.745 0 0 0 3.75-3.75 3.745 3.745 0 0 0-3.75-3.75 3.745 3.745 0 0 0-3.75 3.75z" fill="#909191" opacity=".8" />
+          </svg>
+        </button>
+        <input type="text" placeholder="Search" />
       </div>
     </div>
-    <div class="content">
+    <div class="right">
       <button>
-        New message
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0 4H4V0H0V4ZM6 16H10V12H6V16ZM4 16H0V12H4V16ZM0 10H4V6H0V10ZM10 10H6V6H10V10ZM12 0V4H16V0H12ZM10 4H6V0H10V4ZM12 10H16V6H12V10ZM16 16H12V12H16V16Z" fill="#909191" />
+        </svg>
       </button>
-      <ul id="categories">
-        <li class="selected">
-          <img src="img/icons/inbox.svg" alt="Inbox" class="svg">
-          Inbox
-          <span class="badge">3</span>
-        </li>
-        <li>
-          <img src="img/icons/star.svg" alt="Marked" class="svg">
-          Marked
-        </li>
-        <li>
-          <img src="img/icons/edit-2.svg" alt="Drafts" class="svg">
-          Drafts
-          <span class="badge">2</span>
-        </li>
-        <li>
-          <img src="img/icons/trash-2.svg" alt="Deleted" class="svg">
-          Deleted
-        </li>
-      </ul>
-      <ul id="custom-categories">
-        <li>Personal</li>
-        <li>Work</li>
-        <li><span>Add category</span></li>
-      </ul>
+      <button>
+        <svg width="15" height="18" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.3" d="M7.00033 4.41675C4.92533 4.41675 3.66699 6.10008 3.66699 8.16675V13.1667H10.3337V8.16675C10.3337 6.10008 9.07533 4.41675 7.00033 4.41675Z" fill="#909191" />
+          <path d="M7.00016 17.3334C7.91683 17.3334 8.66683 16.5834 8.66683 15.6667H5.3335C5.3335 16.5834 6.0835 17.3334 7.00016 17.3334Z" fill="#909191" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0002 8.16671V12.3334L13.6668 14V14.8334H0.333496V14L2.00016 12.3334V8.16671C2.00016 5.60004 3.36683 3.46671 5.75016 2.90004V2.33337C5.75016 1.64171 6.3085 1.08337 7.00016 1.08337C7.69183 1.08337 8.25016 1.64171 8.25016 2.33337V2.90004C10.6418 3.46671 12.0002 5.60837 12.0002 8.16671ZM3.66683 13.1667H10.3335V8.16671C10.3335 6.10004 9.07516 4.41671 7.00016 4.41671C4.92516 4.41671 3.66683 6.10004 3.66683 8.16671V13.1667Z" fill="#909191" />
+        </svg>
+      </button>
+      <button>
+        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="user">
+      </button>
     </div>
-  </section>
-
-
-  <!-- EMAIL ROW -->
-
-
-  <section id="emails">
-    <div class="header">
-      <div class="icon-wrap">
-<span class="tooltip" data-title="Remove">
-<img class="svg tooltip" src="img/icons/trash-2.svg" alt="Remove">
-</span>
-        <span class="tooltip" data-title="Search">
-<img class="svg tooltip" src="img/icons/search.svg" alt="Search" title="Search">
-</span>
-        <span class="tooltip" data-title="Move to folder">
-<img class="svg tooltip" src="img/icons/folder.svg" alt="Move to folder" title="Move to folder">
-</span>
+  </div>
+  <div class="page-content">
+    <div class="side-bar">
+      <div class="side-bar-content">
+        <div class="button-wrapper">
+          <button class="compose-button">
+            <p>COMPOSE</p>
+          </button>
+        </div>
+        <div class="side-bar-items">
+          <div class="section">
+            <input class="nav-item" name="nav" type="radio" id="inbox" checked />
+            <input class="nav-item" name="nav" type="radio" id="starred" />
+            <input class="nav-item" name="nav" type="radio" id="snoozed" />
+            <input class="nav-item" name="nav" type="radio" id="sent" />
+            <input class="nav-item" name="nav" type="radio" id="draft" />
+            <input class="nav-item" name="nav" type="radio" id="spam" />
+            <input class="nav-item" name="nav" type="radio" id="trash" />
+            <div class="item-wrapper">
+              <label for="inbox">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M10.0082 15C8.77484 15 7.7165 14.325 7.13317 13.3334H4.1665V15.8334H15.8332V13.3334H12.8748C12.2998 14.325 11.2332 15 10.0082 15Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.24167 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM15.8333 15.8333H4.16667V13.3333H7.13333C7.70833 14.325 8.775 15 10.0083 15C11.2417 15 12.3 14.325 12.8833 13.3333H15.8333V15.8333ZM11.6667 11.6667H15.8333V4.16667H4.16667V11.6667H8.33333C8.33333 12.5833 9.08333 13.3333 10 13.3333C10.9167 13.3333 11.6667 12.5833 11.6667 11.6667Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Inbox</p>
+                  <p>2</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="starred">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M10.0667 12.75L6.93333 14.6417L7.76667 11.075L5 8.675L8.65 8.35833L10.0667 5L11.4917 8.36667L15.1417 8.68333L12.375 11.0833L13.2083 14.65L10.0667 12.75Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.3415 7.18329L18.3332 7.69996L13.7915 11.6416L15.1498 17.5L9.99984 14.3916L4.84984 17.5L6.2165 11.6416L1.6665 7.69996L7.65817 7.19163L9.99984 1.66663L12.3415 7.18329ZM6.8665 14.725L9.99984 12.8333L13.1415 14.7333L12.3082 11.1666L15.0748 8.76663L11.4248 8.44996L9.99984 5.08329L8.58317 8.44163L4.93317 8.75829L7.69984 11.1583L6.8665 14.725Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Starred</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="snoozed">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M3.77783 10.0001C3.77783 6.56894 6.56894 3.77783 10.0001 3.77783C13.4312 3.77783 16.2223 6.56894 16.2223 10.0001C16.2223 13.4312 13.4312 16.2223 10.0001 16.2223C6.56894 16.2223 3.77783 13.4312 3.77783 10.0001ZM9.11117 10.8889L13.3334 13.4223L14.0001 12.3289L10.4445 10.2223V5.55561H9.11117V10.8889Z" fill="currentcolor" />
+                  <path d="M10.4447 5.55554H9.11133V10.8889L13.3336 13.4222L14.0002 12.3289L10.4447 10.2222V5.55554Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 10C2 5.58222 5.58222 2 10 2C14.4178 2 18 5.58222 18 10C18 14.4178 14.4178 18 10 18C5.58222 18 2 14.4178 2 10ZM3.77778 10C3.77778 13.4311 6.56889 16.2222 10 16.2222C13.4311 16.2222 16.2222 13.4311 16.2222 10C16.2222 6.56889 13.4311 3.77778 10 3.77778C6.56889 3.77778 3.77778 6.56889 3.77778 10Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Snoozed</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="sent">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M3.33301 6.87502L9.59134 7.70836L3.34134 5.02502L3.33301 6.87502Z" fill="currentcolor" />
+                  <path opacity="0.3" d="M3.34134 14.975L9.59134 12.2916L3.33301 13.125L3.34134 14.975Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M1.67484 2.5L1.6665 8.33333L14.1665 10L1.6665 11.6667L1.67484 17.5L19.1665 10L1.67484 2.5ZM3.33317 6.875V5.025L9.5915 7.70833L3.33317 6.875ZM3.3415 13.125V14.975L9.59984 12.2917L3.3415 13.125Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Sent</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="draft">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M10.8333 3.33325H5V16.6666H15V7.49992H10.8333V3.33325Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5.00016 1.66663H11.6668L16.6668 6.66663V16.6666C16.6668 17.5833 15.9168 18.3333 15.0002 18.3333H4.99183C4.07516 18.3333 3.3335 17.5833 3.3335 16.6666V3.33329C3.3335 2.41663 4.0835 1.66663 5.00016 1.66663ZM5.00016 16.6666H15.0002V7.49996H10.8335V3.33329H5.00016V16.6666Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Draft</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="spam">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M7.58317 4.16663L4.1665 7.58329V12.4166L7.58317 15.8333H12.4165L15.8332 12.4166V7.58329L12.4165 4.16663H7.58317ZM9.99984 14.1666C9.5415 14.1666 9.1665 13.7916 9.1665 13.3333C9.1665 12.875 9.5415 12.5 9.99984 12.5C10.4582 12.5 10.8332 12.875 10.8332 13.3333C10.8332 13.7916 10.4582 14.1666 9.99984 14.1666ZM9.1665 11.6666H10.8332V5.83329H9.1665V11.6666Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.89167 2.5H13.1083L17.5 6.89167V13.1083L13.1083 17.5H6.89167L2.5 13.1083V6.89167L6.89167 2.5ZM12.4167 15.8333L15.8333 12.4167V7.58333L12.4167 4.16667H7.58333L4.16667 7.58333V12.4167L7.58333 15.8333H12.4167Z" fill="currentcolor" />
+                  <path d="M9.99984 14.1667C10.4601 14.1667 10.8332 13.7936 10.8332 13.3333C10.8332 12.8731 10.4601 12.5 9.99984 12.5C9.5396 12.5 9.1665 12.8731 9.1665 13.3333C9.1665 13.7936 9.5396 14.1667 9.99984 14.1667Z" fill="currentcolor" />
+                  <rect x="9.1665" y="5.83337" width="1.66667" height="5.83333" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Spam</p>
+                </div>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="trash">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect opacity="0.3" x="6.6665" y="7.5" width="6.66667" height="8.33333" fill="currentcolor" />
+                  <path d="M12.9165 3.33333L12.0832 2.5H7.9165L7.08317 3.33333H4.1665V5H15.8332V3.33333H12.9165Z" fill="currentcolor" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 17.5C5.75 17.5 5 16.75 5 15.8334V5.83337H15V15.8334C15 16.75 14.25 17.5 13.3333 17.5H6.66667ZM13.3333 7.50004H6.66667V15.8334H13.3333V7.50004Z" fill="currentcolor" />
+                </svg>
+                <div class="item-info">
+                  <p>Trash</p>
+                </div>
+              </label>
+            </div>
+          </div>
+          <hr class="section-break"></hr>
+          <div class="section">
+            <input class="folder-nav-item" name="folder-nav-item" type="radio" id="clients" />
+            <input class="folder-nav-item" name="folder-nav-item" type="radio" id="expenses" checked />
+            <input class="folder-nav-item" name="folder-nav-item" type="radio" id="reports" />
+            <input class="folder-nav-item" name="folder-nav-item" type="radio" id="team" />
+            <input class="folder-nav-item" name="folder-nav-item" type="radio" id="travels" />
+            <div class="section-header">
+              <p>FOLDERS</p>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.8332 10.8333H10.8332V15.8333H9.1665V10.8333H4.1665V9.16663H9.1665V4.16663H10.8332V9.16663H15.8332V10.8333Z" fill="#909191" />
+              </svg>
+            </div>
+            <div class="item-wrapper">
+              <label for="clients">
+                <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g opacity="0.6">
+                    <path d="M7.5 12.75L11.25 9L7.5 5.25V12.75Z" fill="#909191" />
+                  </g>
+                </svg>
+                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M8.30801 3.66667L7.82467 3.175L6.64134 2H2.33301V12H15.6663V3.66667H8.99967H8.30801Z" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.99984 2.00004H15.6665C16.5832 2.00004 17.3332 2.75004 17.3332 3.66671V12C17.3332 12.9167 16.5832 13.6667 15.6665 13.6667H2.33317C1.4165 13.6667 0.666504 12.9167 0.666504 12L0.674837 2.00004C0.674837 1.08337 1.4165 0.333374 2.33317 0.333374H7.33317L8.99984 2.00004ZM2.33317 2.00004V12H15.6665V3.66671H8.99984H8.30817L7.8165 3.17504L6.6415 2.00004H2.33317Z" fill="#909191" />
+                </svg>
+                <p class="item-name">Clients</p>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="expenses">
+                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M8.30801 3.66667L7.82467 3.175L6.64134 2H2.33301V12H15.6663V3.66667H8.99967H8.30801Z" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.99984 2.00004H15.6665C16.5832 2.00004 17.3332 2.75004 17.3332 3.66671V12C17.3332 12.9167 16.5832 13.6667 15.6665 13.6667H2.33317C1.4165 13.6667 0.666504 12.9167 0.666504 12L0.674837 2.00004C0.674837 1.08337 1.4165 0.333374 2.33317 0.333374H7.33317L8.99984 2.00004ZM2.33317 2.00004V12H15.6665V3.66671H8.99984H8.30817L7.8165 3.17504L6.6415 2.00004H2.33317Z" fill="#909191" />
+                </svg>
+                <p class="item-name">Expenses</p>
+                <span>4</span>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="reports">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M9.30801 6.66667L8.82467 6.175L7.64134 5H3.33301V15H16.6663V6.66667H9.99967H9.30801Z" fill="#F4B400" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99984 5.00004H16.6665C17.5832 5.00004 18.3332 5.75004 18.3332 6.66671V15C18.3332 15.9167 17.5832 16.6667 16.6665 16.6667H3.33317C2.4165 16.6667 1.6665 15.9167 1.6665 15L1.67484 5.00004C1.67484 4.08337 2.4165 3.33337 3.33317 3.33337H8.33317L9.99984 5.00004ZM3.33317 5.00004V15H16.6665V6.66671H9.99984H9.30817L8.8165 6.17504L7.6415 5.00004H3.33317Z" fill="#F4B400" />
+                </svg>
+                <p class="item-name">Reports</p>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="team">
+                <svg class="arrow" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g opacity="0.6">
+                    <path d="M7.5 12.75L11.25 9L7.5 5.25V12.75Z" fill="#909191" />
+                  </g>
+                </svg>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M9.30801 6.66667L8.82467 6.175L7.64134 5H3.33301V15H16.6663V6.66667H9.99967H9.30801Z" fill="#4285F4" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99984 5.00004H16.6665C17.5832 5.00004 18.3332 5.75004 18.3332 6.66671V15C18.3332 15.9167 17.5832 16.6667 16.6665 16.6667H3.33317C2.4165 16.6667 1.6665 15.9167 1.6665 15L1.67484 5.00004C1.67484 4.08337 2.4165 3.33337 3.33317 3.33337H8.33317L9.99984 5.00004ZM3.33317 5.00004V15H16.6665V6.66671H9.99984H9.30817L8.8165 6.17504L7.6415 5.00004H3.33317Z" fill="#4285F4" />
+                </svg>
+                <p class="item-name">Team</p>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="travels">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" d="M9.30801 6.66667L8.82467 6.175L7.64134 5H3.33301V15H16.6663V6.66667H9.99967H9.30801Z" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99984 5.00004H16.6665C17.5832 5.00004 18.3332 5.75004 18.3332 6.66671V15C18.3332 15.9167 17.5832 16.6667 16.6665 16.6667H3.33317C2.4165 16.6667 1.6665 15.9167 1.6665 15L1.67484 5.00004C1.67484 4.08337 2.4165 3.33337 3.33317 3.33337H8.33317L9.99984 5.00004ZM3.33317 5.00004V15H16.6665V6.66671H9.99984H9.30817L8.8165 6.17504L7.6415 5.00004H3.33317Z" fill="#909191" />
+                </svg>
+                <p class="item-name">Travels</p>
+              </label>
+            </div>
+          </div>
+          <hr class="section-break"></hr>
+          <div class="section">
+            <input class="bottom-nav" name="bottom-nav" type="radio" id="settings" />
+            <input class="bottom-nav" name="bottom-nav" type="radio" id="help" />
+            <div class="item-wrapper">
+              <label for="settings">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M15.4831 6.15825L16.0664 7.16659L15.1498 7.86659L14.4081 8.44992L14.5248 9.39159C14.5498 9.64159 14.5664 9.82492 14.5664 9.99992C14.5664 10.1749 14.5581 10.3499 14.5248 10.6083L14.4081 11.5499L15.1498 12.1333L16.0498 12.8333L15.4664 13.8416L14.4081 13.4166L13.5414 13.0666L12.7914 13.6333C12.4331 13.8999 12.0914 14.0999 11.7498 14.2416L10.8664 14.5999L10.7331 15.5416L10.5748 16.6666H9.41644L9.25811 15.5333L9.12477 14.5916L8.24144 14.2333C7.88311 14.0916 7.54144 13.8916 7.21644 13.6416L6.45811 13.0583L5.57477 13.4166L4.51644 13.8416L3.93311 12.8333L4.83311 12.1333L5.57477 11.5499L5.45811 10.6083C5.43311 10.3583 5.41644 10.1666 5.41644 9.99992C5.41644 9.83325 5.43311 9.64159 5.45811 9.39159L5.57477 8.44992L4.83311 7.86659L3.93311 7.16659L4.51644 6.15825L5.57477 6.59159L6.44977 6.94159L7.19977 6.37492C7.55811 6.10825 7.89977 5.90825 8.24144 5.76659L9.12477 5.39992L9.25811 4.45825L9.41644 3.33325H10.5831L10.7414 4.46659L10.8748 5.40825L11.7581 5.76659C12.1164 5.90825 12.4581 6.10825 12.7831 6.35825L13.5414 6.94159L14.4248 6.58325L15.4831 6.15825ZM6.66644 9.99992C6.66644 11.8416 8.15811 13.3333 9.99977 13.3333C11.8414 13.3333 13.3331 11.8416 13.3331 9.99992C13.3331 8.15825 11.8414 6.66659 9.99977 6.66659C8.15811 6.66659 6.66644 8.15825 6.66644 9.99992Z" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2499 9.99996C16.2499 10.2833 16.2249 10.55 16.1915 10.8166L17.9499 12.1916C18.1082 12.3166 18.1499 12.5416 18.0499 12.725L16.3832 15.6083C16.3082 15.7416 16.1665 15.8166 16.0249 15.8166C15.9749 15.8166 15.9249 15.8083 15.8749 15.7916L13.7999 14.9583C13.3665 15.2833 12.8999 15.5666 12.3915 15.775L12.0749 17.9833C12.0499 18.1833 11.8749 18.3333 11.6665 18.3333H8.3332C8.12487 18.3333 7.94987 18.1833 7.92487 17.9833L7.6082 15.775C7.09987 15.5666 6.6332 15.2916 6.19987 14.9583L4.12487 15.7916C4.0832 15.8083 4.0332 15.8166 3.9832 15.8166C3.8332 15.8166 3.69153 15.7416 3.61653 15.6083L1.94987 12.725C1.84987 12.5416 1.89153 12.3166 2.04987 12.1916L3.8082 10.8166C3.77487 10.55 3.74987 10.275 3.74987 9.99996C3.74987 9.72496 3.77487 9.44996 3.8082 9.18329L2.04987 7.80829C1.89153 7.68329 1.84153 7.45829 1.94987 7.27496L3.61653 4.39163C3.69153 4.25829 3.8332 4.18329 3.97487 4.18329C4.02487 4.18329 4.07487 4.19163 4.12487 4.20829L6.19987 5.04163C6.6332 4.71663 7.09987 4.43329 7.6082 4.22496L7.92487 2.01663C7.94987 1.81663 8.12487 1.66663 8.3332 1.66663H11.6665C11.8749 1.66663 12.0499 1.81663 12.0749 2.01663L12.3915 4.22496C12.8999 4.43329 13.3665 4.70829 13.7999 5.04163L15.8749 4.20829C15.9165 4.19163 15.9665 4.18329 16.0165 4.18329C16.1665 4.18329 16.3082 4.25829 16.3832 4.39163L18.0499 7.27496C18.1499 7.45829 18.1082 7.68329 17.9499 7.80829L16.1915 9.18329C16.2249 9.44996 16.2499 9.71663 16.2499 9.99996ZM14.5832 9.99996C14.5832 9.82496 14.5749 9.64996 14.5415 9.39163L14.4249 8.44996L15.1665 7.86663L16.0582 7.15829L15.4749 6.14996L14.4165 6.57496L13.5332 6.93329L12.7749 6.34996C12.4415 6.09996 12.1082 5.90829 11.7499 5.75829L10.8665 5.39996L10.7332 4.45829L10.5749 3.33329H9.41653L9.24987 4.45829L9.11653 5.39996L8.2332 5.75829C7.89153 5.89996 7.54987 6.09996 7.19153 6.36663L6.44153 6.93329L5.57487 6.58329L4.51653 6.15829L3.9332 7.16663L4.8332 7.86663L5.57487 8.44996L5.4582 9.39163C5.4332 9.64163 5.41653 9.83329 5.41653 9.99996C5.41653 10.1666 5.4332 10.3583 5.4582 10.6166L5.57487 11.5583L4.8332 12.1416L3.9332 12.8416L4.51653 13.85L5.57487 13.425L6.4582 13.0666L7.21653 13.65C7.54987 13.9 7.8832 14.0916 8.24153 14.2416L9.12487 14.6L9.2582 15.5416L9.41653 16.6666H10.5832L10.7499 15.5416L10.8832 14.6L11.7665 14.2416C12.1082 14.1 12.4499 13.9 12.8082 13.6333L13.5582 13.0666L14.4249 13.4166L15.4832 13.8416L16.0665 12.8333L15.1665 12.1333L14.4249 11.55L14.5415 10.6083C14.5665 10.3583 14.5832 10.175 14.5832 9.99996Z" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.6665 9.99996C6.6665 8.15829 8.15817 6.66663 9.99984 6.66663C11.8415 6.66663 13.3332 8.15829 13.3332 9.99996C13.3332 11.8416 11.8415 13.3333 9.99984 13.3333C8.15817 13.3333 6.6665 11.8416 6.6665 9.99996ZM8.33317 9.99996C8.33317 10.9166 9.08317 11.6666 9.99984 11.6666C10.9165 11.6666 11.6665 10.9166 11.6665 9.99996C11.6665 9.08329 10.9165 8.33329 9.99984 8.33329C9.08317 8.33329 8.33317 9.08329 8.33317 9.99996Z" fill="#909191" />
+                </svg>
+                <p class="item-name">Settings</p>
+              </label>
+            </div>
+            <div class="item-wrapper">
+              <label for="help">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M9.99967 3.33325C6.32467 3.33325 3.33301 6.32492 3.33301 9.99992C3.33301 13.6749 6.32467 16.6666 9.99967 16.6666C13.6747 16.6666 16.6663 13.6749 16.6663 9.99992C16.6663 6.32492 13.6747 3.33325 9.99967 3.33325ZM9.16634 14.9999V13.3333H10.833V14.9999H9.16634ZM10.6417 9.85131C9.95144 10.3804 9.16634 10.9822 9.16634 12.4999H10.833C10.833 11.5871 11.4255 11.0693 12.0336 10.5379C12.6747 9.97768 13.333 9.40235 13.333 8.33325C13.333 6.49159 11.8413 4.99992 9.99967 4.99992C8.15801 4.99992 6.66634 6.49159 6.66634 8.33325H8.33301C8.33301 7.41658 9.08301 6.66659 9.99967 6.66659C10.9163 6.66659 11.6663 7.41658 11.6663 8.33325C11.6663 9.06593 11.1832 9.43626 10.6417 9.85131Z" fill="#909191" />
+                  <rect x="9.1665" y="13.3333" width="1.66667" height="1.66667" fill="#909191" />
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M1.6665 9.99996C1.6665 5.39996 5.39984 1.66663 9.99984 1.66663C14.5998 1.66663 18.3332 5.39996 18.3332 9.99996C18.3332 14.6 14.5998 18.3333 9.99984 18.3333C5.39984 18.3333 1.6665 14.6 1.6665 9.99996ZM3.33317 9.99996C3.33317 13.675 6.32484 16.6666 9.99984 16.6666C13.6748 16.6666 16.6665 13.675 16.6665 9.99996C16.6665 6.32496 13.6748 3.33329 9.99984 3.33329C6.32484 3.33329 3.33317 6.32496 3.33317 9.99996Z" fill="#909191" />
+                  <path d="M10.0015 5C8.15892 5 6.6665 6.49167 6.6665 8.33333H8.334C8.334 7.41667 9.08438 6.66667 10.0015 6.66667C10.9186 6.66667 11.669 7.41667 11.669 8.33333C11.669 10 9.16775 9.79167 9.16775 12.5H10.8353C10.8353 10.625 13.3365 10.4167 13.3365 8.33333C13.3365 6.49167 11.8441 5 10.0015 5Z" fill="#909191" />
+                </svg>
+                <p class="item-name">Help & Feedback</p>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="content">
-      <ul id="emails-list">
-        <li class="selected">
-          <div class="left-col">
-            <div class="avatar">M</div>
-            <span class="tooltip" data-title="More">
-              <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
-              </span>
-          </div>
-          <div class="right-col">
-            <img class="svg" src="img/icons/star.svg" alt="More">
-            <p class="sender">Melvin Arnold</p>
-            <h4 class="title">Do Androids Dream of Electric Sheep?</h4>
-            <p class="bread-text-preview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est.</p>
-            <p class="recieved">3 min ago</p>
-          </div>
-        </li>
-        <li class="marked">
-          <div class="left-col">
-            <div class="avatar">J</div>
-            <span class="tooltip" data-title="More">
-                <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
-                </span>
-          </div>
-          <div class="right-col">
-            <img class="svg" src="img/icons/star.svg" alt="More">
-            <p class="sender">Jason Owens</p>
-            <h4 class="title">I Was Told There'd Be Cake</h4>
-            <p class="bread-text-preview">Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est.</p>
-            <p class="recieved">1 day ago</p>
-          </div>
-        </li>
-        <li>
-          <div class="left-col">
-            <div class="avatar">E</div>
-            <span class="tooltip" data-title="More">
-<img class="svg" src="img/icons/more-horizontal.svg" alt="More">
-</span>
-          </div>
-          <div class="right-col">
-            <img class="svg" src="img/icons/star.svg" alt="More">
-            <p class="sender">Edward Michael</p>
-            <h4 class="title">Extremely Loud and Incredibly Close</h4>
-            <p class="bread-text-preview">Nullam a lacus cursus, tincidunt orci in, mattis ipsum. Quisque volutpat ultricies pretium.</p>
-            <p class="recieved">2 days ago</p>
-          </div>
-        </li>
-        <li>
-          <div class="left-col">
-            <div class="avatar">C</div>
-            <span class="tooltip" data-title="More">
-<img class="svg" src="img/icons/more-horizontal.svg" alt="More">
-</span>
-          </div>
-          <div class="right-col">
-            <img class="svg" src="img/icons/star.svg" alt="More">
-            <p class="sender">Carolyn Hardin</p>
-            <h4 class="title">Brave New World </h4>
-            <p class="bread-text-preview">Maecenas non leo vel ante porta posuere. Proin sed efficitur odio.</p>
-            <p class="recieved">2 days ago</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- EMAIL BODY -->
-
-  <section id="preview">
-    <div class="header">
-      <div class="icon-wrap">
-        <span class="tooltip" data-title="More">
-        <img class="svg" src="img/icons/more-horizontal.svg" alt="More">
-        </span>
-      </div>
-    </div>
-    <div class="content-wrap">
-      <div class="actions">
-        <button class="primary">Reply</button>
-        <button class="secondary">Forward</button>
-      </div>
-      <div class="quick-actions">
-        <span class="tooltip" data-title="Tag">
-        <img src="img/icons/star.svg" alt="Star" class="svg">
-        </span>
-        <span class="tooltip" data-title="Tag">
-        <img src="img/icons/tag.svg" alt="Tag" class="svg">
-        </span>
-                <span class="tooltip" data-title="Print">
-        <img src="img/icons/printer.svg" alt="Print" class="svg">
-        </span>
-      </div>
-      <div class="content">
-        <div class="content-box">
-          <p class="date">1st February 2018</p>
-          <h2>Do Androids Dream of Electric Sheep?</h2>
-          <p class="bread-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam venenatis mauris id mi vestibulum faucibus. Etiam non tristique eros. Aenean et ullamcorper velit, quis varius est. Nam vitae purus nisi. Quisque semper ipsum ac purus ornare malesuada. Pellentesque aliquam vitae turpis eu consequat. Aliquam malesuada nisl non libero fringilla pellentesque et non sem. Integer sed mauris porttitor, auctor risus in, ultricies magna. Vestibulum consequat arcu euismod ipsum fringilla, nec ultrices velit posuere. Aliquam rhoncus interdum neque ac facilisis.
-            Cheers,
-            <span class="sender">Melvin Arnold</span></p>
+      <div class="side-bar-bottom">
+        <input class="bottom-logo" name="bottom-logo" type="radio" id="logo-1" checked />
+        <input class="bottom-logo" name="bottom-logo" type="radio" id="logo-2" />
+        <input class="bottom-logo" name="bottom-logo" type="radio" id="logo-3" />
+        <div class="label-wrapper">
+          <label for="logo-1">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <rect width="26" height="26" fill="url(#pattern0)" />
+              <defs>
+                <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                  <use xlink:href="#image0" transform="scale(0.005)" />
+                </pattern>
+                <image id="image0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGOGCHvlwAAFOlJREFUeAHtnQmUXFWZx79aeqnq7qSTIAmEtSFwxpgEFGIABWZy2DyAI4MwyJlBSTQhCdk7CxpslqMjBhAcRRMPHpUzozAow+gZwVFhxIPMREZQdggJS0g6vVVV117vvfm+Sl666FRXvar33n21/O85OVVdb7n3/u775y7/e+8jQgABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEPCYgM/j+OmNL/XOajFyFxgtrafQsT3JjgsvjlCoQ/c6XYhfPQE9HvdHfvnI5Oybb4YC2cyrCX/wV6d//d7X1KdkLEZPBPJCX19n++Bbj1H/vvm+TCY4lhwio7WVWs5YQKHLP03BI6cXHsL3BiWQ3fcejT7yY9Kf3UH+bPZQLg0yKOPz57RpR/zBN/OUS2b39Y0eOqjoi3KB7Ny8er3x6st3+HStbNwtCz5GnYuWEwUCinAgGpUEDE2jke9+g2jHM2WjzZBhZI7rWTf3nm13lz3ZwRPKPqQOxkWvr1u63b/zjcWV3NM/uZs6t3yVAlOnVXIZzq1xAtrwEEVu3US+yIjllBqGQcmZx2770Le+v8TyRTZPVCaQnTetW2y89OftPq42Kw4+H3XcsIZaPvJR8vF3hPomkHn+WYrf8zVuT1f+LGiGTpmeWYtm3/Wd+1VQUPa0vXHNZRlfKtViJ1MtHz2HOq5fRr4WW7exkwRca4OANKniP9hG2ad+a+MuRCm/P/fBhx9T8hD4baXU4sW7elfca1ccElX2md9TZN1Syu15x2LMOK1WCGj9eynKZWdXHJKfdl0PvrjqC3epyJsSgegD/dc6lRljNEaxL62l1C8fraqKdioduI91AsnfPEbRTStJj0asX1TmTGNg3z+WOcWRw+8bYnXkjkVuYsSiU5xuyyUffICyf/oj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ilJEIqNhMBNLUVJ3DAIpw7qaIdwytyx7WBZSSYBIyqJy/QQIpARit/obJaI8dAgiOYTC0y8QyAT4nRjCneDWln+GSCyjcu1ECKQIWlX9jSJRH/YTRHIYEqU/QCAFuL1sUhUk47CvEMlhSJT9AIEcRO32EK7dEhWRyDr2TCZj91a4vgICEAjDqqUmVamyM4eA4ZOUouTssaYWiBdDuHaLz2xuQSR2SVq7vmkFUqv9DSvFBpFYoeTMOU0pkFoYwrVbfBCJXYLWrm86gdRLf8NK8UEkVijZO6dpBFLPTapSRQyRlKJj/1hTCKTWh3DtFiNEYpfgxNc3vEAaob8xcfGNHTFFAp9kjIkT35TsrOgPhZW/bE+GcGU/XLtLYp2ArOoeIhLJczOEYEeXkmdKiUB8kyYptX+lvyGdcRFJs4VmEUlwcreSVWVKBBKYPvM1VQ+qNKmaVRwm42YQSdsxx79i5tfNTyUCaZ1x1HY3M2HeW4TRTE0qM9/FPhtdJOGjj1HyTCkRyPEre+8N9pw8VKwgnfhNmlTS9pZPhDECjSqSjlNnD57+xdu/NZZT974pe6JCp86+xo3OutQY0qxqxv6Glcei0UQinfPwnHnXWMm7E+coE8hxy9c+3nb2eRt8rW2OjT6IMCCO8o9Bo4gk0B4ypi68qPfMjbf+qnyunTlDmUAkuT1rNm0Nn3/hlYHpM2yNQDTjEK7d4q53kbQffWxq2iWfvOKMLf90p10WlVyv3Cg8YeX6nxoPPjhp584X79Pe2X1F9q1d3fxuMstpbtQpI5YB2DjR9EjqxUz0+QMU7pk1zP9+Gp43ednsq/qU2gWC2nOj4PX77jsyaKTO1NKZWYamlXS5WqbPTLdfePELNp4RXMoEstnsHH5nYkslMJwaABn59c+11K5dJTc05rgy/lD7a34K/++83t7+StKJc0EABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABEAABBqOwP8D8rOBxEj9l/cAAAAASUVORK5CYII=" />
+              </defs>
+            </svg>
+          </label>
+        </div>
+        <div class="label-wrapper">
+          <label for="logo-2">
+            <svg class="logo-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 58"><path d="M29 1.5c-16.016 0-29 11.641-29 26 0 5.292 1.768 10.211 4.796 14.318C4.398 46.563 3.254 53.246 0 56.5c0 0 9.943-1.395 16.677-5.462l.022.009c2.764-1.801 5.532-3.656 6.105-4.126.3-.421.879-.548 1.33-.277.296.178.483.503.489.848.01.622-.005.784-5.585 4.421A31.914 31.914 0 0 0 29 53.5c16.016 0 29-11.641 29-26s-12.984-26-29-26z" data-original="#546A79" class="active-path" data-old_color="#546A79" fill="#909191" /><circle cx="15" cy="27.5" r="3" data-original="#FFFFFF" data-old_color="#FFFFFF" fill="#ececec" /><circle cx="29" cy="27.5" r="3" data-original="#FFFFFF" data-old_color="#FFFFFF" fill="#ececec" /><circle cx="43" cy="27.5" r="3" data-original="#FFFFFF" data-old_color="#FFFFFF" fill="#ececec" /></svg>
+          </label>
+        </div>
+        <div class="label-wrapper">
+          <label for="logo-3">
+            <svg class="logo-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 299.997 299.997" style="enable-background:new 0 0 299.997 299.997;" xml:space="preserve" width="512" height="512" class=""><g><g>
+<g>
+<path d="M149.996,0C67.157,0,0.001,67.158,0.001,149.997c0,82.837,67.156,150,149.995,150s150-67.163,150-150    C299.996,67.156,232.835,0,149.996,0z M150.453,220.763v-0.002h-0.916H85.465c0-46.856,41.152-46.845,50.284-59.097l1.045-5.587    c-12.83-6.502-21.887-22.178-21.887-40.512c0-24.154,15.712-43.738,35.089-43.738c19.377,0,35.089,19.584,35.089,43.738    c0,18.178-8.896,33.756-21.555,40.361l1.19,6.349c10.019,11.658,49.802,12.418,49.802,58.488H150.453z" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path>
+</g>
+</g></g> </svg>
+          </label>
         </div>
       </div>
     </div>
-  </section>
+    <div class="conversations-list">
+      <div class="action-bar">
+        <div class="actions-left">
+          <button>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.16667 2.44897H15.8333C16.75 2.44897 17.5 3.18367 17.5 4.08163V15.5102C17.5 16.4082 16.75 17.1429 15.8333 17.1429H4.16667C3.25 17.1429 2.5 16.4082 2.5 15.5102V4.08163C2.5 3.18367 3.25 2.44897 4.16667 2.44897ZM15.8333 15.5102V4.08163H4.16667V15.5102H15.8333Z" fill="#909191" />
+            </svg>
+          </button>
+        </div>
+        <div class="actions-right">
+          <button>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M15.8332 15.8333H4.1665V6.66663H15.8332V15.8333ZM8.7915 8.33329V10.8333H6.6665L9.99984 14.1666L13.3332 10.8333H11.2165V8.33329H8.7915Z" fill="#909191" />
+              <path d="M13.3332 10.8334H11.2082V8.33337H8.7915V10.8334H6.6665L9.99984 14.1667L13.3332 10.8334Z" fill="#909191" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M17.1167 4.35833L15.9583 2.95833C15.7333 2.675 15.3917 2.5 15 2.5H5C4.60833 2.5 4.26667 2.675 4.03333 2.95833L2.88333 4.35833C2.64167 4.64167 2.5 5.01667 2.5 5.41667V15.8333C2.5 16.75 3.25 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V5.41667C17.5 5.01667 17.3583 4.64167 17.1167 4.35833ZM5.2 4.16667H14.8L15.475 4.975H4.53333L5.2 4.16667ZM4.16667 15.8333H15.8333V6.66667H4.16667V15.8333Z" fill="#909191" />
+            </svg>
+          </button>
+          <button>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect opacity="0.3" x="6.6665" y="7.5" width="6.66667" height="8.33333" fill="#909191" />
+              <path d="M12.9165 3.33333L12.0832 2.5H7.9165L7.08317 3.33333H4.1665V5H15.8332V3.33333H12.9165Z" fill="#909191" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 17.5C5.75 17.5 5 16.75 5 15.8334V5.83337H15V15.8334C15 16.75 14.25 17.5 13.3333 17.5H6.66667ZM13.3333 7.50004H6.66667V15.8334H13.3333V7.50004Z" fill="#909191" />
+            </svg>
+          </button>
+          <button>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.3" d="M9.99967 12.8L3.33301 8.6167V15H16.6663L16.658 8.6417L9.99967 12.8Z" fill="#909191" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M18.3248 6.66671C18.3248 6.06671 18.0165 5.54171 17.5415 5.25004L9.99984 0.833374L2.45817 5.25004C1.98317 5.54171 1.6665 6.06671 1.6665 6.66671V15C1.6665 15.9167 2.4165 16.6667 3.33317 16.6667H16.6665C17.5832 16.6667 18.3332 15.9167 18.3332 15L18.3248 6.66671ZM9.99984 2.76671L16.6582 6.66671V6.67504L9.99984 10.8334L3.33317 6.66671L9.99984 2.76671ZM3.33317 8.61671V15H16.6665L16.6582 8.64171L9.99984 12.8L3.33317 8.61671Z" fill="#909191" />
+            </svg>
+          </button>
+          <button>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M3.77783 10.0001C3.77783 6.56894 6.56894 3.77783 10.0001 3.77783C13.4312 3.77783 16.2223 6.56894 16.2223 10.0001C16.2223 13.4312 13.4312 16.2223 10.0001 16.2223C6.56894 16.2223 3.77783 13.4312 3.77783 10.0001ZM9.11117 10.8889L13.3334 13.4223L14.0001 12.3289L10.4445 10.2223V5.55561H9.11117V10.8889Z" fill="#909191" />
+              <path d="M10.4447 5.55554H9.11133V10.8889L13.3336 13.4222L14.0002 12.3289L10.4447 10.2222V5.55554Z" fill="#909191" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2 10C2 5.58222 5.58222 2 10 2C14.4178 2 18 5.58222 18 10C18 14.4178 14.4178 18 10 18C5.58222 18 2 14.4178 2 10ZM3.77778 10C3.77778 13.4311 6.56889 16.2222 10 16.2222C13.4311 16.2222 16.2222 13.4311 16.2222 10C16.2222 6.56889 13.4311 3.77778 10 3.77778C6.56889 3.77778 3.77778 6.56889 3.77778 10Z" fill="#909191" />
+            </svg>
+          </button>
+          <button class="more">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </button>
+        </div>
+      </div>
+      <div class="mail-list">
+        <input class="mail-item" name="mail-item" type="radio" id="mail-1" checked />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-2" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-3" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-4" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-5" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-6" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-7" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-8" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-9" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-10" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-11" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-12" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-13" />
+        <input class="mail-item" name="mail-item" type="radio" id="mail-14" />
+        <label for="mail-1" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/51.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Edit Flores</p>
+              <p class="mail-time">10:27 AM</p>
+            </div>
+            <p class="mail-text">Deciphering marketing lingo for small Deciphering marketing lingo for small…</p>
+          </div>
+        </label>
+        <label for="mail-2" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/16.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Juan Ferguson</p>
+              <p class="mail-time">May 13</p>
+            </div>
+            <p class="mail-text">Alfredo and who on earth was he capAlfredo and who on earth was he cap</p>
+          </div>
+        </label>
+        <label for="mail-3" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Mollie Houston</p>
+              <p class="mail-time">May 8</p>
+            </div>
+            <p class="mail-text">Lasik surgery frequently asked quest Lasik surgery frequently asked quest</p>
+          </div>
+        </label>
+        <label for="mail-4" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo blue">
+              <p>J</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Joshua Norman</p>
+              <p class="mail-time">Apr 30</p>
+            </div>
+            <p class="mail-text">Break through self doubt and fear are Break through self doubt and fear are</p>
+          </div>
+        </label>
+        <label for="mail-5" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo yellow">
+              <p>O</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Owen Miles</p>
+              <p class="mail-time">Apr 29</p>
+            </div>
+            <p class="mail-text">Deciphering marketing lingo for small Deciphering marketing lingo for smal</p>
+          </div>
+        </label>
+        <label for="mail-6" class="mail">
+          <div class="profile-pic">
+            <img src="https://i.ibb.co/Cz4LkPC/Profile-pic.png" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Maude French</p>
+              <p class="mail-time">Apr 18</p>
+            </div>
+            <p class="mail-text">Alfredo and who on earth was he cap Alfredo and who on earth was he cap</p>
+          </div>
+        </label>
+        <label for="mail-7" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Landon Mason</p>
+              <p class="mail-time">Apr 18</p>
+            </div>
+            <p class="mail-text">Lasik surgery frequently asked quest Lasik surgery frequently asked quest</p>
+          </div>
+        </label>
+        <label for="mail-8" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo green">
+              <p>L</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Lottie Bowers</p>
+              <p class="mail-time">Apr 17</p>
+            </div>
+            <p class="mail-text">Break through self doubt and fear are Break through self doubt and fear are</p>
+          </div>
+        </label>
+        <label for="mail-9" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Floyd Hudson</p>
+              <p class="mail-time">Apr 17</p>
+            </div>
+            <p class="mail-text">Lasik surgery frequently asked questLasik surgery frequently asked quest </p>
+          </div>
+        </label>
+        <label for="mail-10" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo blue">
+              <p>A</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Alta Benson</p>
+              <p class="mail-time">Apr 9</p>
+            </div>
+            <p class="mail-text">Break through self doubt and fear are Break through self doubt and fear are</p>
+          </div>
+        </label>
+        <label for="mail-11" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Landon Mason</p>
+              <p class="mail-time">Apr 18</p>
+            </div>
+            <p class="mail-text">Lasik surgery frequently asked quest Lasik surgery frequently asked quest</p>
+          </div>
+        </label>
+        <label for="mail-12" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo green">
+              <p>L</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Lottie Bowers</p>
+              <p class="mail-time">Apr 17</p>
+            </div>
+            <p class="mail-text">Break through self doubt and fear are Break through self doubt and fear are</p>
+          </div>
+        </label>
+        <label for="mail-13" class="mail">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="">
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Floyd Hudson</p>
+              <p class="mail-time">Apr 17</p>
+            </div>
+            <p class="mail-text">Lasik surgery frequently asked questLasik surgery frequently asked quest </p>
+          </div>
+        </label>
+        <label for="mail-14" class="mail">
+          <div class="profile-pic">
+            <div class="profile-logo blue">
+              <p>A</p>
+            </div>
+          </div>
+          <div class="mail-content">
+            <div class="mail-header">
+              <p class="contact-name">Alta Benson</p>
+              <p class="mail-time">Apr 9</p>
+            </div>
+            <p class="mail-text">Break through self doubt and fear are Break through self doubt and fear are</p>
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="conversation">
+      <div class="subject-bar">
+        <div class="header">
+          <p>MAIL TITLE</p>
+          <div class="header-buttons">
+            <div class="header-button inbox">
+              <p>Inbox</p>
+              <button>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.5 3.205L8.795 2.5L6 5.295L3.205 2.5L2.5 3.205L5.295 6L2.5 8.795L3.205 9.5L6 6.705L8.795 9.5L9.5 8.795L6.705 6L9.5 3.205Z" fill="currentcolor" />
+                </svg>
+              </button>
+            </div>
+            <div class="header-button team">
+              <p>Team</p>
+              <button>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.5 3.205L8.795 2.5L6 5.295L3.205 2.5L2.5 3.205L5.295 6L2.5 8.795L3.205 9.5L6 6.705L8.795 9.5L9.5 8.795L6.705 6L9.5 3.205Z" fill="currentcolor" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="subject-actions">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M11.6667 11.6667V12.6417L14.3083 10.0001L11.6667 7.3584V8.3334H5V11.6667H11.6667Z" fill="#909191" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 3.33337L16.6668 10L10.0002 16.6667V13.3334H3.3335V6.66671H10.0002V3.33337ZM5.00016 8.33337V11.6667H11.6668V12.6417L14.3085 10L11.6668 7.35837V8.33337H5.00016Z" fill="#909191" />
+          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect opacity="0.3" x="6.6665" y="4.16663" width="6.66667" height="2.5" fill="#909191" />
+            <path d="M14.9998 10.4167C15.4601 10.4167 15.8332 10.0436 15.8332 9.58333C15.8332 9.1231 15.4601 8.75 14.9998 8.75C14.5396 8.75 14.1665 9.1231 14.1665 9.58333C14.1665 10.0436 14.5396 10.4167 14.9998 10.4167Z" fill="#909191" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.9998 6.66667H15.8332C17.2165 6.66667 18.3332 7.78333 18.3332 9.16667V12.5V14.1667H14.9998V17.5H4.99984V14.1667H1.6665V12.5V9.16667C1.6665 7.78333 2.78317 6.66667 4.1665 6.66667H4.99984V2.5H14.9998V6.66667ZM13.3332 4.16667H6.6665V6.66667H13.3332V4.16667ZM13.3332 15.8333H6.6665V12.5H13.3332V15.8333ZM14.9998 12.5H16.6665V9.16667C16.6665 8.70833 16.2915 8.33333 15.8332 8.33333H14.9998H4.99984H4.1665C3.70817 8.33333 3.33317 8.70833 3.33317 9.16667V12.5H4.99984V10.8333H14.9998V12.5Z" fill="#909191" />
+            <g opacity="0.3">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M14.9997 10.8334H4.99967V12.5H3.33301V9.16671C3.33301 8.70837 3.70801 8.33337 4.16634 8.33337H4.99967H14.9997H15.833C16.2913 8.33337 16.6663 8.70837 16.6663 9.16671V12.5H14.9997V10.8334ZM15.833 9.58337C15.833 9.12504 15.458 8.75004 14.9997 8.75004C14.5413 8.75004 14.1663 9.12504 14.1663 9.58337C14.1663 10.0417 14.5413 10.4167 14.9997 10.4167C15.458 10.4167 15.833 10.0417 15.833 9.58337Z" fill="#909191" />
+            </g>
+          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6415 7.5L9.9998 4.85833L7.35814 7.5L6.1748 6.325L9.9998 2.5L13.8165 6.325L12.6415 7.5ZM7.35814 12.5L9.9998 15.1417L12.6415 12.5L13.8248 13.675L9.9998 17.5L6.18314 13.675L7.35814 12.5Z" fill="#808080" />
+          </svg>
+        </div>
+      </div>
+      <div class="mail-area">
+        <div class="content-wrapper">
+          <div class="profile-pic">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+          </div>
+          <div class="mail-content-wrapper">
+            <div class="contact-info">
+              <p class="contact-name">Mollie Houston</p>
+              <div class="right">
+                <p class="mail-time">May 8, 2018, 11:18 AM</p>
+                <button>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.3" d="M10.0667 12.75L6.93333 14.6417L7.76667 11.075L5 8.675L8.65 8.35833L10.0667 5L11.4917 8.36667L15.1417 8.68333L12.375 11.0833L13.2083 14.65L10.0667 12.75Z" fill="#909191" />
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.3415 7.18329L18.3332 7.69996L13.7915 11.6416L15.1498 17.5L9.99984 14.3916L4.84984 17.5L6.2165 11.6416L1.6665 7.69996L7.65817 7.19163L9.99984 1.66663L12.3415 7.18329ZM6.8665 14.725L9.99984 12.8333L13.1415 14.7333L12.3082 11.1666L15.0748 8.76663L11.4248 8.44996L9.99984 5.08329L8.58317 8.44163L4.93317 8.75829L7.69984 11.1583L6.8665 14.725Z" fill="#909191" />
+                  </svg>
+                </button>
+                <button>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.3" x="6.6665" y="7.5" width="6.66667" height="8.33333" fill="#909191" /> <path d="M12.9165 3.33333L12.0832 2.5H7.9165L7.08317 3.33333H4.1665V5H15.8332V3.33333H12.9165Z" fill="#909191" /> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 17.5C5.75 17.5 5 16.75 5 15.8334V5.83337H15V15.8334C15 16.75 14.25 17.5 13.3333 17.5H6.66667ZM13.3333 7.50004H6.66667V15.8334H13.3333V7.50004Z" fill="#909191" /> </svg>
+                </button>
+                <button>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 6.53057C10.9168 6.53057 11.6668 5.79587 11.6668 4.89791C11.6668 3.99995 10.9168 3.26526 10.0002 3.26526C9.0835 3.26526 8.3335 3.99995 8.3335 4.89791C8.3335 5.79587 9.0835 6.53057 10.0002 6.53057ZM10.0002 8.16322C9.0835 8.16322 8.3335 8.89791 8.3335 9.79587C8.3335 10.6938 9.0835 11.4285 10.0002 11.4285C10.9168 11.4285 11.6668 10.6938 11.6668 9.79587C11.6668 8.89791 10.9168 8.16322 10.0002 8.16322ZM8.3335 14.6938C8.3335 13.7959 9.0835 13.0612 10.0002 13.0612C10.9168 13.0612 11.6668 13.7959 11.6668 14.6938C11.6668 15.5918 10.9168 16.3265 10.0002 16.3265C9.0835 16.3265 8.3335 15.5918 8.3335 14.6938Z" fill="#909191" /> </svg>
+                </button>
+              </div>
+            </div>
+            <p contenteditable="false">Hello Mubin,<br><br>
+              Thank you for such a great conversation. I learn a lot from you.
+              <br>
+              <br>
+              Let’s keep in touch.
+              <br>
+              <br>
+              <br>
+              Best,
+              <br>
+              <br> - Mollie</p>
+            <div class="reaction-buttons">
+              <button>Looking forward to it!</button>
+              <button>You’re welcome!</button>
+              <button>Same to you!</button>
+            </div>
+            <hr class="mail-break"> </hr>
+            <div class="bottom-action">
+              <div class="bottom-button-wrapper">
+                <div class="left">
+                  <button class="send">REPLY</button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 475.078 475.077" style="enable-background:new 0 0 475.078 475.077;" xml:space="preserve" class="hovered-paths"><g><g>
+<g>
+<polygon points="139.899,353.459 237.539,272.087 96.501,185.005 0,262.382   " data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></polygon>
+  <polygon points="237.539,272.08 335.467,353.452 475.078,262.375 378.58,185.005   " data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></polygon>
+  <polygon points="238.111,289.786 238.111,289.212 237.827,289.499 237.539,289.212 237.539,289.786 139.899,370.871     97.928,343.463 97.928,374.293 237.539,457.951 237.539,458.235 237.827,457.951 238.111,458.235 238.111,457.951     378.008,374.293 378.008,343.463 336.036,370.871   " data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></polygon>
+  <polygon points="0,107.917 96.501,185.005 237.539,98.212 139.899,16.842   " data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></polygon>
+  <polygon points="335.467,16.842 237.539,98.212 378.58,185.005 475.078,107.917   " data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></polygon>
+</g>
+</g></g> </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 52.623 52.623" style="enable-background:new 0 0 52.623 52.623;" xml:space="preserve" class="hovered-paths"><g transform="matrix(1 -2.44929e-16 -2.44929e-16 -1 3.55271e-15 52.623)"><path d="M14.371,52.623c-3.535,0-6.849-1.368-9.332-3.852s-3.852-5.797-3.852-9.332c0-3.534,1.368-6.848,3.852-9.331L32.333,2.814  c3.905-3.903,9.973-3.728,14.114,0.413c4.141,4.141,4.319,10.208,0.414,14.114L21.22,42.982c-2.407,2.407-6.327,2.411-8.738,0  c-2.409-2.41-2.408-6.33,0-8.738l17.369-17.369c0.586-0.586,1.535-0.586,2.121,0c0.586,0.586,0.586,1.535,0,2.121L14.603,36.365  c-1.239,1.239-1.239,3.256,0,4.496c1.241,1.239,3.257,1.237,4.496,0L44.74,15.22c2.695-2.696,2.518-6.94-0.414-9.872  s-7.176-3.109-9.872-0.413L7.16,32.229c-1.917,1.917-2.973,4.478-2.973,7.21c0,2.733,1.056,5.294,2.973,7.211  s4.478,2.973,7.211,2.973c2.732,0,5.293-1.056,7.21-2.973l27.294-27.294c0.586-0.586,1.535-0.586,2.121,0s0.586,1.535,0,2.121  L23.702,48.771C21.219,51.254,17.905,52.623,14.371,52.623z" data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></path></g> </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" class="hovered-paths"><g><g>
+<g>
+<path d="M474.562,37.446c-49.928-49.928-131.135-49.928-181.063,0L220.2,110.744c-3.115,3.115-3.991,7.825-2.219,11.846    c1.771,4.032,5.522,6.616,10.252,6.356l3.251-0.24c5.533-0.51,11.19-0.094,16.785,0.427c9.388,0.854,19.223,2.844,30.08,6.074    c3.772,1.156,7.825,0.094,10.586-2.678l49.824-49.824c24.172-24.172,66.37-24.172,90.542,0c24.964,24.964,24.964,65.577,0,90.541    l-71.375,71.374c-5.617-22.019-16.668-41.752-32.733-57.809c-21.026-21.036-48.293-33.633-78.852-36.435    c-26.527-2.313-52.669,3.303-75.559,16.525c-10.93,6.335-19.4,12.659-26.652,19.911L37.438,293.503    c-49.918,49.917-49.918,131.144,0,181.061C62.403,499.528,95.181,512,127.97,512c32.789,0,65.567-12.472,90.532-37.435    l73.278-73.277c3.105-3.105,3.991-7.793,2.23-11.815c-1.761-4.022-5.97-6.731-10.18-6.387l-3.386,0.24    c-5.449,0.531-11.096,0.052-16.712-0.458c-9.367-0.854-19.213-2.844-30.09-6.074c-3.793-1.136-7.814-0.094-10.575,2.688    l-49.824,49.824c-24.172,24.172-66.37,24.172-90.542,0c-24.964-24.964-24.964-65.577,0-90.541l71.375-71.374    c5.617,22.019,16.668,41.752,32.733,57.808c21.036,21.036,48.303,33.633,78.862,36.425c3.98,0.365,7.95,0.542,11.909,0.542    c22.391,0,44.187-5.814,63.64-17.056c10.93-6.335,19.4-12.659,26.652-19.911l106.692-106.691    C524.479,168.59,524.479,87.363,474.562,37.446z M295.679,295.709c-23.009,6.991-47.184,0.646-63.611-15.772    c-16.656-16.656-22.488-41.152-15.75-63.626c23.051-6.956,47.205-0.639,63.615,15.761    C296.592,248.731,302.421,273.232,295.679,295.709z" data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></path>
+</g>
+</g></g> </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="512" height="512" viewBox="0 0 550.801 550.801" style="enable-background:new 0 0 550.801 550.801;" xml:space="preserve" class="hovered-paths"><g><g>
+<g id="drive">
+<path d="M538.051,339.15L362.1,33.15H188.7l0,0l175.951,306H538.051z M216.75,364.65l-86.7,153H464.1l86.701-153H216.75z     M165.75,71.4L0,364.65l86.7,153L255,224.4L165.75,71.4z" data-original="#000000" class="hovered-path active-path" style="fill:#909191" data-old_color="#000000"></path>
+</g>
+</g></g> </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -36 512 511"><g><path d="m231.898438 198.617188c28.203124 0 51.152343-22.945313 51.152343-51.148438 0-28.207031-22.949219-51.152344-51.152343-51.152344-28.203126 0-51.148438 22.945313-51.148438 51.152344 0 28.203125 22.945312 51.148438 51.148438 51.148438zm0-72.300782c11.664062 0 21.152343 9.488282 21.152343 21.152344 0 11.660156-9.488281 21.148438-21.152343 21.148438-11.660157 0-21.148438-9.488282-21.148438-21.148438 0-11.664062 9.488281-21.152344 21.148438-21.152344zm0 0" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path><path d="m493.304688.5h-474.609376c-10.308593 0-18.695312 8.386719-18.695312 18.695312v401.726563c0 10.308594 8.386719 18.695313 18.695312 18.695313h474.609376c10.308593 0 18.695312-8.386719 18.695312-18.695313v-401.726563c0-10.308593-8.386719-18.695312-18.695312-18.695312zm-11.304688 30v237.40625l-94.351562-94.355469c-6.152344-6.140625-16.15625-6.136719-22.304688.011719l-133.441406 133.441406-85.238282-85.234375c-2.980468-2.984375-6.945312-4.628906-11.164062-4.628906-4.214844 0-8.175781 1.640625-11.15625 4.621094l-94.34375 94.34375v-285.605469zm-452 379.117188v-51.085938l105.5-105.5 85.234375 85.234375c2.984375 2.984375 6.949219 4.632813 11.167969 4.632813 4.210937 0 8.175781-1.644532 11.152344-4.625l133.445312-133.445313 105.503906 105.503906v99.285157zm0 0" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path></g> </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-87 0 512 512"><g><path d="m130 129c0-21.503906 17.496094-39 39-39s39 17.496094 39 39v53h90v-53c0-71.132812-57.867188-129-129-129s-129 57.867188-129 129v53h90zm0 0" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path><path d="m0 212v300h338v-300zm169 240c-57.898438 0-105-47.101562-105-105s47.101562-105 105-105 105 47.101562 105 105-47.101562 105-105 105zm0 0" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path><path d="m169 272c-41.355469 0-75 33.644531-75 75s33.644531 75 75 75 75-33.644531 75-75-33.644531-75-75-75zm-.113281 94.636719-46.5625-44.476563 20.722656-21.691406 26.066406 24.894531 14.460938-13.511719 20.480469 21.921876zm0 0" data-original="#000000" class="active-path" style="fill:#909191" data-old_color="#000000"></path></g> </svg>
+                  </button>
+                  <button class="send">NOTE</button>
+                </div>
+                <div class="right">
+                  <button class="bottom-icons">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect opacity="0.3" x="6.6665" y="7.5" width="6.66667" height="8.33333" fill="#909191" />
+                      <path d="M12.9165 3.33333L12.0832 2.5H7.9165L7.08317 3.33333H4.1665V5H15.8332V3.33333H12.9165Z" fill="#909191" />
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 17.5C5.75 17.5 5 16.75 5 15.8334V5.83337H15V15.8334C15 16.75 14.25 17.5 13.3333 17.5H6.66667ZM13.3333 7.50004H6.66667V15.8334H13.3333V7.50004Z" fill="#909191" />
+                    </svg>
+                  </button>
+                  <button class="bottom-icons">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 6.53057C10.9168 6.53057 11.6668 5.79587 11.6668 4.89791C11.6668 3.99995 10.9168 3.26526 10.0002 3.26526C9.0835 3.26526 8.3335 3.99995 8.3335 4.89791C8.3335 5.79587 9.0835 6.53057 10.0002 6.53057ZM10.0002 8.16322C9.0835 8.16322 8.3335 8.89791 8.3335 9.79587C8.3335 10.6938 9.0835 11.4285 10.0002 11.4285C10.9168 11.4285 11.6668 10.6938 11.6668 9.79587C11.6668 8.89791 10.9168 8.16322 10.0002 8.16322ZM8.3335 14.6938C8.3335 13.7959 9.0835 13.0612 10.0002 13.0612C10.9168 13.0612 11.6668 13.7959 11.6668 14.6938C11.6668 15.5918 10.9168 16.3265 10.0002 16.3265C9.0835 16.3265 8.3335 15.5918 8.3335 14.6938Z" fill="#909191" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ASSISTANT -->
+        <div class="content-wrapper">
+          <div class="profile-pic">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.8">
+                <path d="M8.33333 7.49996V4.16663L2.5 9.99996L8.33333 15.8333V12.4166C12.5 12.4166 15.4167 13.75 17.5 16.6666C16.6667 12.5 14.1667 8.33329 8.33333 7.49996Z" fill="#808080" />
+              </g>
+            </svg>
+          </div>
+          <div class="mail-content-wrapper">
+            <div class="contact-info">
+              <p class="contact-name">NextAssistant</p>
+            </div>
+            <p>Here are some informations!
+              <br><br>
+            <p class="name">Attachements</p>
+              <p>CARD HERE</p>
+            <br><br>
+            <p class="name">People in this conversation</p>
+            <p>ROUND USER CARD HERE</p>
+            <br>
 
 
-
-
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="other-services">
+      <div class="services-top">
+        <button>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 511.999 511.999" style="enable-background:new 0 0 511.999 511.999;" xml:space="preserve" width="512" height="512" class=""><g><path style="fill:#E6E6E6;" d="M455.617,10.846H56.367c-12.437,0-22.517,10.094-22.517,22.531v74.912h444.296V33.377  C478.147,20.939,468.053,10.846,455.617,10.846z M148.16,55.922c-5.953,0-10.784-4.831-10.784-10.784s4.831-10.784,10.784-10.784  c5.953,0,10.784,4.831,10.784,10.784S154.112,55.922,148.16,55.922z M366.656,55.922c-5.953,0-10.784-4.831-10.784-10.784  s4.831-10.784,10.784-10.784s10.784,4.831,10.784,10.784S372.608,55.922,366.656,55.922z" data-original="#E6E6E6" class=""></path><path style="fill:#3A5BBC" d="M511.505,113.523l-34.077,177.704l13.918,184.793c1.021,13.559-9.706,25.134-23.322,25.134H43.96  c-13.602,0-24.343-11.575-23.322-25.134l13.933-184.793L0.494,113.523C-2.712,96.815,10.099,81.3,27.123,81.3h457.74  C501.901,81.3,514.711,96.815,511.505,113.523z" data-original="#3A5BBC" class="active-path" data-old_color="#3A5BBC"></path><path style="fill:#518EF8;" d="M468.024,501.153H43.96c-13.602,0-24.343-11.575-23.322-25.134l13.933-184.793h244.435h198.423  l13.918,184.793C492.368,489.578,481.641,501.153,468.024,501.153z" data-original="#518EF8" class=""></path><g>
+<path style="fill:#FFFFFF" d="M247.371,244.856c0-34.687-29.026-62.906-64.703-62.906s-64.703,28.219-64.703,62.906h21.568   c0-22.794,19.351-41.338,43.136-41.338s43.136,18.544,43.136,41.338s-19.351,41.338-43.136,41.338h-20.13v21.568h20.13   c23.785,0,43.136,18.544,43.136,41.338c0,22.794-19.351,41.338-43.136,41.338s-43.136-18.544-43.136-41.338h-21.568   c0,34.687,29.026,62.906,64.703,62.906s64.703-28.219,64.703-62.906c0-21.663-11.322-40.802-28.513-52.122   C236.05,285.659,247.371,266.519,247.371,244.856z" data-original="#FFFFFF" class="" data-old_color="#FFFFFF"></path>
+            <polygon style="fill:#FFFFFF" points="289.289,218.704 300.353,237.218 342.989,211.741 342.989,401.222 364.556,401.222    364.556,173.728  " data-original="#FFFFFF" class="" data-old_color="#FFFFFF"></polygon>
+</g></g> </svg>
+        </button>
+        <button>
+          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48" style=" fill:#000000;"><path fill="#ffc107" d="M9,42h23l10-10V9c0-1.7-1.3-3-3-3H9C7.3,6,6,7.3,6,9v30C6,40.7,7.3,42,9,42z"></path><path fill="#ffecb3" d="M32,42V32h10L32,42z"></path><path fill="#fff" d="M28,36h-8v-7.9c-3.1-1.5-5-4.6-5-8.1c0-5,4-9,9-9c5,0,9,4,9,9c0,3.5-1.9,6.5-5,8.1V36z M22,34h4 v-7.3l0.6-0.3c2.7-1.1,4.4-3.6,4.4-6.5c0-3.9-3.1-7-7-7c-3.9,0-7,3.1-7,7c0,2.9,1.7,5.4,4.4,6.5l0.6,0.3V34z"></path><path fill="#fff" d="M22 35h4v3h-4V35zM21 30H27V32H21z"></path></svg>
+        </button>
+        <button>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512" class=""><g><circle style="fill:#FAD55C" cx="256" cy="256" r="256" data-original="#FAD55C" class="" data-old_color="#FAD55C"></circle><path style="fill:#E3C04D" d="M235.012,511.138l-88.842-88.842l221.817-289.844L511.25,275.715  C501.184,407.889,390.753,512,256,512C248.93,512,241.932,511.7,235.012,511.138z" data-original="#E3C04D" class="active-path" data-old_color="#E3C04D"></path><path style="fill:#FF8C8A;" d="M155.485,127.011H356.52c8.171,0,14.857,6.687,14.857,14.857v268.873  c0,8.171-6.687,14.857-14.857,14.857H155.485c-8.176,0-14.863-6.687-14.863-14.857V141.868  C140.623,133.697,147.309,127.011,155.485,127.011z" data-original="#FF8C8A" class=""></path><polygon style="fill:#F8F8F8;" points="149.143,134.926 362.862,134.926 362.862,417.683 149.143,417.683 " data-original="#F8F8F8" class=""></polygon><path style="fill:#817C85;" d="M222.873,109.669h13.112c-0.445-1.234-0.684-2.535-0.684-3.874c0-8.393,9.266-15.202,20.699-15.202  c11.433,0,20.699,6.809,20.699,15.202c0,1.34-0.239,2.64-0.684,3.874h13.117c2.568,0,4.063,2.195,4.669,4.674l5.619,22.828  c0.611,2.49-2.112,4.674-4.674,4.674h-76.525c-2.557,0-5.186-2.151-4.674-4.674l4.652-22.828  C218.71,111.826,220.3,109.669,222.873,109.669z" data-original="#817C85"></path><path style="fill:#99959C;" d="M207.694,136.832h96.607c2.935,0,5.325,2.396,5.325,5.325l0,0c0,2.929-2.39,5.325-5.325,5.325  h-96.607c-2.924,0-5.319-2.396-5.319-5.325l0,0C202.374,139.228,204.77,136.832,207.694,136.832z" data-original="#99959C"></path><g>
+<polygon style="fill:#B3B3BD" points="177.357,198.145 334.649,198.145 334.649,204.742 177.357,204.742  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,219.533 334.649,219.533 334.649,226.13 177.357,226.13  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,240.921 334.649,240.921 334.649,247.524 177.357,247.524  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,262.314 334.649,262.314 334.649,268.912 177.357,268.912  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,283.702 334.649,283.702 334.649,290.3 177.357,290.3  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,305.09 334.649,305.09 334.649,311.688 177.357,311.688  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,326.478 334.649,326.478 334.649,333.081 177.357,333.081  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+            <polygon style="fill:#B3B3BD" points="177.357,347.872 244.572,347.872 244.572,354.469 177.357,354.469  " data-original="#B3B3BD" class="" data-old_color="#B3B3BD"></polygon>
+</g></g> </svg>
+        </button>
+        <hr class="section-break"></hr>
+        <button>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.8" fill-rule="evenodd" clip-rule="evenodd" d="M9 3V9H3V11H9V17H11V11H17V9H11V3H9Z" fill="#808080" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-<script src='https://use.fontawesome.com/15af25ac7b.js'></script>
-<script id="rendered-js">
-  /*
-   * Replace all SVG images with inline SVG
-   */
-  jQuery('img.svg').each(function () {
-    var $img = jQuery(this);
-    var imgID = $img.attr('id');
-    var imgClass = $img.attr('class');
-    var imgURL = $img.attr('src');
-
-    jQuery.get(imgURL, function (data) {
-      // Get the SVG tag, ignore the rest
-      var $svg = jQuery(data).find('svg');
-
-      // Add replaced image's ID to the new SVG
-      if (typeof imgID !== 'undefined') {
-        $svg = $svg.attr('id', imgID);
-      }
-      // Add replaced image's classes to the new SVG
-      if (typeof imgClass !== 'undefined') {
-        $svg = $svg.attr('class', imgClass + ' replaced-svg');
-      }
-
-      // Remove any invalid XML tags as per http://validator.w3.org
-      $svg = $svg.removeAttr('xmlns:a');
-
-      // Check if the viewport is set, if the viewport is not set the SVG wont't scale.
-      if (!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
-        $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'));
-      }
-
-      // Replace image with new SVG
-      $img.replaceWith($svg);
-
-    }, 'xml');
-
-  });
-  //# sourceURL=pen.js
-</script>
+</div>
 </body>
 </html>
