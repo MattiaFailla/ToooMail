@@ -335,8 +335,8 @@ button {
 
 .tab-bar {
   justify-content: space-between;
-  height: 64px;
-  border-bottom: 1px solid #ddd;
+  height: 55px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 910px 0 rgba(0, 0, 0, 0.09);
 }
 
 .logo-wrapper {
