@@ -13,3 +13,4 @@ web/img/loadmp3.pl
 
 venv/
 /Pipfile
+/.logs/*
