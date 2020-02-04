@@ -20,7 +20,7 @@ class UserApi:
         # if user isn't logged -> start the 'subscription app' the first time
         try:
             # Creating the sqlite3 database
-            conn = sqlite3.connect(current_configuration)
+            conn = sqlite3.connect(current_configuration.db_location)
             cursor = conn.cursor()
             cursor.execute('SELECT id FROM user;')
             if not cursor.fetchall():
