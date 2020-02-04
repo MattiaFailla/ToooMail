@@ -8,6 +8,8 @@
 
   <script type="text/javascript" src="/eel.js"></script>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
   <link href="css/toastr.min.css" rel="stylesheet"/>
   <script src="js/toastr.min.js"></script>
 
@@ -266,7 +268,7 @@
     }
   </style>
 </head>
-<body translate="no">
+<body translate="no" onload="verifyOnline()">
 <h2>ToooMail</h2>
 
 
@@ -336,6 +338,42 @@
 </script>
 
 <script>
+  function verifyOnline() {
+    eel.say_hello_py("Registration page loaded.");
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "800",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+
+    toastr.info('Welcome in TooMail. We are online!');
+    primaryData();
+  }
+
+  async function primaryData(){
+    const server_data = await eel.get_email_platform()();
+    const sel = document.getElementById('platform_selector');
+    for(let i = 0; i < server_data.length; i++) {
+      let opt = document.createElement('option');
+      opt.innerHTML = server_data[i].name;
+      opt.value = server_data[i].id;
+      sel.appendChild(opt);
+    }
+  }
+
+
   async function setServerSettings(){
     // Setting server settings based on dropdown id
 
@@ -345,9 +383,9 @@
       let server_data = await eel.get_email_platform_settings(id)();
       console.log(server_data);
       // Setting fields
-      var ssl_field = ((server_data[0].ssl !== ('False' || 'None')));
-      var ssl_context_field = ((server_data[0].sslcontext !== ('False' || 'None')));
-      var starttls_field = ((server_data[0].starttls !== ('False' || 'None')));
+      let ssl_field = ((server_data[0].ssl !== ('False' || 'None')));
+      let ssl_context_field = ((server_data[0].sslcontext !== ('False' || 'None')));
+      let starttls_field = ((server_data[0].starttls !== ('False' || 'None')));
       console.log(ssl_field, ssl_context_field, starttls_field);
       document.getElementById("imap").value = server_data[0].imap;
       document.getElementById("smtp").value = server_data[0].smtp;
