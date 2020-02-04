@@ -33,7 +33,7 @@ class MailApi:
 
         # return mails day by day
         step = step + 60
-        mails: List[Any] = DBApi("mails").get_mail(step=step, user_id=self.user_id)
+        mails = DBApi("mails").get_mail(step=step, user_id=self.user_id)
 
         # now we need to create the dict
         dict_mails = []
@@ -49,7 +49,6 @@ class MailApi:
 
                 # getting attach info
                 shipped_with = self.get_attach_info_from_db(mail[1])
-                print(mail[1])
                 # parsing datetime
                 received = mail[6]
                 parsed_date = dateutil.parser.parse(received)
@@ -78,7 +77,7 @@ class MailApi:
         return dict_mails
 
     def get_folder(self, folder_name="Inbox"):
-        mails: List[Any] = DBApi("mails").get_mail(user_id=self.user_id, folder=folder_name)
+        mails = DBApi("mails").get_mail(user_id=self.user_id, folder=folder_name)
 
         # now we need to create the dict
         dict_mails = []

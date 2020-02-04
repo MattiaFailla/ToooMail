@@ -122,7 +122,6 @@ class ImapApi:
         with open(".db/mails/" + str(uid.decode()) + ".json", "w") as file:
             json.dump(appmails, file)
 
-        print(appmails)
         return appmails
 
     def check_imap_connection(self):
@@ -375,13 +374,9 @@ class ImapApi:
             all_inbox_messages = imbox.messages()
 
             i = 0
-            print(all_inbox_messages.__len__())
             for uid, message in reversed(all_inbox_messages):
                 # Check if the mail exists in the local database
                 percentage = i / all_inbox_messages.__len__()
-                print(percentage * 100)
-                print(i)
-                print(DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode()))
                 i = i + 1
                 query = DBApi("mails").get("uuid", "WHERE uuid =" + uid.decode())
                 if not query:
