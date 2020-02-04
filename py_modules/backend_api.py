@@ -188,7 +188,6 @@ def first_download():
                 c.execute('INSERT INTO emails (uid, from_name, from_mail, to_name, to_mail, subject, bodyHTML,
                            bodyPLAIN, directory, datetimes) VALUES (?,?,?,?,?,?,?,?,)', data)
             except sqlite3.IntegrityError as e:
-                print('sqlite error: ', e) # column name is not unique
                 continue
             conn.commit()"""
 
@@ -206,7 +205,6 @@ def notify(title, description, duration):
 def elaborate_new_mails(new_messages):
     # NEW MAILS! Add them to the db, send notification and notify the frontend
     for uid, message in reversed(new_messages):
-        # print(message.attachments)
         sanitized_body = str(message.body["html"])
         sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
         sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
