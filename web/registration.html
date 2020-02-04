@@ -5,6 +5,12 @@
 <head>
   <meta charset="UTF-8">
   <title>ToooMail</title>
+
+  <script type="text/javascript" src="/eel.js"></script>
+
+  <link href="css/toastr.min.css" rel="stylesheet"/>
+  <script src="js/toastr.min.js"></script>
+
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css'>
   <style>
     @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -272,6 +278,9 @@
       <input type="text" placeholder="Name" />
       <input type="text" placeholder="Server IMAP" />
       <input type="text" placeholder="Server SMTP" />
+      <select id="platform_selector" name="platform_selector" onchange="setServerSettings()">
+        <option value="-1">--- Platform ---</option>
+      </select>
       <input type="email" placeholder="Email" />
       <input type="password" placeholder="Password" />
       <button>Sign Up</button>
@@ -325,5 +334,54 @@
     container.classList.remove("right-panel-active");
   });
 </script>
+
+<script>
+  async function setServerSettings(){
+    // Setting server settings based on dropdown id
+
+    // Getting the id
+    const id = document.getElementById("platform_selector").value;
+    if (id != "-1"){
+      let server_data = await eel.get_email_platform_settings(id)();
+      console.log(server_data);
+      // Setting fields
+      var ssl_field = ((server_data[0].ssl !== ('False' || 'None')));
+      var ssl_context_field = ((server_data[0].sslcontext !== ('False' || 'None')));
+      var starttls_field = ((server_data[0].starttls !== ('False' || 'None')));
+      console.log(ssl_field, ssl_context_field, starttls_field);
+      document.getElementById("imap").value = server_data[0].imap;
+      document.getElementById("smtp").value = server_data[0].smtp;
+      document.getElementById("ssl").checked = ssl_field;
+      document.getElementById("ssl_context").checked = ssl_context_field;
+      document.getElementById("starttls").checked = starttls_field;
+      console.log(server_data[0])
+
+      // disabling input
+      /*document.getElementById("imap").disabled = true;
+      document.getElementById("smtp").disabled = true;
+      document.getElementById("ssl").disabled = true;
+      document.getElementById("ssl_context").disabled = true;
+      document.getElementById("starttls").disabled = true;*/
+
+
+    }else{
+      /*// Cleaning fields
+      document.getElementById("imap").value = "";
+      document.getElementById("smtp").value = "";
+      document.getElementById("ssl").checked = false;
+      document.getElementById("ssl_context").checked = false;
+      document.getElementById("starttls").checked = false;
+
+      // enabling input
+      document.getElementById("imap").disabled = false;
+      document.getElementById("smtp").disabled = false;
+      document.getElementById("ssl").disabled = false;
+      document.getElementById("ssl_context").disabled = false;
+      document.getElementById("starttls").disabled = false;*/
+    }
+
+  }
+</script>
+
 </body>
 </html>

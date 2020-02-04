@@ -493,7 +493,6 @@ def sync():
 
 if __name__ == "__main__":
     say_hello_py("Server.")
-    eel.say_hello_js("Server connected.")  # Call a Javascript function
 
     template = UserApi.check_if_user_exists()
     if template == "index.html":
