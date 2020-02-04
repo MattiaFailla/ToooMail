@@ -24,33 +24,30 @@ from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
 
 import multiprocessing
+import configuration
 
-logging.basicConfig(
-    format="%(asctime)s - %(message)s",
-    datefmt="%d-%b-%y %H:%M:%S",
-    level=logging.CRITICAL,
-)
+logger = configuration.get_current().logger
 
 # Set web files folder
-eel.init("web")
+eel.init('web')
 
 
 def mail_parsing(uid, message, unread_uid, directory):
-    if len(message.body["html"]) < 1:
-        sanitized_body = str(message.body["plain"][0])
+    if len(message.body['html']) < 1:
+        sanitized_body = str(message.body['plain'][0])
     else:
-        sanitized_body = str(message.body["html"][0])
+        sanitized_body = str(message.body['html'][0])
 
-    from_name = message.sent_from[0]["name"] if message.sent_from else ""
-    from_mail = message.sent_from[0]["email"] if message.sent_from else ""
-    to_name = message.sent_to[0]["name"] if message.sent_to else ""
-    to_mail = message.sent_to[0]["email"] if message.sent_to else ""
+    from_name = message.sent_from[0]['name'] if message.sent_from else ''
+    from_mail = message.sent_from[0]['email'] if message.sent_from else ''
+    to_name = message.sent_to[0]['name'] if message.sent_to else ''
+    to_mail = message.sent_to[0]['email'] if message.sent_to else ''
 
     date_message = message.date
 
     # If html body is empty, load the plain
-    if sanitized_body == "[]":
-        sanitized_body = message.body["plain"]
+    if sanitized_body == '[]':
+        sanitized_body = message.body['plain']
 
     if uid.decode() in unread_uid:
         unread = False
@@ -58,58 +55,58 @@ def mail_parsing(uid, message, unread_uid, directory):
         unread = True
 
     # Getting the subject
-    subject = str(message.subject) if str(message.subject) else "(No subject)"
+    subject = str(message.subject) if str(message.subject) else '(No subject)'
 
     # saving attach in the local disk and on the db
     attach_names = []
     for attach in message.attachments:
-        attach_name = attach.get("filename")
+        attach_name = attach.get('filename')
         attach_names.append(attach_name)
-        content = attach.get("content").read()
+        content = attach.get('content').read()
 
         if not attach_name or not content:
             return
 
-        with open(".db/mails/attach/" + uid.decode() + "_" + attach_name, "wb") as file:
+        with open('.db/mails/attach/' + uid.decode() + '_' + attach_name, 'wb') as file:
             file.write(content)
         payload = {
-            "uuid": uid.decode(),
-            "subject": subject,
-            "real_filename": attach_name,
-            "saved_as": uid.decode() + "_" + attach_name,
-            "user_id": "1",
-            "deleted": "false",
-            "datetime": date_message,
+            'uuid': uid.decode(),
+            'subject': subject,
+            'real_filename': attach_name,
+            'saved_as': uid.decode() + '_' + attach_name,
+            'user_id': '1',
+            'deleted': 'false',
+            'datetime': date_message,
         }
         # saving the file information into the db
-        DBApi("files").insert(data=payload)
+        DBApi('files').insert(data=payload)
 
     appmails = {
-        "uid": uid.decode(),
-        "From_name": str(from_name),
-        "from_mail": str(from_mail),
-        "To_name": str(to_name),
-        "To_mail": str(to_mail),
-        "Subject": str(subject),
-        "bodyHTML": str(sanitized_body),
-        "bodyPLAIN": str(message.body["plain"]),
-        "attach": attach_names,
-        "directory": directory,
-        "datetimes": str(""),
-        "readed": unread,
+        'uid': uid.decode(),
+        'From_name': str(from_name),
+        'from_mail': str(from_mail),
+        'To_name': str(to_name),
+        'To_mail': str(to_mail),
+        'Subject': str(subject),
+        'bodyHTML': str(sanitized_body),
+        'bodyPLAIN': str(message.body['plain']),
+        'attach': attach_names,
+        'directory': directory,
+        'datetimes': str(''),
+        'readed': unread,
     }
 
     # inserting the mail in the database
     mail_payload = {
-        "uuid": uid.decode(),
-        "subject": str(subject),
-        "user_id": "1",
-        "readed": date_message,
+        'uuid': uid.decode(),
+        'subject': str(subject),
+        'user_id': '1',
+        'readed': date_message,
     }
 
-    DBApi("mails").insert(data=mail_payload)
+    DBApi('mails').insert(data=mail_payload)
 
-    with open("./.db/mails/" + str(uid.decode()) + ".json", "w") as file:
+    with open('./.db/mails/' + str(uid.decode()) + '.json', 'w') as file:
         json.dump(appmails, file)
 
     return appmails
@@ -118,25 +115,26 @@ def mail_parsing(uid, message, unread_uid, directory):
 @eel.expose
 def check_smtp_connection(username, password, smtp):
     msg = MIMEMultipart()
-    msg["From"] = username
-    msg["To"] = username
-    msg["Subject"] = "Weclome in ToooMail"
-    msg.attach(MIMEText("Hey! We're glad you're here!"))
+    msg['From'] = username
+    msg['To'] = username
+    msg['Subject'] = 'Welcome in ToooMail'
+    msg.attach(MIMEText('Hey! We\'re glad you\'re here!'))
 
     try:
-        print("sending mail to " + username + " on " + "Welcome in ToooMail")
+        logger.debug(f'Sending mail to {username} on Welcome in ToooMail')
 
-        mailServer = smtplib.SMTP(smtp, 587)
-        mailServer.ehlo()
-        mailServer.starttls()
-        mailServer.ehlo()
-        mailServer.login(username, password)
-        mailServer.sendmail(username, username, msg.as_string())
-        mailServer.close()
+        mail_server = smtplib.SMTP(smtp, 587)
+        mail_server.ehlo()
+        mail_server.starttls()
+        mail_server.ehlo()
+        mail_server.login(username, password)
+        mail_server.sendmail(username, username, msg.as_string())
+        mail_server.close()
         return True
 
     except Exception as e:
-        print(str(e))
+        # FIXME: Catch only specific exceptions if possible
+        logger.error('Error during smtp connection check', e)
         return False
 
 
@@ -154,7 +152,7 @@ def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, star
             imbox.messages()
         return True
     except Exception as e:
-        print(e)
+        logger.error('Error during imap connection check', e)
         return False
 
 
@@ -178,9 +176,9 @@ def get_number_unread():
 @eel.expose
 def get_unread():
     mails = []
-    username = backend_api.get_user_info("mail")
-    passw = backend_api.get_user_info("password")
-    imapserver = backend_api.get_user_info("imapserver")
+    username = backend_api.get_user_info('mail')
+    passw = backend_api.get_user_info('password')
+    imapserver = backend_api.get_user_info('imapserver')
     with Imbox(
             imapserver,
             username=username,
@@ -190,7 +188,7 @@ def get_unread():
             starttls=False,
     ) as imbox:
 
-        logging.info("Account informations correct. Connected.")
+        logging.info('Account informations correct. Connected.')
 
         # Gets all messages after the day x
         all_inbox_messages = imbox.messages(unread=True)
@@ -198,10 +196,10 @@ def get_unread():
         unread_uid = []
         for uid, msg in unread_msgs:
             unread_uid.append(uid.decode())
-        logging.debug("Gathered all inbox messages")
+        logging.debug('Gathered all inbox messages')
 
         for uid, message in reversed(all_inbox_messages):
-            mail = mail_parsing(uid, message, unread_uid, "Unread")
+            mail = mail_parsing(uid, message, unread_uid, 'Unread')
             mails.append(mail)
 
         return mails
@@ -210,54 +208,54 @@ def get_unread():
 # FROM FOLDER
 @eel.expose
 def get_starred():
-    SYNCApi.get_folder(foldername="Starred")
-    return MailApi().get_folder("Starred")
+    SYNCApi.get_folder(folder_name='Starred')
+    return MailApi().get_folder('Starred')
 
 
 @eel.expose
 def get_unwanted():
-    SYNCApi.get_folder(foldername="Junk")
-    return MailApi().get_folder("Junk")
+    SYNCApi.get_folder(folder_name='Junk')
+    return MailApi().get_folder('Junk')
 
 
 @eel.expose
 def get_deleted():
-    SYNCApi.get_folder(foldername="Deleted")
-    return MailApi().get_folder("Deleted")
+    SYNCApi.get_folder(folder_name='Deleted')
+    return MailApi().get_folder('Deleted')
 
 
 # FROM :SPECIFICS:
 @eel.expose
 def get_flagged():
     SYNCApi.get_flagged()
-    return MailApi().get_folder("Flagged")
+    return MailApi().get_folder('Flagged')
 
 
 @eel.expose
 def get_sent():
     SYNCApi.get_sent()
-    return MailApi().get_folder("Sent")
+    return MailApi().get_folder('Sent')
 
 
 @eel.expose
 def delete_mail(uid):
     # @todo: delete the mail both local and remote
-    DBApi("mails").delete(what=uid, where="")
+    DBApi('mails').delete(what=uid, where='')
 
 
 @eel.expose
 def add_note(text, uid, attach):
-    DBApi("notes").insert({"uid": uid, "attach": attach, "text": text})
+    DBApi('notes').insert({'uid': uid, 'attach': attach, 'text': text})
 
 
 @eel.expose
 def del_note(uid):
-    DBApi("notes").delete(what=uid, where="")
+    DBApi('notes').delete(what=uid, where='')
 
 
 @eel.expose
 def add_contact(name, surname, mail, note, nick):
-    DBApi("contact").insert({"name": name, "surname": surname, "mail": mail, "note": note, "nick": nick})
+    DBApi('contact').insert({'name': name, 'surname': surname, 'mail': mail, 'note': note, 'nick': nick})
 
 
 @eel.expose
@@ -277,18 +275,18 @@ def event():
 def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
     # Regular user registration
     data = {
-        "name": name,
-        "surname": "",
-        "nickname": "",
-        "bio": "",
-        "mail": mail,
-        "password": passw,
-        "profilepic": "",
-        "imapserver": imapserver,
-        "smtpserver": smtpserver,
-        "is_logged_in": True,
-        "mail_server_setting": mail_server_id,
-        "created": datetime.datetime.now().isoformat(),
+        'name': name,
+        'surname': '',
+        'nickname': '',
+        'bio': '',
+        'mail': mail,
+        'password': passw,
+        'profilepic': '',
+        'imapserver': imapserver,
+        'smtpserver': smtpserver,
+        'is_logged_in': True,
+        'mail_server_setting': mail_server_id,
+        'created': datetime.datetime.now().isoformat(),
     }
     UserApi.user_registration(datagram=data)
 
@@ -309,21 +307,21 @@ def set_flag(uid):
 def send_mail(account, to, subject, body, attach):
     # get user input
     # input sender email address and password:
-    from_addr = backend_api.get_user_info("mail")
-    password = backend_api.get_user_info("password")
+    from_address = backend_api.get_user_info('mail')
+    password = backend_api.get_user_info('password')
     # input receiver email address.
-    to_addr = to
+    to_address = to
     # input smtp server ip address:
-    smtp_server = backend_api.get_user_info("smtpserver")
+    smtp_server = backend_api.get_user_info('smtpserver')
 
     # email object that has multiple part:
     msg = MIMEMultipart()
-    msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg["Subject"] = Header(subject, "utf-8").encode()
+    msg['From'] = from_address
+    msg['To'] = to_address
+    msg['Subject'] = Header(subject, 'utf-8').encode()
 
     # attache a MIMEText object to save email content
-    msg_content = MIMEText(body, "plain", "utf-8")
+    msg_content = MIMEText(body, 'plain', 'utf-8')
     msg.attach(msg_content)
 
     # to add an attachment is just add a MIMEBase object to read a picture locally.
@@ -345,36 +343,36 @@ def send_mail(account, to, subject, body, attach):
         'smtp-mail.outlook.com'
         """
 
-    mailServer = smtplib.SMTP(backend_api.get_user_info("imapserver"), 587)
-    mailServer.ehlo()
-    mailServer.starttls()
-    mailServer.ehlo()
-    mailServer.login(
-        backend_api.get_user_info("mail"), backend_api.get_user_info("password")
+    mail_server = smtplib.SMTP(backend_api.get_user_info('imapserver'), 587)
+    mail_server.ehlo()
+    mail_server.starttls()
+    mail_server.ehlo()
+    mail_server.login(
+        backend_api.get_user_info('mail'), backend_api.get_user_info('password')
     )
-    mailServer.sendmail(account, to, msg.as_string())
-    mailServer.close()
+    mail_server.sendmail(account, to, msg.as_string())
+    mail_server.close()
 
 
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
-    print("Hello from %s" % x)
+    logger.info(f'Hello from {x}.')
 
 
 @eel.expose
 def get_email_platform_settings(id):
-    result = DBApi("mail_server_settings").get(field="*", expression="WHERE ID = " + str(id))
+    result = DBApi('mail_server_settings').get(field='*', expression=f'WHERE ID = {str(id)}')
     fe_data = []
     for data in result:
         fe_data.append(
             {
-                "id": data[0],
-                "name": data[1],
-                "smtp": data[2],
-                "imap": data[3],
-                "ssl": data[4],
-                "sslcontext": data[5],
-                "starttls": data[6],
+                'id': data[0],
+                'name': data[1],
+                'smtp': data[2],
+                'imap': data[3],
+                'ssl': data[4],
+                'sslcontext': data[5],
+                'starttls': data[6],
             }
         )
     return fe_data
@@ -383,13 +381,13 @@ def get_email_platform_settings(id):
 @eel.expose
 def get_email_platform():
     # Getting vendors with ID
-    result = DBApi("mail_server_settings").get(field="id, service_name", expression="")
+    result = DBApi('mail_server_settings').get(field='id, service_name', expression='')
     fe_data = []
     for data in result:
         fe_data.append(
             {
-                "id": data[0],
-                "name": data[1]
+                'id': data[0],
+                'name': data[1]
             }
         )
     return fe_data
@@ -397,31 +395,33 @@ def get_email_platform():
 
 @eel.expose
 def guess_imap(mail):
-    """This function tries to find the imap/smtp address from a list of known servers
+    '''This function tries to find the imap/smtp address from a list of known servers
         or tries to guess the server from the e-mail address.
-        It checks if the server answers to a socket call"""
+        It checks if the server answers to a socket call'''
     if mail:
         try:
-            domain = re.search(r"(@)(.*)(\.)", mail).group(2)
-            complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
         except Exception as e:
+            # FIXME: catch specific exceptions instead of Exception
+            logger.error('Error guessing imap', e)
             return False
     else:
         return False
     server = {
-        "gmail": "imap.gmail.com",
-        "yahoo": "imap.mail.yahoo.com",
-        "aol": "imap.aol.com",
-        "icloud": "imap.mail.me.com",
-        "me": "imap.mail.me.com",
-        "hotmail": "imap-mail.outlook.com",
-        "live": "imap-mail.outlook.com",
+        'gmail': 'imap.gmail.com',
+        'yahoo': 'imap.mail.yahoo.com',
+        'aol': 'imap.aol.com',
+        'icloud': 'imap.mail.me.com',
+        'me': 'imap.mail.me.com',
+        'hotmail': 'imap-mail.outlook.com',
+        'live': 'imap-mail.outlook.com',
     }
     if domain in server.keys():
         return server[domain]
     else:
         ip = None
-        prefix = ["mail.", "imap.", "imap.mail.", "imap-mail."]
+        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
         for i in prefix:
             try:
                 connection = socket.create_connection(
@@ -441,31 +441,36 @@ def guess_imap(mail):
 
 @eel.expose
 def guess_smtp(mail):
-    """This function tries to find the imap/smtp address from a list of known servers
-        or tries to guess the server from the e-mail address.
-        It checks if the server answers to a socket call"""
+    """
+    This function tries to find the imap/smtp address from a list of known servers
+    or tries to guess the server from the e-mail address.
+    It checks if the server answers to a socket call
+    :param mail:
+    :return:
+    """
     if mail:
         try:
-            domain = re.search(r"(@)(.*)(\.)", mail).group(2)
-            complete_domain = re.search(r"(@)(.*\..*)", mail).group(2)
+            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
+            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
         except Exception as e:
+            logger.error('Error guessing smtp', e)
             return False
     else:
         return False
     server = {
-        "gmail": "smtp.gmail.com",
-        "yahoo": "smtp.mail.yahoo.com",
-        "aol": "smtp.aol.com",
-        "icloud": "smtp.mail.me.com",
-        "me": "smtp.mail.me.com",
-        "hotmail": "smtp-mail.outlook.com",
-        "live": "smtp-mail.outlook.com",
+        'gmail': 'smtp.gmail.com',
+        'yahoo': 'smtp.mail.yahoo.com',
+        'aol': 'smtp.aol.com',
+        'icloud': 'smtp.mail.me.com',
+        'me': 'smtp.mail.me.com',
+        'hotmail': 'smtp-mail.outlook.com',
+        'live': 'smtp-mail.outlook.com',
     }
     if domain in server.keys():
         return server[domain]
     else:
         ip = None
-        prefix = ["mail.", "smtp.", "smtp.mail.", "smtp-mail."]
+        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
         for i in prefix:
             try:
                 connection = socket.create_connection(
@@ -491,15 +496,14 @@ def sync():
     SYNCApi().download_new_mails_from_server()
 
 
-if __name__ == "__main__":
-    say_hello_py("Server.")
-    eel.say_hello_js("Server connected.")  # Call a Javascript function
+if __name__ == '__main__':
+    say_hello_py('Server')
+    # eel.say_hello_js('Server connected.')  # Call a Javascript function
 
     template = UserApi.check_if_user_exists()
-    if template == "index.html":
+    if template == 'index.html':
         processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
-        #for p in processes:
-        #    p.start()
+
         eel.start(template, block=True)  # Start
     else:
         eel.start(template, block=True)  # Start

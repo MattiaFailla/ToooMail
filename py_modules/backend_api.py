@@ -48,7 +48,6 @@ def update_starred():
         all_inbox_messages = imbox.messages(flagged=True)
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -67,7 +66,7 @@ def update_starred():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
 
-            DBApi("emails").insert(
+            DBApi("mails").insert(
                 {
                     "uid": uid.decode(),
                     "from_name": str(from_name),
@@ -95,7 +94,6 @@ def get_mails(year, month, day):
         all_inbox_messages = imbox.messages(date__on=datetime.date(year, month, day))
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -150,10 +148,8 @@ def first_download():
     with Imbox(get_user_connection_data()) as imbox:
         # Gets all messages from the inbox
         all_inbox_messages = imbox.messages()
-        print(len(all_inbox_messages))
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -185,14 +181,13 @@ def first_download():
                 str(message.date),
             ]
 
-            insert("emails", data)
+            DBApi("emails").insert(data)
             """
             # INSERT INTO THE DB
             try:
                 c.execute('INSERT INTO emails (uid, from_name, from_mail, to_name, to_mail, subject, bodyHTML,
                            bodyPLAIN, directory, datetimes) VALUES (?,?,?,?,?,?,?,?,)', data)
             except sqlite3.IntegrityError as e:
-                print('sqlite error: ', e) # column name is not unique
                 continue
             conn.commit()"""
 
@@ -210,7 +205,6 @@ def notify(title, description, duration):
 def elaborate_new_mails(new_messages):
     # NEW MAILS! Add them to the db, send notification and notify the frontend
     for uid, message in reversed(new_messages):
-        # print(message.attachments)
         sanitized_body = str(message.body["html"])
         sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
         sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
