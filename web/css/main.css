@@ -277,7 +277,7 @@ html {
   --selected-background-color: rgba(0, 65, 255, 0.16);
   --selected-items-color: rgb(37, 109, 255);
   --svg-current-color: rgba(144, 145, 145, 0.74);
-  --write-mail-color-button: rgb(50, 90, 255);
+  --write-mail-color-button: rgb(40, 107, 210);
   overflow: hidden;
 }
 
@@ -300,14 +300,6 @@ h2 {
   opacity: 0.6;
 }
 
-.compose-button {
-  -webkit-box-shadow: -1px 5px 9px 2px #e8e8e8;
-  -moz-box-shadow: -1px 5px 9px 2px #e8e8e8;
-  box-shadow: 0px 3px 10px #e4e8eb;
-  background-color: var(--write-mail-color-button);
-  color: white !important;
-
-}
 
 button, label {
   cursor: pointer;
@@ -392,11 +384,20 @@ button {
 .compose-button {
   justify-content: space-evenly;
   border-radius: 30px;
-  width: 148px;
-  height: 42px;
+  width: 200px;
+  height: 40px;
   color: #909191;
   font-size: 13px;
   font-weight: 600;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: var(--write-mail-color-button);
+  color: white !important;
+}
+
+.compose-button:hover {
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 10px 30px 0 rgba(0, 0, 0, 0.19);
 }
 
 .item-wrapper label {
@@ -796,9 +797,12 @@ label span {
   display: flex;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 10px;
   background: #ffffff;
   margin-bottom: 10px;
+  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
 .mail-content-wrapper {

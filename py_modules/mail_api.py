@@ -1,17 +1,19 @@
 import json
-from datetime import datetime, timedelta
 import dateutil.parser
 from typing import List, Any
-
+import configuration
 from py_modules import backend_api
 from py_modules.db_api import DBApi
 from py_modules.imap_api import ImapApi
+
+current_configuration = configuration.get_current()
+logger = current_configuration.logger
 
 
 class MailApi:
     def __init__(self, uuid=-1):
         self.uuid = uuid
-        self.userId = backend_api.get_user_id()
+        self.user_id = backend_api.get_user_id()
 
     @staticmethod
     def read_json_data_from_fs(uid):
@@ -20,9 +22,9 @@ class MailApi:
             return json.load(f)
 
     def get_attach_info_from_db(self, uid):
-        datastream: List[Any] = DBApi("attach").get_files_information(uid=uid, user_id=self.userId)
+        data_stream = DBApi("attach").get_files_information(uid=uid, user_id=self.user_id)
         files = []
-        for file in datastream:
+        for file in data_stream:
             files.append(file[0])
         return files
 
@@ -31,7 +33,7 @@ class MailApi:
 
         # return mails day by day
         step = step + 60
-        mails: List[Any] = DBApi("mails").get_mail(step=step, user_id=self.userId)
+        mails = DBApi("mails").get_mail(step=step, user_id=self.user_id)
 
         # now we need to create the dict
         dict_mails = []
@@ -39,22 +41,21 @@ class MailApi:
             # Getting json info
             # read file
             try:
-                with open(".db/mails/" + str(mail[1]) + ".json", "r") as myfile:
-                    data = myfile.read()
+                with open(".db/mails/" + str(mail[1]) + ".json", "r") as my_file:
+                    data = my_file.read()
 
                 # parse file
                 obj = json.loads(data)
 
                 # getting attach info
                 shipped_with = self.get_attach_info_from_db(mail[1])
-                print(mail[1])
                 # parsing datetime
                 received = mail[6]
-                strdate = dateutil.parser.parse(received)
-                strdate = strdate.strftime("%d/%m/%Y %H:%M:%S")
+                parsed_date = dateutil.parser.parse(received)
+                parsed_date = parsed_date.strftime("%d/%m/%Y %H:%M:%S")
 
                 # Creating the dict
-                tempmail = {
+                temp_mail = {
                     "uid": mail[1],
                     "From_name": str(obj['From_name']),
                     "from_mail": str(obj['from_mail']),
@@ -65,28 +66,26 @@ class MailApi:
                     "bodyPLAIN": str(obj['bodyPLAIN']),
                     "attach": obj['attach'],
                     "directory": str(mail[4]),
-                    "datetimes": str(strdate),
+                    "datetimes": str(parsed_date),
                     "readed": str(mail[5]),
                 }
 
-                dict_mails.append(tempmail)
+                dict_mails.append(temp_mail)
             except Exception as e:
-                print("Errore elaborazione: ")
-                print(e)
-                pass
+                logger.error('Error retrieving emails', e)
 
         return dict_mails
 
-    def get_folder(self, foldername="Inbox"):
-        mails: List[Any] = DBApi("mails").get_mail(user_id=self.userId, folder=foldername)
+    def get_folder(self, folder_name="Inbox"):
+        mails = DBApi("mails").get_mail(user_id=self.user_id, folder=folder_name)
 
         # now we need to create the dict
         dict_mails = []
         for mail in mails:
             # Getting json info
             # read file
-            with open(".db/mails/" + str(mail[1]) + ".json", "r") as myfile:
-                data = myfile.read()
+            with open(".db/mails/" + str(mail[1]) + ".json", "r") as my_file:
+                data = my_file.read()
 
             # parse file
             obj = json.loads(data)
@@ -95,7 +94,7 @@ class MailApi:
             self.get_attach_info_from_db(mail[0])
 
             # Creating the dict
-            tempmail = {
+            temp_mail = {
                 "uid": mail[1],
                 "From_name": str(obj['From_name']),
                 "from_mail": str(obj['from_mail']),
@@ -110,6 +109,6 @@ class MailApi:
                 "readed": str(mail[5]),
             }
 
-            dict_mails.append(tempmail)
+            dict_mails.append(temp_mail)
 
         return dict_mails
