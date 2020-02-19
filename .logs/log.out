@@ -1,7 +1,10 @@
-2020-02-04 15:36:54,439 - app.py - INFO - Hello from Server.
-2020-02-04 15:36:54,736 - handler.py - DEBUG - Initializing WebSocket
-2020-02-04 15:36:54,736 - handler.py - DEBUG - Validating WebSocket request
-2020-02-04 15:36:54,738 - handler.py - INFO - 127.0.0.1 - - [2020-02-04 15:36:54] "GET /registration.html HTTP/1.1" 404 882 0.002649
-2020-02-04 15:36:54,841 - handler.py - DEBUG - Initializing WebSocket
-2020-02-04 15:36:54,841 - handler.py - DEBUG - Validating WebSocket request
-2020-02-04 15:36:54,841 - handler.py - INFO - 127.0.0.1 - - [2020-02-04 15:36:54] "GET /favicon.ico HTTP/1.1" 404 876 0.000372
+2020-02-05 09:51:16,236 - app.py - INFO - Hello from Server..
+2020-02-05 09:51:17,599 - handler.py - DEBUG - Initializing WebSocket
+2020-02-05 09:51:17,600 - handler.py - DEBUG - Validating WebSocket request
+2020-02-05 09:51:17,615 - handler.py - INFO - 127.0.0.1 - - [2020-02-05 09:51:17] "GET /index.html HTTP/1.1" 200 81836 0.015405
+2020-02-05 09:51:18,002 - handler.py - DEBUG - Initializing WebSocket
+2020-02-05 09:51:18,003 - handler.py - DEBUG - Validating WebSocket request
+2020-02-05 09:51:18,005 - handler.py - INFO - 127.0.0.1 - - [2020-02-05 09:51:18] "GET /css/main.css HTTP/1.1" 200 18064 0.002262
+2020-02-05 09:51:18,232 - handler.py - DEBUG - Initializing WebSocket
+2020-02-05 09:51:18,232 - handler.py - DEBUG - Validating WebSocket request
+2020-02-05 09:51:18,235 - handler.py - INFO - 127.0.0.1 - - [2020-02-05 09:51:18] "GET /favicon.ico HTTP/1.1" 404 876 0.002722
