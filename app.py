@@ -5,7 +5,6 @@ import datetime
 import json
 import logging
 import re
-# import python smtplib module
 import smtplib
 import socket
 from email.header import Header
@@ -503,12 +502,12 @@ def pong():
 
 
 @eel.expose
-def log(message):
+def ui_log(message):
     logger.debug(f'UI: {message}')
 
 
 @eel.expose
-def log_error(message):
+def ui_log_error(message):
     logger.error(f'UI: {message}')
 
 
