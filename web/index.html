@@ -103,7 +103,7 @@
 </section>
 <section class="mails">
   <div class="search-bar">
-    <input type="text" placeholder="Search...">
+    <input type="text" id="search_bar" placeholder="Search...">
     <span><i class="fas fa-search"></i></span>
   </div>
   <div class="mail-list">
@@ -281,6 +281,15 @@
   </div>
 </section>
 
+<!-- Full screen search -->
+<div id="full_search">
+  <button type="button" class="close">×</button>
+  <form>
+    <input type="search" value="" placeholder="type keyword(s) here" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="composeEmail" tabindex="-1" role="dialog" aria-labelledby="composeEmailLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -339,18 +348,18 @@
               <div class="col-md-6">
                 <div class="profile-head">
                   <h5>
-                    Kshiti Ghelani
+                    USER NAME HERE
                   </h5>
                   <h6>
-                    Web Developer and Designer
+                    USER BIO HERE
                   </h6>
-                  <p class="proile-rating">RANKINGS : <span>8/10</span></p>
+                  <p class="proile-rating">Total emails: <span>890</span></p>
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                       <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Password</a>
                     </li>
                   </ul>
                 </div>
@@ -362,16 +371,10 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="profile-work">
-                  <p>WORK LINK</p>
-                  <a href="">Website Link</a><br/>
-                  <a href="">Bootsnipp Profile</a><br/>
-                  <a href="">Bootply Profile</a>
-                  <p>SKILLS</p>
-                  <a href="">Web Designer</a><br/>
-                  <a href="">Web Developer</a><br/>
-                  <a href="">WordPress</a><br/>
-                  <a href="">WooCommerce</a><br/>
-                  <a href="">PHP, .Net</a><br/>
+                  <p>PROFILE ACTION / APP ACTION</p>
+                  <a href="">Manage apps</a><br/>
+                  <a href="">Connect to NextBlu</a><br/>
+                  <a href="">Delete profile</a>
                 </div>
               </div>
               <div class="col-md-8">
@@ -382,7 +385,7 @@
                         <label>User Id</label>
                       </div>
                       <div class="col-md-6">
-                        <p>Kshiti123</p>
+                        <p>userid546</p>
                       </div>
                     </div>
                     <div class="row">
@@ -390,7 +393,7 @@
                         <label>Name</label>
                       </div>
                       <div class="col-md-6">
-                        <p>Kshiti Ghelani</p>
+                        <p>Incredible Name</p>
                       </div>
                     </div>
                     <div class="row">
@@ -398,7 +401,7 @@
                         <label>Email</label>
                       </div>
                       <div class="col-md-6">
-                        <p>kshitighelani@gmail.com</p>
+                        <p>myname@nextblu.com</p>
                       </div>
                     </div>
                     <div class="row">
@@ -414,7 +417,7 @@
                         <label>Profession</label>
                       </div>
                       <div class="col-md-6">
-                        <p>Web Developer and Designer</p>
+                        <p>Mail sender</p>
                       </div>
                     </div>
                   </div>
@@ -497,6 +500,30 @@
 <script src='https://kit.fontawesome.com/6c5e14b9fa.js'></script>
 <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<!-- general style js -->
+<script>
+  $(function () {
+    $('#search_bar').on('click', function(event) {
+      event.preventDefault();
+      $('#full_search').addClass('open');
+      $('#full_search > form > input[type="search"]').focus();
+    });
+
+    $('#full_search, #full_search button.close').on('click keyup', function(event) {
+      if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+        $(this).removeClass('open');
+      }
+    });
+
+
+    //Do not include! This prevents the form from submitting for DEMO purposes only!
+    $('form').submit(function(event) {
+      event.preventDefault();
+      return false;
+    })
+  });
+</script>
 
 <!-- Initializing Quill editor -->
 <script>
