@@ -24,7 +24,7 @@
 <section class="sidebar">
   <div class="wapper">
     <img src="img/logo_transparent.png" class="logo">
-    <a href="#write" class="btn-compose text-center" data-toggle="modal" data-target="#composeEmail">
+    <a href="#write" class="btn-compose text-center shadow-lg" data-toggle="modal" data-target="#composeEmail">
       <span class="icon"><i class="fas fa-edit"></i></span>
       Compose
     </a>
@@ -41,7 +41,7 @@
           <li>
             <a href="#">
               <span class="icon"><i class="far fa-flag"></i></span>
-              Flagged
+              Flagged 
             </a>
           </li>
           <li>
@@ -102,12 +102,12 @@
   </div>
 </section>
 <section class="mails">
-  <div class="search-bar">
+  <div class="search-bar shadow-sm">
     <input type="text" id="search_bar" placeholder="Search...">
     <span><i class="fas fa-search"></i></span>
   </div>
   <div class="mail-list">
-    <div class="message shadow-lg active-message">
+    <div class="message shadow active-message">
       <div class="message-status hidden">
         <i class="fas fa-circle"></i>
       </div>
@@ -130,7 +130,7 @@
       </p>
       <div class="message-folder-indicator bg-blue"></div>
     </div>
-    <div class="message shadow-lg">
+    <div class="message shadow">
       <div class="message-status text-red">
         <i class="fas fa-circle"></i>
       </div>
@@ -153,7 +153,7 @@
       </p>
       <div class="message-folder-indicator bg-yellow"></div>
     </div>
-    <div class="message shadow-lg">
+    <div class="message shadow">
       <div class="message-status hidden">
         <i class="fas fa-circle"></i>
       </div>
@@ -176,7 +176,7 @@
       </p>
       <div class="message-folder-indicator bg-red"></div>
     </div>
-    <div class="message">
+    <div class="message shadow">
       <div class="message-status text-red">
         <i class="fas fa-circle"></i>
       </div>
@@ -517,7 +517,7 @@
     });
 
 
-    //Do not include! This prevents the form from submitting for DEMO purposes only!
+    //Preventing the form submit
     $('form').submit(function(event) {
       event.preventDefault();
       return false;
