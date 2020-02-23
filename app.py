@@ -161,13 +161,15 @@ def get_mails(step):
     # days -> number of days to be - from today
     return MailApi().get_mails(step=step)
 
+
 @eel.expose
 def get_mail_by_uuid(uuid):
     return MailApi().get_specific_email(uuid=uuid)
 
+
 @eel.expose
 def mark_as_seen(uid):
-    SYNCApi.mark_as_seen(uid=uid)
+    SYNCApi.mark_as_seen(uid=str(uid))
     return True
 
 
@@ -490,6 +492,7 @@ def guess_smtp(mail):
             else:
                 return False
 
+
 @eel.expose
 def get_username():
     return UserApi.get_username()
@@ -504,7 +507,8 @@ if __name__ == "__main__":
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
-        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
+        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
+                     range(4)]
 
         eel.start(template, block=True)  # Start
     else:
