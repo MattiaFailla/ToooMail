@@ -60,7 +60,7 @@ class SYNCApi:
 
     @staticmethod
     def get_sent():
-        ImapApi.get_sent()
+        ImapApi().get_sent()
 
 
 
