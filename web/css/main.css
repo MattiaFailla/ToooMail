@@ -505,6 +505,7 @@ body {
   padding: 15px 5px 0;
   margin-left: 200px;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 .mails .search-bar {
   margin-bottom: 45px;
