@@ -180,19 +180,19 @@
     <div class="open-message">
       <div class="message-info">
         <div class="message-sender-img">
-          <img src="https://images.unsplash.com/photo-1504911539020-cfb0f7887a5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+          <img src="https://images.unsplash.com/photo-1504911539020-cfb0f7887a5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" id="sender-profile-pic">
         </div>
         <div class="message-sender">
-          <h4 class="sender-name">Nicole Randall</h4>
-          <p class="message-subject">
+          <h4 class="sender-name" id="sender-name">Nicole Randall</h4>
+          <p class="message-subject" id="message-subject">
             The best travel destinations
           </p>
         </div>
-        <div class="message-timestamp">
+        <div class="message-timestamp" id="message-timestamp">
           <small>2:05 PM</small>
         </div>
       </div>
-      <div class="message-content">
+      <div class="message-content" id="message-content">
         <p>Hi Chris!</p>
         <p>
           Towards the end of every year we look at the year ahead through a cultural lens, with a focus on
@@ -591,7 +591,27 @@
   async function getmailbody(uid) {
     logger("Loading the mail with uid: "+uid.toString());
     let email_data = await eel.get_mail_by_uuid(uid.toString())()
-    logger("Received email data for uid: "+uid.toString()+" with the following payload:"+email_data)
+    logger("Received email data for uid: "+uid.toString()+" with the following payload:")
+    logger(email_data)
+
+    // Adding the mail content to the DOM
+    let sender_name = email_data[0].From_name;
+    let subject = email_data[0].Subject;
+    let timestamp = email_data[0].datetimes;
+    let body = email_data[0].bodyHTML;
+
+    let sender_profile_pic =  MD5(email_data[0].from_mail);;
+
+    document.getElementById('sender-name').innerHTML = sender_name;
+    document.getElementById('message-subject').innerHTML = subject;
+    document.getElementById('message-timestamp').innerHTML = timestamp;
+    document.getElementById('message-content').innerHTML = body;
+
+    document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128";
+
+
+
+
   }
   // get mail attach list
   async function getmailattach() {

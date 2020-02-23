@@ -163,7 +163,7 @@ def get_mails(step):
 
 @eel.expose
 def get_mail_by_uuid(uuid):
-    return MailApi.get_specific_email(uuid)
+    return MailApi().get_specific_email(uuid=uuid)
 
 @eel.expose
 def mark_as_seen(uid):
