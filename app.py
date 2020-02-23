@@ -161,6 +161,9 @@ def get_mails(step):
     # days -> number of days to be - from today
     return MailApi().get_mails(step=step)
 
+@eel.expose
+def get_mail_by_uuid(uuid):
+    return MailApi.get_specific_email(uuid)
 
 @eel.expose
 def mark_as_seen(uid):
