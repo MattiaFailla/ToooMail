@@ -72,7 +72,13 @@ class ImapApi:
 
         # If html body is empty, load the plain
         if sanitized_body == "[]":
-            sanitized_body = message.body["plain"]
+            sanitized_body = message.body["plain"][0]
+
+        # Getting clean raw body
+        if len(message.body["plain"]) < 1:
+            plain_message = ""
+        else:
+            plain_message = message.body["plain"][0]
 
         if uid.decode() in unread_uid:
             unread = False
@@ -114,7 +120,7 @@ class ImapApi:
             "To_mail": str(to_mail),
             "Subject": str(subject),
             "bodyHTML": str(sanitized_body),
-            "bodyPLAIN": str(message.body["plain"]),
+            "bodyPLAIN": str(plain_message),
             "attach": attach_names,
             "directory": directory,
             "datetimes": str(iso_date),
