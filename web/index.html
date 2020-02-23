@@ -106,6 +106,7 @@
     <input type="text" id="search_bar" placeholder="Search...">
     <span><i class="fas fa-search"></i></span>
   </div>
+
   <div class="mail-list" id="mail-list">
 
     <!--<div class="tm-message shadow active-message">
@@ -178,7 +179,11 @@
       </button>
     </div>
     <button class="delete-btn">
+      <i class="far fa-star" aria-hidden="true"></i>
+    </button>
+    <button class="delete-btn">
       <i class="far fa-trash-alt" aria-hidden="true"></i>
+      <i class="far fa-flag" aria-hidden="true"></i>
     </button>
   </div>
   <div class="tm-wrapper">
@@ -488,10 +493,9 @@
     main();
   });
   async function main(){
-    loadmailrow(); // load the mails
     userinfo(); // load the user infos in the dom
     numberunread(); // loading the number of unreaded emails
-
+    loadmailrow(); // load the mails
   }
   async function logger(message){
     console.log(message);
@@ -618,8 +622,8 @@
     let sender_profile_pic =  MD5(email_data[0].from_mail);;
 
     document.getElementById('sender-name').innerHTML = sender_name;
-    document.getElementById('message-subject').innerHTML = subject;
-    document.getElementById('message-timestamp').innerHTML = timestamp;
+    document.getElementById('message-subject').innerText = subject;
+    document.getElementById('message-timestamp').innerText = timestamp;
     document.getElementById('message-content').innerHTML = body;
 
     document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128";
