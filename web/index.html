@@ -35,7 +35,7 @@
             <a href="#">
               <span class="icon"><i class="far fa-envelope"></i></span>
               Inbox
-              <span class="number">36</span>
+              <span class="number" id="number-unread">36</span>
             </a>
           </li>
           <li>
@@ -474,10 +474,15 @@
 <script type="text/javascript" src="/eel.js"></script>
 
 <script>
+  /*GLOBAL VARS*/
+  var mail_container_helper = [];
+
+
   // main function - called on first page load
   async function main(){
     loadmailrow(); // load the mails
     userinfo(); // load the user infos in the dom
+    numberunread(); // loading the number of unreaded emails
 
   }
   async function logger(message){
@@ -493,6 +498,9 @@
   async function loadmailrow() {
     let mail_data = await eel.get_mails(10)();
     logger(mail_data);
+
+    window.mail_container_helper.push(mail_data); // Adding emails to the global var
+
     logger("Adding email row to DOM.");
 
 
@@ -501,7 +509,9 @@
       const div = document.createElement('div');
       div.className = 'message shadow';
       div.id = 'message-'+i;
-      div.onclick = getmailbody(mail_data[i].uid);
+
+      div.onclick = `getmailbody(${mail_data[i].uid});`
+      div.setAttribute("onclick",`getmailbody(${mail_data[i].uid});`);
 
       let mail_sender_name = mail_data[i].From_name;
       let mail_subject = mail_data[i].Subject;
@@ -525,7 +535,7 @@
         </div>
         <div class="message-info">
           <div class="message-sender-img">
-            <img src="https://www.gravatar.com/avatar/${sender_profile_pic}" alt="">
+            <img src="https://www.gravatar.com/avatar/${sender_profile_pic}?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${mail_sender_name}/128" alt="">
           </div>
           <div class="message-sender">
             <h4 class="sender-name">${mail_sender_name}</h4>
@@ -540,17 +550,22 @@
         <p class="message-preview">
           ${message_preview} ...
         </p>
-        <div class="message-folder-indicator bg-yellow"></div>
+        <div class="message-folder-indicator bg-blue"></div>
 
       `;
       document.getElementById('mail-list').appendChild(div);
     }
-
-
   }
   // load user info and place in the dom
   async function userinfo(){
 
+  }
+  // number unread
+  async function numberunread() {
+    let NumberUnread = await eel.get_number_unread()();
+    logger("Getting the number of unread messages");
+    var NumberUnreadSpan = document.getElementById("number-unread");
+    NumberUnreadSpan.innerHTML = NumberUnread;
   }
   // send mail
   async function sendmail() {
@@ -574,7 +589,9 @@
   }
   // get mail body
   async function getmailbody(uid) {
-
+    logger("Loading the mail with uid: "+uid.toString());
+    let email_data = await eel.get_mail_by_uuid(uid.toString())()
+    logger("Received email data for uid: "+uid.toString()+" with the following payload:"+email_data)
   }
   // get mail attach list
   async function getmailattach() {
