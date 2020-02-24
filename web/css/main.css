@@ -320,7 +320,7 @@ textarea {
 }
 
 html {
-  font-size: 10px;
+  font-size: 11px;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -839,4 +839,16 @@ body {
 .tm-profile-tab p{
   font-weight: 600;
   color: #0062cc;
+}
+
+/* IN APP MAIL NOTIFICATION */
+.toast-message {
+  -ms-word-wrap: break-word;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+.toast-title {
+  font-weight: bold;
+  font-size: 18px;
 }
