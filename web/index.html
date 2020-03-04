@@ -631,7 +631,7 @@
     document.getElementById('message-timestamp').innerText = timestamp;
     document.getElementById('message-content').innerHTML = body;
 
-    document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128";
+    document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128?background=0D8ABC&color=fff";
 
     // setting the active mail
     document.getElementById('message-'+uid).className = "tm-message shadow active-message";
@@ -862,7 +862,7 @@
   }
 
   // opening every link in the browser
-  
+
 
   function displaymessagenotification(title, message) {
     toastr.options = {
