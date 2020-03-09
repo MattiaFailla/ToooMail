@@ -97,7 +97,7 @@
 
 
 
-    <div class="container settings">
+    <div class="container settings" style="padding-right: 1px; padding-left: 1px">
       <div class="row">
         <div class="col-sm">
           <a href="#">
@@ -124,6 +124,30 @@
 
 
 <section class="tm-mails">
+
+  <nav class="navbar navbar-dark bg-dark tm-mobile-navbar sticky-top">
+    <!-- Navbar content -->
+    <a class="navbar-brand" href="#">ToooMail</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <div class="tm-search-bar shadow-sm">
     <input type="text" id="search_bar" placeholder="Search...">
     <span><i class="fas fa-search"></i></span>
@@ -154,6 +178,7 @@
       </p>
       <div class="tm-message-folder-indicator tm-bg-blue"></div>
     </div>
+
     <div class="tm-message shadow">
       <div class="tm-message-status tm-text-red">
         <i class="fas fa-circle"></i>
@@ -190,8 +215,11 @@
 
   </div>
 </section>
-<section class="tm-mail-viewer tm-bg-white">
-  <div class="tm-controls">
+<section class="tm-mail-viewer">
+
+
+
+  <!--<div class="tm-controls">
     <div class="back-btns">
       <button class="back-btn">
         <i class="fas fa-arrow-left"></i>
@@ -207,47 +235,155 @@
       <i class="far fa-trash-alt" aria-hidden="true"></i>
       <i class="far fa-flag" aria-hidden="true"></i>
     </button>
-  </div>
+  </div>-->
+
+
   <div class="tm-wrapper">
+
+
     <div class="tm-open-message">
-      <div class="tm-message-info">
-        <div class="tm-message-sender-img">
-          <img src="https://images.unsplash.com/photo-1504911539020-cfb0f7887a5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" id="sender-profile-pic">
-        </div>
-        <div class="message-sender">
-          <h4 class="tm-sender-name" id="sender-name">Nicole Randall</h4>
-          <p class="tm-message-subject" id="message-subject">
-            The best travel destinations
-          </p>
-        </div>
-        <div class="tm-message-timestamp" id="message-timestamp">
-          <small>2:05 PM</small>
-        </div>
-      </div>
-      <div class="tm-message-content" id="message-content">
-        <p>Hi Chris!</p>
-        <p>
-          Towards the end of every year we look at the year ahead through a cultural lens, with a focus on
-          major events and trends the world - in 2020, for example, the Olympics will take place in Japan.
-        </p>
-        <p>
-          We know about Japan more than all travel agents. We will be happy to share with you all the
-          advantages of this destination:)
-        </p>
-        <div class="tm-image-gallery">
-          <div class="tm-gallery-row">
-            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+
+
+
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-xs-12">
+
+            <div class="tm-mail-content">
+
+              <div class="tm-message-info sticky-top">
+                <div class="tm-message-sender-img">
+                  <img src="https://images.unsplash.com/photo-1504911539020-cfb0f7887a5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" id="sender-profile-pic">
+                </div>
+                <div class="message-sender">
+                  <h4 class="tm-sender-name" id="sender-name" >Nicole Randall</h4>
+                  <h4 class="tm-sender-name" id="sender-name" >mattia@nextblu.com</h4>
+                </div>
+
+
+
+
+
+                <div class="tm-message-timestamp" id="message-timestamp">
+                  <small>2:05 PM</small>
+                </div>
+
+                <div class="btn-group header-buttons" role="group" aria-label="Mail actions">
+                  <button type="button" class="btn btn-light"><i class="fa fa-reply"></i></button>
+                  <button type="button" class="btn btn-light"><i class="fa fa-reply-all"></i></button>
+                  <button type="button" class="btn btn-light"><i class="fa fa-arrow-right"></i></button>
+                </div>
+
+              </div>
+              <p class="tm-message-subject" id="message-subject">
+                The best travel destinations
+              </p>
+              <div class="tm-message-content" id="message-content">
+                <p>Hi Chris!</p>
+                <p>
+                  Towards the end of every year we look at the year ahead through a cultural lens, with a focus on
+                  major events and trends the world - in 2020, for example, the Olympics will take place in Japan.
+                </p>
+                <p>
+                  We know about Japan more than all travel agents. We will be happy to share with you all the
+                  advantages of this destination:)
+                </p>
+                <div class="tm-image-gallery">
+                  <div class="tm-gallery-row">
+                    <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=80" alt="">
+                    <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+                  </div>
+                  <div class="tm-gallery-row">
+                    <img src="https://images.unsplash.com/photo-1520312501384-dbdb83a1cb11?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="" class="tm-w-100">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
           </div>
-          <div class="tm-gallery-row">
-            <img src="https://images.unsplash.com/photo-1520312501384-dbdb83a1cb11?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="" class="tm-w-100">
+          <div class="col-lg-4 col-xs-12">
+
+            <div class="tm-mail-lateral">
+              <div class="container">
+
+                <div class="tm-attachements">
+
+                  <h4>Attachements</h4>
+                  <div class="tm-lateral-image-gallery">
+                    <div class="tm-gallery-row">
+                      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=80" alt="">
+                      <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+                      <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+                      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=80" alt="">
+                      <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+                      <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=350&q=60" alt="">
+
+                    </div>
+                  </div>
+
+                  <div class="tm-file-summary">
+                    <p>6 files <strong>24.8 Mb</strong></p>
+                  </div>
+
+
+                </div>
+
+                <div class="tm-people-in-conversation">
+                  <h4>People in conversation</h4>
+                  <br>
+
+                  <div class="one-match">
+                    <div class="one-match-content">
+                      <img src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80">
+                      <div class="match-info">
+                        <h4>Mattia</h4>
+                        <h5 class="online">Online</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="one-match">
+                    <div class="one-match-content">
+                      <img src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80">
+                      <div class="match-info">
+                        <h4>Basic_ph</h4>
+                        <h5 class="online">Online</h5>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <div class="tm-mail-notes">
+                  <h4>Notes</h4> <button type="button" class="btn btn-light tm-text-center">Add a note</button>
+
+                  <div class="postit yellow">
+                    <div class="tape">My simple note</div>
+                    <div class="widget-content">
+                      <p>Now i can insert incredible notes here!</p>
+                      <p>What a cool feature!.</p>
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+            </div>
+
           </div>
+
+
         </div>
+
       </div>
-      <div class="tm-message-footer">
-        <p>3 files <strong>24.8 Mb</strong></p>
-      </div>
+
+
     </div>
+
+
+
   </div>
 </section>
 
@@ -913,10 +1049,10 @@
 </script>
 <script>
   var options = {
-    bottom: '32px', // default: '32px'
-    right: '32px', // default: '32px'
+    bottom: '20px', // default: '32px'
+    right: '20px', // default: '32px'
     left: 'unset', // default: 'unset'
-    time: '0.5s', // default: '0.3s'
+    time: '0.9s', // default: '0.3s'
     mixColor: '#fff', // default: '#fff'
     backgroundColor: '#fff',  // default: '#fff'
     buttonColorDark: '#100f2c',  // default: '#100f2c'
