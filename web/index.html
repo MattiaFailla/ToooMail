@@ -99,17 +99,22 @@
 
     <div class="container settings" style="padding-right: 1px; padding-left: 1px">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-2">
           <a href="#">
             <i class="fas fa-cog"></i>
           </a>
         </div>
-        <div class="col-sm">
+        <div class="col-sm-2">
           <a data-toggle="modal" data-target="#viewProfile">
             <i class="fas fa-user"></i>
           </a>
         </div>
-        <div class="col-sm">
+        <div class="col-sm-2">
+          <a data-toggle="modal" data-target="#viewProfile">
+            <i class="fas fa-lock"></i>
+          </a>
+        </div>
+        <div class="col-sm-1">
           <a data-toggle="modal" data-target="#viewProfile">
             <i class="fas fa-store"></i>
           </a>
@@ -602,7 +607,7 @@
 
 <!--- JAVASCRIPT SECTION ---->
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
@@ -681,11 +686,13 @@
     for (var i = 0; i < mail_data.length; i++) {
       // Creating the DOM element
       const div = document.createElement('div');
-      div.className = 'tm-message shadow';
+      div.className = 'tm-message shadow .d-none';
       div.id = 'message-'+mail_data[i].uid;
 
       div.onclick = `getmailbody(${mail_data[i].uid});`
       div.setAttribute("onclick",`getmailbody(${mail_data[i].uid});`);
+
+      div.style = "display: none;"
 
       let mail_sender_name = mail_data[i].From_name;
       let mail_subject = mail_data[i].Subject;
@@ -735,7 +742,22 @@
   function removeloader(){
     document.getElementById('mail-row-loader-cont').className = ' hidden .d-none';
     document.getElementById('mail-row-loader').className = ' hidden .d-none';
+    fadeInMailRow();
   }
+  // fade-in
+  function fadeInMailRow(){
+    // store children in an array
+    var elems = $('#mail-list').children();
+
+    $(elems).ready().each(function(index) {
+      logger(this);
+      logger(index)
+      if (index > 0){
+        $(this).delay(2000*index).fadeIn(500);
+      }
+    });
+  }
+
   // load user info and place in the dom
   async function userinfo(){
 
