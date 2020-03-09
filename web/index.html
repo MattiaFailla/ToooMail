@@ -247,7 +247,7 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-xs-12">
+          <div class="col-lg-8">
 
             <div class="tm-mail-content">
 
@@ -302,7 +302,8 @@
 
 
           </div>
-          <div class="col-lg-4 col-xs-12">
+
+          <div class="col-lg-4">
 
             <div class="tm-mail-lateral">
               <div class="container">
@@ -687,7 +688,7 @@
       let mail_sender_name = mail_data[i].From_name;
       let mail_subject = mail_data[i].Subject;
       let mail_timestamp = mail_data[i].datetimes;
-      let message_preview = mail_data[i].bodyPLAIN.substring(0,90);
+      let message_preview = mail_data[i].bodyPLAIN.substring(0,50);
 
       let sender_profile_pic = MD5(mail_data[i].from_mail);
 
