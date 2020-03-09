@@ -636,6 +636,12 @@
 
     document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128?background=0D8ABC&color=fff";
 
+    // removing the active flag
+    var elems = document.querySelectorAll(".active-message");
+    [].forEach.call(elems, function(el) {
+      el.classList.remove("active-message");
+    });
+
     // setting the active mail
     document.getElementById('message-'+uid).className = "tm-message shadow active-message";
 
