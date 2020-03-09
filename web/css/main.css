@@ -320,7 +320,7 @@ textarea {
 }
 
 html {
-  font-size: 11px;
+  font-size: 12px;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -386,6 +386,13 @@ ul {
   width: 100% !important;
 }
 
+html[data-theme='dark'] {
+  --text-color-normal: hsl(210, 10%, 62%);
+  --text-color-light: hsl(210, 15%, 35%);
+  --text-color-richer: hsl(210, 50%, 72%);
+  --text-color-highlight: hsl(25, 70%, 45%);
+}
+
 body {
   display: grid;
   grid-template-rows: 1;
@@ -394,6 +401,7 @@ body {
 }
 
 .tm-sidebar {
+  font-size: 10px;
   background-color: #f7f8f9;
   padding: 10px 25px;
   position: relative;
@@ -402,6 +410,7 @@ body {
   width: 200px;
 }
 .tm-sidebar .tm-logo {
+  z-index: 320;
   width: 50%;
   display: block;
   text-align: center;
@@ -444,6 +453,7 @@ body {
   margin-bottom: 15px;
 }
 .tm-sidebar .navigation ul li {
+  font-size: 10px;
   margin-bottom: 15px;
 }
 .tm-sidebar .tm-icon {
@@ -454,7 +464,7 @@ body {
 }
 .tm-sidebar a, .tm-sidebar .tm-icon {
   color: #909191;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 .tm-sidebar li.active a, .tm-sidebar li.active .tm-icon {
   color: #256dff;
@@ -545,9 +555,11 @@ body {
   display: flex;
 }
 .tm-mails .tm-message .tm-message-sender-img {
+  z-index: 310;
   margin-right: 15px;
 }
 .tm-mails .tm-message .tm-message-sender-img img {
+  z-index: 310;
   width: 45px;
   border-radius: 100%;
 }
@@ -602,9 +614,11 @@ body {
   display: flex;
 }
 .tm-mail-viewer .tm-message-sender-img {
+  z-index: 310;
   margin-right: 30px;
 }
 .tm-mail-viewer .tm-message-sender-img img {
+  z-index: 310;
   width: 45px;
   border-radius: 100%;
 }
@@ -851,4 +865,13 @@ body {
 .toast-title {
   font-weight: bold;
   font-size: 18px;
+}
+
+/* DARK MODE */
+.darkmode-layer, .darkmode-toggle {
+  z-index: 300;
+}
+
+img {
+  z-index: 310;
 }

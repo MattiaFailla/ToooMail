@@ -22,12 +22,15 @@
   <link href="css/toastr.min.css" rel="stylesheet"/>
   <script src="js/toastr.min.js"></script>
 
+  <!-- darkmode -->
+  <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+
 
 </head>
 <body translate="no">
 <section class="tm-sidebar">
   <div class="wapper">
-    <img src="img/logo_transparent.png" class="tm-logo">
+    <img src="img/logo_transparent.png" class="tm-logo" style="z-index: 310;">
     <a href="#write" class="tm-btn-compose tm-text-center shadow-lg" data-toggle="modal" data-target="#composeEmail">
       <span class="tm-icon"><i class="fas fa-edit"></i></span>
       Compose
@@ -886,6 +889,24 @@
     toastr.info(message, title);
 
   }
+</script>
+<script>
+  var options = {
+    bottom: '32px', // default: '32px'
+    right: '32px', // default: '32px'
+    left: 'unset', // default: 'unset'
+    time: '0.5s', // default: '0.3s'
+    mixColor: '#fff', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: true, // default: true,
+    label: '🌓', // default: ''
+    autoMatchOsTheme: true // default: true
+  }
+
+  const darkmode = new Darkmode(options);
+  darkmode.showWidget();
 </script>
 
 </body>
