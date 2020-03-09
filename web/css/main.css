@@ -477,7 +477,7 @@ body {
 }
 .tm-sidebar .settings {
   position: absolute;
-  bottom: 35px;
+  bottom: 20px;
 }
 .tm-sidebar .settings a:hover {
   color: #d6a847;
