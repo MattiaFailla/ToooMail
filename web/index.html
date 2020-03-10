@@ -224,6 +224,8 @@
 
 
 
+
+
   <!--<div class="tm-controls">
     <div class="back-btns">
       <button class="back-btn">
@@ -246,15 +248,25 @@
   <div class="tm-wrapper">
 
 
-    <div class="tm-open-message">
+
+    <div class="tm-open-message shadow-lg">
 
 
 
-      <div class="container">
+
+      <div class="container ">
+
+
         <div class="row">
-          <div class="col-lg-8">
 
-            <div class="tm-mail-content">
+          <div class="col-lg-8">
+            <button type="button" class="close close-mail-body" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+
+
+
+            <div class="tm-mail-content ">
 
               <div class="tm-message-info sticky-top">
                 <div class="tm-message-sender-img">
@@ -299,12 +311,18 @@
                   </div>
                 </div>
               </div>
+
             </div>
+
+            <button type="button" class="btn btn-primary reply-to-message btn-lg "><i class="fa fa-reply"></i>   Reply</button>
+            <button type="button" class="btn btn-light forward-message btn-lg"><i class="fa fa-arrow-right"></i>     Forward</button>
+
 
 
           </div>
 
           <div class="col-lg-4">
+
 
             <div class="tm-mail-lateral">
               <div class="container">
@@ -384,6 +402,7 @@
 
 
         </div>
+
 
       </div>
 

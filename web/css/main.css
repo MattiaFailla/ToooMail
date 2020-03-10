@@ -602,8 +602,6 @@ body {
 
 .tm-mail-viewer {
   overflow-y: scroll;
-  /*padding: 35px 25px;*/
-  max-width: 100%;
 }
 .tm-mail-viewer .tm-controls {
   display: flex;
@@ -674,6 +672,7 @@ body {
 .tm-open-message .tm-mail-content {
   width: 100%;
   overflow-y: scroll;
+  z-index: 30;
 }
 
 .tm-mail-lateral {
@@ -711,6 +710,63 @@ body {
   margin-left: 30px;
 }
 
+.close-mail-body{
+  float: right;
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1;
+  color: red;
+  text-shadow: 0 1px 0 red;
+  filter: alpha(opacity=30);
+  opacity: 1;
+  position:absolute;
+  top: -30px;
+  right: -275px;
+  z-index: 9;
+}
+
+.reply-to-message {
+  position: absolute;
+  bottom: -35px;
+  left: 20px;
+  float: left;
+  border-radius: 24px!important;
+  background-color: #036AD6;
+  border-color: #036AD6;
+  width: 120px;
+}
+
+.forward-message {
+  position: absolute;
+  bottom: -35px;
+  left: 150px;
+  float: left;
+  border-radius: 24px!important;
+  width: 120px;
+}
+
+/* ASSISTANT */
+.mail-assistant {
+  background-color: white;
+  position: relative;
+  bottom: 300px;
+  width: 35%;
+  border-radius: 10px;
+  height: 50px;
+  margin-bottom: 20px;
+}
+
+.assistant-closed {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  right: 25%;
+  border: 5px solid lightgrey;
+  color: lightgrey;
+  border-radius: 5px;
+  width: 50%;
+
+}
 
 /* ATTACHEMENTS */
 
