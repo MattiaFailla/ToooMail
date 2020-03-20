@@ -8,7 +8,6 @@
 
   <!-- bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
   <!-- main app style -->
   <link rel='stylesheet' href='css/main.css'>
 
@@ -140,27 +139,27 @@
     <div class="navigation">
       <nav class="primary-navigation">
         <ul>
-          <li class="active">
+          <li class="active" title="Inbox">
             <a href="#">
               <span class="tm-iconn"><i class="far fa-envelope"></i></span>
             </a>
           </li>
-          <li>
+          <li title="Flagged">
             <a href="#">
               <span class="tm-iconn"><i class="far fa-flag"></i></span>
             </a>
           </li>
-          <li>
+          <li title="Draft">
             <a href="#">
               <span class="tm-iconn"><i class="far fa-file-alt"></i></span>
             </a>
           </li>
-          <li>
+          <li title="Sent">
             <a href="#">
               <span class="tm-iconn"><i class="far fa-paper-plane"></i></span>
             </a>
           </li>
-          <li>
+          <li title="Bin">
             <a href="#">
               <span class="tm-iconn"><i class="far fa-trash-alt"></i></span>
             </a>
@@ -184,6 +183,53 @@
         </ul>
       </nav>
     </div>
+
+    <div class="settings">
+
+
+      <a data-toggle="modal" data-target="#viewProfile">
+        <i class="fas fa-user"></i>
+      </a>
+
+      <a data-toggle="modal" data-target="#viewProfile">
+        <i class="fas fa-lock"></i>
+      </a>
+
+      <a data-toggle="modal" data-target="#viewProfile">
+        <i class="fas fa-store"></i>
+      </a>
+
+      <a href="#">
+        <i class="fas fa-cog"></i>
+      </a>
+
+
+    </div>
+
+    <!--<div class="container settings" style="padding-right: 1px; padding-left: 1px">
+      <div class="row">
+        <div class="col-sm-1">
+          <a href="#">
+            <i class="fas fa-cog"></i>
+          </a>
+        </div>
+        <div class="col-sm-1">
+          <a data-toggle="modal" data-target="#viewProfile">
+            <i class="fas fa-user"></i>
+          </a>
+        </div>
+        <div class="col-sm-1">
+          <a data-toggle="modal" data-target="#viewProfile">
+            <i class="fas fa-lock"></i>
+          </a>
+        </div>
+        <div class="col-sm-1">
+          <a data-toggle="modal" data-target="#viewProfile">
+            <i class="fas fa-store"></i>
+          </a>
+        </div>
+      </div>
+    </div>-->
 
 
   </div>

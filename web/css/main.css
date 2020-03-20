@@ -499,6 +499,10 @@ body {
   position: absolute;
   bottom: 20px;
 }
+.tm-sidebar .settings a{
+  display: block;
+  margin-top: 10px;
+}
 .tm-sidebar .settings a:hover {
   color: #d6a847;
 }
@@ -902,7 +906,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
 
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
@@ -917,6 +921,8 @@ body {
   transform: translate(0px, -100%) scale(0, 0);
 
   opacity: 0;
+
+  z-index: 99999;
 }
 
 #tm-full_search.open {
@@ -987,7 +993,7 @@ body {
 
 /* profile page */
 .emp-profile{
-  padding: 3%;
+  padding: 1%;
   margin-top: 3%;
   margin-bottom: 3%;
   border-radius: 0.5rem;
