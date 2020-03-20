@@ -27,17 +27,17 @@ class ImapApi:
         # Getting the imap configuration
 
         ## Converting
-        if backend_api.get_user_server_config("ssl") == "True":
+        if backend_api.get_user_server_config("ssl") == 1:
             self.ssl = True
         else:
             self.ssl = False
 
-        if backend_api.get_user_server_config("ssl_context") == "True":
+        if backend_api.get_user_server_config("ssl_context") == 1:
             self.ssl_context = True
         else:
             self.ssl_context = None
 
-        if backend_api.get_user_server_config("starttls") == "True":
+        if backend_api.get_user_server_config("starttls") == 1:
             self.starttls = True
         else:
             self.starttls = False
