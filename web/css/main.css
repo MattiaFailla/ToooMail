@@ -380,7 +380,7 @@ ul {
   background-color: #EEF1F6;
   max-height: 100%;
   overflow-y: scroll;
-  background-image: url("https://images.unsplash.com/photo-1525296682-101c994ad524?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1601&q=80");
+  background-image: url("https://source.unsplash.com/user/erondu");
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -405,7 +405,7 @@ html[data-theme='dark'] {
 body {
   display: grid;
   /*grid-template-rows: 3;*/
-  grid-template-columns: 560px 1fr;
+  grid-template-columns: 400px 1fr;
   height: 100vh;
 }
 
@@ -416,17 +416,18 @@ body {
   /*position: relative;*/
   height: 100vh;
   position: fixed;
-  width: 230px;
+  /*width: 230px;*/
+  width: 80px;
 }
 .tm-sidebar .tm-logo {
   z-index: 320;
-  width: 50%;
+  width: 164%;
   display: block;
   text-align: center;
   border-radius: 1px;
   border-top: 0;
-  margin: 0 auto;
-  padding: 0 0 20px;
+  margin: 2px -8px;
+  padding: 1px 0 20px;
 
   transition: background 0.3s;
 }
@@ -435,8 +436,9 @@ body {
   color: #fff;
   width: 100%;
   display: block;
-  padding: 15px 0;
+  /*padding: 15px 0;*/
   border-radius: 5px;
+  margin-top: 20px;
   margin-bottom: 45px;
   transition: background 0.3s;
 }
@@ -473,17 +475,26 @@ body {
 }
 .tm-sidebar a, .tm-sidebar .tm-icon {
   color: #909191;
-  font-size: 1.2rem;
+  font-size: large;
+  text-align: center;
 }
 .tm-sidebar li.active a, .tm-sidebar li.active .tm-icon {
   color: #256dff;
+  font-size: large;
+  text-align: center;
 }
 .tm-sidebar li.active .tm-number {
   background: rgba(0, 69, 255, 0.38);
 }
 .tm-sidebar .navigation .primary-navigation {
   margin-bottom: 45px;
+  text-align: center;
 }
+.tm-sidebar .navigation .secondary-navigation {
+  margin-bottom: 45px;
+  text-align: center;
+}
+
 .tm-sidebar .settings {
   position: absolute;
   bottom: 20px;
@@ -523,7 +534,8 @@ body {
 .tm-mails {
   background: #F5F5FA;
   padding: 15px 5px 0;
-  margin-left: 230px;
+  /*margin-left: 230px;*/
+  margin-left: 80px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -655,6 +667,7 @@ body {
 .tm-mail-viewer .tm-message-content {
   padding-left: 1px;
   overflow-y: scroll;
+  object-fit: scale-down;
 }
 .tm-mail-viewer .tm-message-timestamp {
   margin-left: auto;
@@ -1121,5 +1134,7 @@ img {
 
   }
 
-
 }
+
+
+
