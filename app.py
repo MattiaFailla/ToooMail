@@ -5,7 +5,6 @@ import datetime
 import json
 import logging
 import re
-# import python smtplib module
 import smtplib
 import socket
 from email.header import Header
@@ -502,9 +501,25 @@ def sync():
     SYNCApi().download_new_mails_from_server()
 
 
-if __name__ == "__main__":
-    say_hello_py("Server.")
 
+@eel.expose
+def pong():
+    return "ping"
+
+
+@eel.expose
+def ui_log(message):
+    logger.debug(f'UI: {message}')
+
+
+@eel.expose
+def ui_log_error(message):
+    logger.error(f'UI: {message}')
+
+
+if __name__ == '__main__':
+    say_hello_py('Server')
+    # eel.say_hello_js('Server connected.')  # Call a Javascript function
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
         processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
