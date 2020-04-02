@@ -1,20 +1,18 @@
-class downloadModule():
-    userId = 0
-    userName = ""
+class DownloadModule:
 
-    def __init__(self, userName, userId):
-        self.userId = userId
-        self.userName = userName
+    def __init__(self, username, user_id):
+        self.user_id = user_id
+        self.username = username
 
-    def downloadUUID(self):
+    def download_UUID(self):
         """downloadUUID
 
         download every UUID and save them on the db
 
         """
-        return
+        pass
 
-    def getFolders(self):
+    def get_folders(self):
         """getFolders
 
 
@@ -23,5 +21,4 @@ class downloadModule():
 
 
         """
-        return
-
+        pass

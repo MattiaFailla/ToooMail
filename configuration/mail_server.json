@@ -1,0 +1,50 @@
+[
+    {
+        "service_name":"gmail",
+        "server_smtp": "smtp.gmail.com",
+        "server_imap": "imap.gmail.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": false
+    },
+    {
+        "service_name":"yahoo",
+        "server_smtp": "smtp.mail.yahoo.com",
+        "server_imap": "imap.mail.yahoo.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": false
+    },
+    {
+        "service_name":"aol",
+        "server_smtp": "smtp.aol.com",
+        "server_imap": "imap.aol.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": false
+    },
+    {
+        "service_name":"mail.me",
+        "server_smtp": "smtp.mail.me.com",
+        "server_imap": "imap.mail.me.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": true
+    },
+    {
+        "service_name":"hotmail",
+        "server_smtp": "smtp-mail.outlook.com",
+        "server_imap": "imap-mail.outlook.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": false
+    },
+    {
+        "service_name":"live",
+        "server_smtp": "smtp-mail.outlook.com",
+        "server_imap": "imap-mail.outlook.com",
+        "ssl": true,
+        "ssl_context": null,
+        "starttls": true
+    }
+]

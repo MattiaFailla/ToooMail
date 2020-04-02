@@ -1,6 +1,6 @@
-import threading
+import datetime
 from imbox import Imbox
-from py_modules import db_api
+from py_modules.db_api import DBApi
 
 
 # from pynotifier import Notification
@@ -9,7 +9,20 @@ from py_modules import db_api
 
 
 def get_user_info(what):
-    data = db_api.get("user", what, "WHERE ID = 1")
+    data = DBApi("user").get(what, "WHERE is_logged_in = 1")
+    p = data[0]
+    return p[0]
+
+
+def get_user_id():
+    data = DBApi("user").get("id", "WHERE is_logged_in = 1")
+    p = data[0]
+    return p[0]
+
+
+def get_user_server_config(what):
+    config_id = get_user_info("mail_server_setting")
+    data = DBApi("mail_server_settings").get(what, "WHERE id = " + str(config_id))
     p = data[0]
     return p[0]
 
@@ -29,16 +42,12 @@ def get_user_connection_data():
 def update_starred():
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account informations correct. Connected.")
-
         # Gets all messages after the day x
 
         # to get the mails of today:
         all_inbox_messages = imbox.messages(flagged=True)
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -57,8 +66,7 @@ def update_starred():
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
 
-            db_api.insert(
-                "emails",
+            DBApi("mails").insert(
                 {
                     "uid": uid.decode(),
                     "from_name": str(from_name),
@@ -70,7 +78,7 @@ def update_starred():
                     "bodyPLAIN": str(message.body["plain"]),
                     "directory": "",
                     "datetimes": datetime.date(year, month, day),
-                },
+                }
             )
 
 
@@ -80,16 +88,12 @@ def get_mails(year, month, day):
 
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account information correct. Connected.")
-
         # Gets all messages after the day x
 
         # to get the mails of today:
         all_inbox_messages = imbox.messages(date__on=datetime.date(year, month, day))
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -108,8 +112,7 @@ def get_mails(year, month, day):
 
             subject = str(message.subject) if str(message.subject) else "(No subject)"
 
-            db_api.insert(
-                "emails",
+            DBApi("emails").insert(
                 {
                     "uid": uid.decode(),
                     "from_name": str(from_name),
@@ -143,15 +146,10 @@ def first_download():
     """
     mails = []
     with Imbox(get_user_connection_data()) as imbox:
-        logging.info("Account information correct.")
-
         # Gets all messages from the inbox
         all_inbox_messages = imbox.messages()
-        print(len(all_inbox_messages))
-        logging.debug("Gathered all inbox messages")
 
         for uid, message in reversed(all_inbox_messages):
-            # print(message.attachments)
             sanitized_body = str(message.body["html"])
             sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
             sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -183,14 +181,13 @@ def first_download():
                 str(message.date),
             ]
 
-            insert("emails", data)
+            DBApi("emails").insert(data)
             """
             # INSERT INTO THE DB
             try:
                 c.execute('INSERT INTO emails (uid, from_name, from_mail, to_name, to_mail, subject, bodyHTML,
                            bodyPLAIN, directory, datetimes) VALUES (?,?,?,?,?,?,?,?,)', data)
             except sqlite3.IntegrityError as e:
-                print('sqlite error: ', e) # column name is not unique
                 continue
             conn.commit()"""
 
@@ -208,7 +205,6 @@ def notify(title, description, duration):
 def elaborate_new_mails(new_messages):
     # NEW MAILS! Add them to the db, send notification and notify the frontend
     for uid, message in reversed(new_messages):
-        # print(message.attachments)
         sanitized_body = str(message.body["html"])
         sanitized_body = sanitized_body.replace(r"['\r\n", "&#13;")
         sanitized_body = sanitized_body.replace(r"[b'", "&#13;")
@@ -218,7 +214,7 @@ def elaborate_new_mails(new_messages):
         sanitized_body = sanitized_body.replace(r"\t", "")
         sanitized_body = sanitized_body.replace(r"['", "")
         sanitized_body = sanitized_body.replace(r"']", "")
-        sanitized_body = sanitized_body.replace("\"]", "")
+        sanitized_body = sanitized_body.replace('"]', "")
 
         # Apply local time to base server time
         from_name = message.sent_from[0]["name"]

@@ -1,10 +1,16 @@
 
 *.pyc
-*.db
-py_modules/__pycache__/
+app.db
+py_modules/__pycache__/*
 
 .idea/
 
 web/img/loadmp3.pl
 
+.db/mails/*.json
+
+.db/mails/attach/*
+
 venv/
+/Pipfile
+/.logs/log.out*
