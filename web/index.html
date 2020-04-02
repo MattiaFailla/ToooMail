@@ -927,13 +927,16 @@
     let sender_name = email_data[0].From_name;
     let subject = email_data[0].Subject;
     let timestamp = email_data[0].datetimes;
+    var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    timestamp = new Date(timestamp);
+    let correctDate = timestamp.toLocaleDateString("en-US", dateOptions)
     let body = email_data[0].bodyHTML;
 
     let sender_profile_pic =  MD5(email_data[0].from_mail);;
 
     document.getElementById('sender-name').innerHTML = sender_name;
     document.getElementById('message-subject').innerText = subject;
-    document.getElementById('message-timestamp').innerText = timestamp;
+    document.getElementById('message-timestamp').innerText = correctDate;
     document.getElementById('message-content').innerHTML = body;
 
     document.getElementById("sender-profile-pic").src="https://www.gravatar.com/avatar/"+sender_profile_pic+"?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+sender_name+"/128?background=0D8ABC&color=fff";
@@ -972,6 +975,8 @@
 <script>
   // CORE HELPER FUNCTIONS
   var MD5 = function (string) {
+
+    Date().to
 
     function RotateLeft(lValue, iShiftBits) {
       return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
