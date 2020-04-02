@@ -127,6 +127,17 @@ class DBApi:
                 data.append(row)
             return data
 
+    def get_specific_email(self, uuid):
+        cur = self.conn.cursor()
+        cur.execute(
+            "SELECT * FROM mails WHERE uuid = " + str(uuid) + "")
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row)
+        return data
+
+
     @staticmethod
     def upload_config():
         """ UPLOADING APP SETTINGS """

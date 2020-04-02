@@ -162,8 +162,13 @@ def get_mails(step):
 
 
 @eel.expose
+def get_mail_by_uuid(uuid):
+    return MailApi().get_specific_email(uuid=uuid)
+
+
+@eel.expose
 def mark_as_seen(uid):
-    SYNCApi.mark_as_seen(uid=uid)
+    SYNCApi.mark_as_seen(uid=str(uid))
     return True
 
 
@@ -496,6 +501,7 @@ def sync():
     SYNCApi().download_new_mails_from_server()
 
 
+
 @eel.expose
 def pong():
     return "ping"
@@ -516,7 +522,8 @@ if __name__ == '__main__':
     # eel.say_hello_js('Server connected.')  # Call a Javascript function
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
-        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in range(4)]
+        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
+                     range(4)]
 
         eel.start(template, block=True)  # Start
     else:

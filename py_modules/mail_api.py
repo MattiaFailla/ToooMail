@@ -112,3 +112,41 @@ class MailApi:
             dict_mails.append(temp_mail)
 
         return dict_mails
+
+    def get_specific_email(self, uuid):
+        mails = DBApi("mails").get_specific_email(uuid=uuid)
+
+        # now we need to create the dict
+        dict_mails = []
+        for mail in mails:
+            # Getting json info
+            # read file
+            with open(".db/mails/" + str(mail[1]) + ".json", "r") as my_file:
+                data = my_file.read()
+
+            # parse file
+            obj = json.loads(data)
+
+            # getting attach info
+            self.get_attach_info_from_db(mail[0])
+
+            # Creating the dict
+            temp_mail = {
+                "uid": mail[1],
+                "From_name": str(obj['From_name']),
+                "from_mail": str(obj['from_mail']),
+                "To_name": str(obj['To_name']),
+                "To_mail": str(obj['To_mail']),
+                "Subject": str(mail[2]),
+                "bodyHTML": str(obj['bodyHTML']),
+                "bodyPLAIN": str(obj['bodyPLAIN']),
+                "attach": str(obj['attach']),
+                "directory": str(mail[4]),
+                "datetimes": str(mail[6]),
+                "readed": str(mail[5]),
+            }
+
+            dict_mails.append(temp_mail)
+
+        return dict_mails
+
