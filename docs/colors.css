@@ -1,0 +1,11 @@
+    import colors from 'vuetify/es5/util/colors'
+
+      {
+      primary: colors.indigo.base,
+      secondary: colors.light-blue.base,
+      accent: colors.purple.base,
+      error: colors.pink.base,
+      warning: colors.amber.base,
+      info: colors.green.base,
+      success: colors.blue.base
+      }
