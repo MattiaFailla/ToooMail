@@ -502,7 +502,6 @@ def sync():
     SYNCApi().download_new_mails_from_server()
 
 
-
 @eel.expose
 def pong():
     return "ping"
@@ -517,6 +516,15 @@ def ui_log(message):
 def ui_log_error(message):
     logger.error(f'UI: {message}')
 
+
+def check_incoming():
+    while True:
+        print("NEW EMAILS:")
+        print(ImapApi().check_new_emails())
+        eel.sleep(1.0)  # Use eel.sleep(), not time.sleep()
+
+
+# eel.spawn(check_incoming) # FIXME
 
 if __name__ == '__main__':
     say_hello_py('Server')

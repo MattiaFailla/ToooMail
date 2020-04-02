@@ -451,3 +451,17 @@ class ImapApi:
                 starttls=self.starttls,
         ) as imbox:
             imbox.mark_seen(uid)
+
+    def check_new_emails(self):
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            last_uid = DBApi().get_last_email_id(user_id=1)
+            print(last_uid[0][0])
+            print(str(last_uid[0][0]) + ':*')
+            return len(imbox.messages(uid__range=str(last_uid[0][0]) + ':*'))
