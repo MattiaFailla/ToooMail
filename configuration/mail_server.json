@@ -1,5 +1,13 @@
 [
     {
+        "service_name":"nextblu",
+        "server_smtp": "mail.nextblu.com",
+        "server_imap": "mail.nextblu.com",
+        "ssl": false,
+        "ssl_context": null,
+        "starttls": true
+    },
+    {
         "service_name":"gmail",
         "server_smtp": "smtp.gmail.com",
         "server_imap": "imap.gmail.com",

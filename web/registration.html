@@ -324,10 +324,10 @@
         <form action="#">
             <h1>Sign in with NextBlu</h1>
             <span>One account: multiple apps.</span>
-            <input placeholder="username@nextblu.com" type="email"/>
-            <input placeholder="MyIncrediblePassword1" type="password"/>
+            <input placeholder="username@nextblu.com" id="nextblu-username" type="email"/>
+            <input placeholder="MyIncrediblePassword1" id="nextblu-password" type="password"/>
             <a href="#">Forgot your password?</a>
-            <button>Sign In</button>
+            <button onclick="signingNext()">Sign In</button>
         </form>
     </div>
 
@@ -405,6 +405,46 @@
         }
     }
 
+    async function signingNext() {
+        let username = document.getElementById("nextblu-username").value;
+        let password = document.getElementById("nextblu-password").value;
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "800",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        let verification_imap = await eel.check_imap_connection(username, password, "mail.nextblu.com", false, null, true)();
+        let verification_smtp = await eel.check_smtp_connection(username, password, "mail.nextblu.com")();
+        if (verification_imap && verification_smtp) {
+            eel.user_registration(username, username, password, "mail.nextblu.com", "mail.nextblu.com", "1");
+        } else {
+            toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
+            console.log("User informations incorrect");
+            return;
+        }
+
+
+        toastr.success("Welcome in TooMail. We are ready to go.", "Hey!");
+
+        // Loading the home-page
+        window.location.href = "index.html";
+
+    }
+
 
     async function setServerSettings() {
         // Setting server settings based on dropdown id
@@ -439,14 +479,14 @@
             document.getElementById("imap").value = "";
             document.getElementById("smtp").value = "";
             document.getElementById("ssl").checked = false;
-            document.getElementById("ssl_context").checked = false;
+            document.getElementById("ssl_context").checked = null;
             document.getElementById("starttls").checked = false;
 
             // enabling input
             document.getElementById("imap").disabled = false;
             document.getElementById("smtp").disabled = false;
             document.getElementById("ssl").disabled = false;
-            document.getElementById("ssl_context").disabled = false;
+            document.getElementById("ssl_context").disabled = null;
             document.getElementById("starttls").disabled = false;
         }
 

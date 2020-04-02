@@ -113,6 +113,7 @@ def mail_parsing(uid, message, unread_uid, directory):
 
 @eel.expose
 def check_smtp_connection(username, password, smtp):
+    # @todo BISOGNA ELIMINARE IL SEND MAIL MA TESTARE SOLAMENTE LA CONNESSIONE AL SERVER
     msg = MIMEMultipart()
     msg['From'] = username
     msg['To'] = username
@@ -528,3 +529,5 @@ if __name__ == '__main__':
         eel.start(template, block=True)  # Start
     else:
         eel.start(template, block=True)  # Start
+
+    logger.info("Closing the app.")
