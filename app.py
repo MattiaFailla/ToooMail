@@ -113,13 +113,6 @@ def mail_parsing(uid, message, unread_uid, directory):
 
 @eel.expose
 def check_smtp_connection(username, password, smtp):
-    # @todo BISOGNA ELIMINARE IL SEND MAIL MA TESTARE SOLAMENTE LA CONNESSIONE AL SERVER
-    msg = MIMEMultipart()
-    msg['From'] = username
-    msg['To'] = username
-    msg['Subject'] = 'Welcome in ToooMail'
-    msg.attach(MIMEText('Hey! We\'re glad you\'re here!'))
-
     try:
         logger.debug(f'Sending mail to {username} on Welcome in ToooMail')
 
@@ -128,7 +121,6 @@ def check_smtp_connection(username, password, smtp):
         mail_server.starttls()
         mail_server.ehlo()
         mail_server.login(username, password)
-        mail_server.sendmail(username, username, msg.as_string())
         mail_server.close()
         return True
 
