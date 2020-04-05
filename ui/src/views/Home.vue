@@ -13,6 +13,15 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  mounted() {
+    var cookies = this.$cookies.get("isLoggedIn");  // return value
+
+    // check the cookie
+    if (cookies == null) {
+      console.log("USER NOT LOGGED.");
+      this.$router.push('Login')
+    }
   }
 }
 </script>
