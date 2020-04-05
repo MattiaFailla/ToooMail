@@ -526,8 +526,8 @@ if __name__ == '__main__':
         processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
                      range(4)]
 
-        eel.start(template, block=True)  # Start
+        eel.start(template, block=True, port=8686)  # Start
     else:
-        eel.start(template, block=True)  # Start
+        eel.start(template, block=True, port=8686)  # Start
 
     logger.info("Closing the app.")
