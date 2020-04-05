@@ -24,7 +24,7 @@
                         <input id="ssl_context" type="checkbox" value="ssl_context">SSL_CONTEXT
                     </div>-->
 
-                    <button type="submit" onclick="signing()">Sign Up</button>
+                    <button type="submit" @click="providerSignin()">Sign Up</button>
                 </div>
             </div>
             <div class="form-container sign-in-container">
@@ -96,12 +96,30 @@
                 if (verification_imap && verification_smtp) {
                     eel.user_registration(username, username, password, "mail.nextblu.com", "mail.nextblu.com", "1");
                     //this.$router.push('Home')
+
+                    // @todo: VALIDATE THE COOKIE
+
                     this.$router.push({ name: 'Home', params: {firstLogin: 'yep' }})
                 } else {
                     //toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
                     this.$toasted.error("We can't login into your inbox. Please verify your password or email address.");
                     console.log("User informations incorrect");
                 }
+            },
+            providerSignin(){
+                let username = this.username;
+                let usermail = this.usermail;
+                let password = this.password;
+                let imap_address = this.imapserver;
+                let smtp_address = this.smtpserver;
+
+                if (eel.custom_user_registration(username, usermail, password, imap_address, smtp_address)){
+                    // @todo: Redirect to home
+                    // @todo: validate the cookie
+                }else{
+                    // We can't find any settings -> showing the user an advanced tab with an error toast.
+                }
+
             }
         },
         created() {
