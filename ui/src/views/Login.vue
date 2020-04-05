@@ -95,18 +95,13 @@
                 let verification_smtp = eel.check_smtp_connection(username, password, "mail.nextblu.com")();
                 if (verification_imap && verification_smtp) {
                     eel.user_registration(username, username, password, "mail.nextblu.com", "mail.nextblu.com", "1");
+                    //this.$router.push('Home')
+                    this.$router.push({ name: 'Home', params: {firstLogin: 'yep' }})
                 } else {
                     //toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
                     this.$toasted.error("We can't login into your inbox. Please verify your password or email address.");
                     console.log("User informations incorrect");
-                    return;
                 }
-
-
-                toastr.success("Welcome in TooMail. We are ready to go.", "Hey!");
-
-                // Loading the home-page
-                window.location.href = "index.html";
             }
         },
         created() {
