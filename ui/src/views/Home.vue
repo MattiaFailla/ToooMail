@@ -20,7 +20,7 @@ export default {
     // check the cookie
     if (cookies == null) {
       console.log("USER NOT LOGGED.");
-      this.$router.push('Login')
+      //this.$router.push('Login')
     }
   }
 }

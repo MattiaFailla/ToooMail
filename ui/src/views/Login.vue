@@ -1,73 +1,75 @@
 <template>
-    <div class="login container">
-        <div class="container" id="container">
-            <div class="form-container sign-up-container">
-                <div class="form-element">
-                    <h1>Provider details</h1>
-                    <span>Use your personal mail</span>
-                    <input id="name" v-bind="username" placeholder="Name" type="text"/>
-                    <input id="email" v-bind="usermail" placeholder="Email" type="email"/>
-                    <input id="password" v-bind="password" placeholder="Password" type="password"/>
-                    <br>
-                    <input id="imap" v-bind="imapserver" placeholder="Server IMAP" type="text"/>
-                    <input id="smtp" v-bind="smtpserver" placeholder="Server SMTP" type="text"/>
-                    <!--<span>Set server configuration</span>
-                    <select id="platform_selector" name="platform_selector" onchange="setServerSettings()">
-                        <option value="-1">--- Custom platform ---</option>
-                    </select>
-
-                    <div class="inline">
-                        <input id="ssl" type="checkbox" value="ssl">SSL
-                        <input id="starttls" type="checkbox" value="starttls">starttls
-                    </div>
-                    <div class="inline">
-                        <input id="ssl_context" type="checkbox" value="ssl_context">SSL_CONTEXT
-                    </div>-->
-
-                    <button type="submit" @click="providerSignin()">Sign Up</button>
-                </div>
-            </div>
-            <div class="form-container sign-in-container">
+    <div id="login">
+        <div class="login container">
+            <div class="container" id="container">
+                <div class="form-container sign-up-container">
                     <div class="form-element">
-                    <h1>Sign in with NextBlu</h1>
-                    <span>One account: multiple apps.</span>
-                    <input placeholder="username@nextblu.com" id="nextblu-username" type="email"
-                    v-bind="next_username"/>
-                    <input placeholder="MyIncrediblePassword1" id="nextblu-password" type="password"
-                    v-bind="next_password"/>
-                    <a href="#">Forgot your password?</a>
-                    <button @click="nextSigning()">Sign In</button>
-                    </div>
-            </div>
+                        <h1>Provider details</h1>
+                        <span>Use your personal mail</span>
+                        <input id="name" v-bind="username" placeholder="Name" type="text"/>
+                        <input id="email" v-bind="usermail" placeholder="Email" type="email"/>
+                        <input id="password" v-bind="password" placeholder="Password" type="password"/>
+                        <br>
+                        <input id="imap" v-bind="imapserver" placeholder="Server IMAP" type="text"/>
+                        <input id="smtp" v-bind="smtpserver" placeholder="Server SMTP" type="text"/>
+                        <!--<span>Set server configuration</span>
+                        <select id="platform_selector" name="platform_selector" onchange="setServerSettings()">
+                            <option value="-1">--- Custom platform ---</option>
+                        </select>
 
-            <div class="overlay-container">
-                <div class="overlay">
-                    <div class="overlay-panel overlay-left">
-                        <h1>NextBlu?</h1>
-                        <p>With NextBlu your informations are synced. One account: multiple apps.</p>
-                        <button class="ghost" id="signIn">Sign In With NextBlu</button>
-                    </div>
-                    <div class="overlay-panel overlay-right">
-                        <h1>First Time here?</h1>
-                        <p>You can log-in with your provider by clicking here</p>
-                        <button class="ghost" id="signUp">Sign Up With a Provider</button>
+                        <div class="inline">
+                            <input id="ssl" type="checkbox" value="ssl">SSL
+                            <input id="starttls" type="checkbox" value="starttls">starttls
+                        </div>
+                        <div class="inline">
+                            <input id="ssl_context" type="checkbox" value="ssl_context">SSL_CONTEXT
+                        </div>-->
+
+                        <button type="submit" @click="providerSignin()">Sign Up</button>
                     </div>
                 </div>
+                <div class="form-container sign-in-container">
+                        <div class="form-element">
+                        <h1>Sign in with NextBlu</h1>
+                        <span>One account: multiple apps.</span>
+                        <input placeholder="username@nextblu.com" id="nextblu-username" type="email"
+                        v-bind="next_username"/>
+                        <input placeholder="MyIncrediblePassword1" id="nextblu-password" type="password"
+                        v-bind="next_password"/>
+                        <a href="#">Forgot your password?</a>
+                        <button @click="nextSigning()">Sign In</button>
+                        </div>
+                </div>
+
+                <div class="overlay-container">
+                    <div class="overlay">
+                        <div class="overlay-panel overlay-left">
+                            <h1>NextBlu?</h1>
+                            <p>With NextBlu your informations are synced. One account: multiple apps.</p>
+                            <button class="ghost" id="signIn">Sign In With NextBlu</button>
+                        </div>
+                        <div class="overlay-panel overlay-right">
+                            <h1>First Time here?</h1>
+                            <p>You can log-in with your provider by clicking here</p>
+                            <button class="ghost" id="signUp">Sign Up With a Provider</button>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
 
 
+            <footer>
+                <p>
+                    This is a BETA version. <i class="fa fa-heart"></i> Read more about NextBlu login system <a>here</a>.
+                </p>
+            </footer>
         </div>
-
-
-        <footer>
-            <p>
-                This is a BETA version. <i class="fa fa-heart"></i> Read more about NextBlu login system <a>here</a>.
-            </p>
-        </footer>
     </div>
 </template>
 
-<script>
+<script scoped>
     export default {
         name: "Login",
         data() {
@@ -150,20 +152,36 @@
     }
 </script>
 
-<style>
+<style scoped>
     @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css";
-
     @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+
 
     * {
         box-sizing: border-box;
     }
 
-    body {
-        background: #f6f5f7;
-        background-image: url("../assets/img/daniel-olah.jpg");
-        background-position: center; /* Center the image */
-        background-repeat: no-repeat; /* Do not repeat the image */
+    #login {
+        width: 100%;
+        background: #f6f5f7 url("../assets/img/daniel-olah.jpg") no-repeat center;
+        background-size: cover; /* Resize the background image to cover the entire container */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        height: 100vh;
+        overflow-y: hidden;
+        /*margin: -20px 0 50px;*/
+    }
+
+    .login {
+        width: 100%;
+    }
+
+    .body {
+        background: #f6f5f7 url("../assets/img/daniel-olah.jpg") no-repeat center;
         background-size: cover; /* Resize the background image to cover the entire container */
         display: flex;
         justify-content: center;
@@ -175,13 +193,13 @@
     }
 
     h1 {
-        font-weight: bold;
+        /*font-weight: bold;*/
         margin: 0;
     }
 
-    h2 {
+    /*h2 {
         text-align: center;
-    }
+    }*/
 
     p {
         font-size: 14px;
