@@ -332,6 +332,7 @@ a {
 ul {
   list-style: none;
 }
+/************************************************************/
 
 .tm-text-center {
   text-align: center;
@@ -395,6 +396,7 @@ ul {
   width: 100% !important;
 }
 
+/************************************************************/
 html[data-theme='dark'] {
   --text-color-normal: hsl(210, 10%, 62%);
   --text-color-light: hsl(210, 15%, 35%);
@@ -408,6 +410,7 @@ body {
   grid-template-columns: 400px 1fr;
   height: 100vh;
 }
+/************************************************************/
 
 .tm-sidebar {
   font-size: 10px;
