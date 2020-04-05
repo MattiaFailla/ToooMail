@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="form-container sign-in-container">
-                <form>
+                    <div class="form-element">
                     <h1>Sign in with NextBlu</h1>
                     <span>One account: multiple apps.</span>
                     <input placeholder="username@nextblu.com" id="nextblu-username" type="email"
@@ -37,7 +37,7 @@
                     v-bind="next_password"/>
                     <a href="#">Forgot your password?</a>
                     <button @click="nextSigning()">Sign In</button>
-                </form>
+                    </div>
             </div>
 
             <div class="overlay-container">
@@ -161,6 +161,10 @@
 
     body {
         background: #f6f5f7;
+        background-image: url("../assets/img/daniel-olah.jpg");
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-size: cover; /* Resize the background image to cover the entire container */
         display: flex;
         justify-content: center;
         align-items: center;
