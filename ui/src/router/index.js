@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from "../views/Login.vue";
+import LockedOut from "../views/LockedOut.vue";
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ Vue.use(VueRouter)
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/locked',
+      name: 'Locked',
+      component: LockedOut
     },
   {
     path: '/about',

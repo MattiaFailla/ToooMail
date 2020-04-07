@@ -220,7 +220,7 @@
           region: '',
           date1: '',
           date2: '',
-          delivery: false,
+          delivery: true,
           type: [],
           files: [],
           resource: '',
