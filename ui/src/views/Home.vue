@@ -68,12 +68,16 @@
         <el-col :span="6" v-loading="loading = false">
 
           <div class="tm-search-bar">
-            <input type="text" id="search_bar" placeholder="Search...">
+            <input type="text" id="search_bar" v-model="search"  placeholder="Search...">
             <span><i class="fas fa-search"></i></span>
           </div>
 
+
+
           <div id="mail-list" class="flex">
-            <div @click="openEmail(index)" class="mail-item" :class="{selected: isSelected(index)}" v-for="(email, index) in emails" :key="index">
+            <div @click="openEmail(index)" class="mail-item"
+                 :class="{selected: isSelected(index)}"
+                 v-for="(email, index) in emails.filter(data => !search || data.subject.toLowerCase().includes(search.toLowerCase()))" :key="index">
               <div class="mail-same-height">
                 <div class="mail-item-title-bar flex">
                   <p class="flex center-vertical center-horizontal">{{email.sender.name[0]}}</p>
@@ -171,8 +175,6 @@
               <el-upload
                       class="upload-demo"
                       drag
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
                       :file-list="form.files"
                       multiple>
                 <i class="el-icon-upload"></i>
@@ -228,7 +230,9 @@
         currentPage: 1,
         selectedIndex: -1,
 
-        isWriting: true,
+        search: '',
+
+        isWriting: false,
 
         emails: [
           {
