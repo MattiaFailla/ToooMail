@@ -67,7 +67,10 @@
         </el-col>
         <el-col :span="6" v-loading="loading = false">
 
-
+          <div class="tm-search-bar">
+            <input type="text" id="search_bar" placeholder="Search...">
+            <span><i class="fas fa-search"></i></span>
+          </div>
 
           <div id="mail-list" class="flex">
             <div @click="openEmail(index)" class="mail-item" :class="{selected: isSelected(index)}" v-for="(email, index) in emails" :key="index">
@@ -93,11 +96,13 @@
         <el-col :span="17" class="mail-body-container">
 
           <div class="tm-wrapper">
+
+
             <div class="tm-open-message shadow-lg">
                     <div class="tm-mail-content">
 
-                      <div id="mail-detail">
-                        <div id="overlap">
+                      <div id="mail-detail" >
+                        <div id="overlap" >
                           <div id="mail-actions" class="flex center-vertical">
                             <div class="flex center-vertical">
                               <p class="flex center-vertical center-horizontal">{{selectedEmail.sender.name[0]}}</p>
@@ -118,7 +123,7 @@
                             </div>
                           </div>
                         </div>
-                        <div id="mail-content">
+                        <div id="mail-content" >
                           <div>
                             <p>{{selectedEmail.subject}}</p>
                             <p>{{selectedEmail.sent}}</p>
@@ -137,6 +142,63 @@
         </el-col>
       </el-row>
 
+
+      <el-dialog
+              title="Write a new email"
+              :visible.sync="isWriting"
+              width="60%"
+              :before-close="handleClose">
+
+        <span>
+          <el-form ref="form" :model="form">
+            <el-form-item label="Recipient email">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Instant delivery">
+              <el-switch v-model="form.delivery"></el-switch>
+            </el-form-item>
+            <el-form-item label="Select an automatic delivery date" v-if="!form.delivery">
+              <el-col :span="5">
+                <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="2">-</el-col>
+              <el-col :span="5">
+                <el-time-picker placeholder="Pick a time" v-model="form.date2" style="width: 100%;"></el-time-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="Add attachments"><br>
+              <el-upload
+                      class="upload-demo"
+                      drag
+                      :on-preview="handlePreview"
+                      :on-remove="handleRemove"
+                      :file-list="form.files"
+                      multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+                <div class="el-upload__tip" slot="tip">Files with a size less than 500mb</div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="Mail">
+              <el-input type="textarea" v-model="form.desc"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="isWriting = false">Save for later</el-button>
+            </el-form-item>
+          </el-form>
+        </span>
+
+        <span slot="footer" class="dialog-footer">
+
+
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+
+
+  </span>
+      </el-dialog>
+
     </el-container>
   </div>
 </template>
@@ -151,10 +213,22 @@
         loading: true,
         src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
         isCollapse: true,
-
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          files: [],
+          resource: '',
+          desc: ''
+        },
         perPage: 5,
         currentPage: 1,
         selectedIndex: -1,
+
+        isWriting: true,
 
         emails: [
           {
@@ -201,6 +275,9 @@
       }
     },
     methods: {
+      onSubmit() {
+        console.log('submit!');
+      },
       openEmail(index){
         this.selectedIndex = index;
       },
@@ -212,7 +289,10 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
-      }
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
     },
     created(){
       this.selectedIndex = 0;
@@ -230,6 +310,31 @@
     position: absolute;
     left: 19%;
     bottom: 20px;
+  }
+
+
+
+
+  .tm-search-bar {
+    margin-bottom: 15px;
+    color: #c8cae3;
+    font-size: 1.4rem;
+    background-color: #EBEBF6;
+    padding: 10px 15px;
+    border-radius: 3px;
+    margin-left: 30px;
+    margin-top: 10px;
+  }
+  .tm-search-bar input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    /*color: darken(#E0E1EF, 7%);*/
+    color: black;
+  }
+
+  .tm-search-bar span {
+    float: right;
   }
 
   #mail-list {
@@ -319,10 +424,9 @@
 
 
   #mail-detail {
-    margin-top: 10px;
-    width: calc(95%);
+    margin: 10px;
     background: white;
-    margin-left: 32px;
+    /*margin-left: 32px;*/
     border-radius: 10px;
     z-index: 1;
   }
@@ -403,6 +507,15 @@
   #mail-detail #mail-content > div + p {
     margin-top: 24px;
     font-size: 14px;
+  }
+
+  .element-container {
+    color: #909191;
+    background-color: white;
+    padding: 10px;
+    margin: 6px;
+    width: auto;
+    border-radius: 6px;
   }
 
 
