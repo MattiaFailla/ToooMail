@@ -93,14 +93,16 @@
 
 
                             <div class="Email dark" v-if="emails.length > 0">
-                                <div class="ImgWrapper">
-                                    <div class="img notif">
-                                    </div>
+                                <div class="ImgWrapper notif">
+                                    <img :src="email.profilePic" class="img">
+
+                                    <!--<div class="img notif">
+                                    </div>-->
                                 </div>
                                 <div class="EmailTitle">
                                     <p class="EmailTime">{{email.sent}}</p>
-                                    <h1>{{email.sender.name}}</h1>
-                                    <h2>{{email.subject}}</h2>
+                                    <h1 class="EmailSenderName">{{email.sender.name}}</h1>
+                                    <h2 class="EmailSubject">{{email.subject}}</h2>
                                     <!--<p class="EmailPreview">Hi Matt! Are you available for...</p>-->
                                 </div>
                             </div>
@@ -258,7 +260,8 @@
                         sender: {name: "Next Blu", email: "hello@nextblu.com"},
                         subject: "Some exciting news",
                         body: "Necessary ye contented newspaper zealously breakfast he prevailed. Melancholy middletons yet understood decisively boy law she. Answer him easily are its barton little. Oh no though mother be things simple itself. Dashwood horrible he strictly on as. Home fine in so am good body this hope.",
-                        sent: '7:11 AM'
+                        sent: '7:11 AM',
+                        profilePic: 'https://eu.ui-avatars.com/api/?name=Next Blu'
                     }/*,
           {
             sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
@@ -447,11 +450,13 @@
                 let vm = this;
                 let appdata = []
                 data.forEach(function (data) {
+                    let profilePic = "https://eu.ui-avatars.com/api/?name="+data.From_name
                     appdata.push({
                         "sender": {"name": data.From_name, "email": data.From_mail},
                         "subject": data.Subject,
                         "body": data.bodyHTML,
-                        "sent": data.datetimes
+                        "sent": data.datetimes,
+                        "profilePic": profilePic
                     });
                 })
                 vm.emails = appdata;
@@ -577,10 +582,18 @@
         cursor: pointer;
         position: relative;
         opacity: 1;
+        height: 70px;
     }
 
-    .Email.light {
-        background: rgba(255, 255, 255, .4);
+    .Email:hover{
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .EmailSenderName{
+        color: white;
+    }
+    .EmailSubject{
+        color: white;
     }
 
     .NoDataMail {
@@ -588,8 +601,8 @@
     }
 
     .Email.active {
-        margin-top: -76px;
-        padding: 10px 0px;
+        /*margin-top: -76px;
+        padding: 10px 0px;*/
         background: #21294a;
         color: #fff;
         z-index: 15;
@@ -615,7 +628,6 @@
     .Email .img {
         width: 40px;
         height: 40px;
-        background: #fff;
         border-radius: 100%;
         position: relative;
     }
@@ -692,7 +704,7 @@
 
     .mail-body-container {
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 
@@ -726,12 +738,12 @@
     }
 
     #mail-detail {
-        margin: 10px;
-        background: white;
+        margin: 15px;
+        background: #F8F9F9;
         /*margin-left: 32px;*/
         border-radius: 10px;
         z-index: 1;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 
@@ -741,6 +753,7 @@
         background: #001f3f;
         border-color: #001f3f;
         z-index: 2;
+        width-min: 100%;
     }
 
     #mail-detail #overlap #mail-actions {
@@ -807,10 +820,10 @@
 
     #mail-detail #mail-content {
         z-index: 3;
-        margin: 0px 6px;
+        margin: 0 6px;
         position: relative;
         top: -40px;
-        background: white;
+        background: #F8F9F9;
         border-radius: 10px;
         padding: 16px;
     }
