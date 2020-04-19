@@ -29,7 +29,7 @@ class MailApi:
         return files
 
     def get_mails(self, step):
-        ImapApi().get_today_mails()
+        ImapApi().get_inbox_from_server()
 
         # return mails day by day
         step = step + 60

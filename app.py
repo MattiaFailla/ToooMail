@@ -32,6 +32,7 @@ logger = configuration.get_current().logger
 eel.init('web')
 
 
+## HELPER
 def mail_parsing(uid, message, unread_uid, directory):
     if len(message.body['html']) < 1:
         sanitized_body = str(message.body['plain'][0])
@@ -515,6 +516,13 @@ def check_incoming():
         print("NEW EMAILS:")
         print(ImapApi().check_new_emails())
         eel.sleep(1.0)  # Use eel.sleep(), not time.sleep()
+
+
+def force_download_from_imap_server(howmany):
+    # @todo
+    # Forcing the download of X emails from the remote server
+    # starting from the email with the lowest uid to X in reverse (9-8-7-6..)
+    return False
 
 
 # eel.spawn(check_incoming) # FIXME

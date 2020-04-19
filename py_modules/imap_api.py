@@ -380,7 +380,7 @@ class ImapApi:
             imbox.delete(uuid)
             return True
 
-    def download_all_mailbox(self):
+    def download_whole_mailbox(self):
         with Imbox(
                 self.server,
                 username=self.userName,
