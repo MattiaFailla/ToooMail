@@ -54,6 +54,10 @@
               <i class="el-icon-setting"></i>
               <span slot="title">Settings</span>
             </el-menu-item>
+            <el-menu-item index="8" @click="lockTheSession()">
+              <i class="el-icon-lock"></i>
+              <span slot="title">Lock the session</span>
+            </el-menu-item>
 
 
 
@@ -252,6 +256,7 @@
 
       }
     },
+
     mounted() {
       var cookies = this.$cookies.get("isLoggedIn");  // return value
 
@@ -279,8 +284,9 @@
       }
     },
     methods: {
-      onSubmit() {
-        console.log('submit!');
+      lockTheSession(){
+        // @todo: saving in the cookie the logged status
+        this.$router.push({ name: 'Locked', params: {fromHome: 'yep' }})
       },
       openEmail(index){
         this.selectedIndex = index;
