@@ -3,7 +3,7 @@
     <el-container v-loading.fullscreen.lock="fullscreenLoading">
 
 
-      <el-row :gutter="24">
+      <el-row type="flex" class="row-bg">
         <el-col :span="1">
           <el-menu default-active="2" class="el-menu-vertical-demo"
                    @open="handleOpen"
@@ -73,8 +73,7 @@
 
           </el-menu>
         </el-col>
-        <div class="page-container">
-        <el-col :span="6">
+        <el-col class="mail-row-col" :span="7">
 
           <div class="tm-search-bar">
             <input type="text" id="search_bar" v-model="search"  placeholder="Search...">
@@ -83,21 +82,23 @@
 
 
 
-          <div id="mail-list" class="flex">
-            <div @click="openEmail(index)" class="mail-item"
+          <div id="mail-list" class="flex-column">
+            <div @click="openEmail(index)" class="mail-itemm"
                  :class="{selected: isSelected(index)}"
                  v-for="(email, index) in emails.filter(data => !search || data.subject.toLowerCase().includes(search.toLowerCase()))" :key="index">
-              <div class="mail-same-height">
-                <div class="mail-item-title-bar flex">
-                  <p class="flex center-vertical center-horizontal">{{email.sender.name[0]}}</p>
+
+
+              <div class="Email dark">
+                <div class="ImgWrapper">
+                  <div class="img notif">
+                  </div>
                 </div>
-                <div>
-                  <p>{{email.sender.name}}</p>
-                  <p class="max-lines">{{email.subject}}</p>
+                <div class="EmailTitle">
+                  <p class="EmailTime">{{email.sent}}</p>
+                  <h1>{{email.sender.name}}</h1>
+                  <h2>{{email.subject}}</h2>
+                  <p class="EmailPreview">Hi Matt! Are you available for...</p>
                 </div>
-              </div>
-              <div>
-                <p>{{email.sent}}</p>
               </div>
             </div>
           </div>
@@ -106,9 +107,9 @@
 
 
         </el-col>
-        <el-col :span="17" class="mail-body-container">
+        <el-col :span="20" class="mail-body-container">
 
-          <div class="tm-wrapper">
+          <div class="tm-wrapper" id="tm-wrapper">
 
 
             <div class="tm-open-message shadow-lg">
@@ -153,7 +154,6 @@
 
 
         </el-col>
-        </div>
 
 
 
@@ -281,6 +281,7 @@
         console.log("USER NOT LOGGED.");
         //this.$router.push('Login')
       }
+      this.onPageLoad();
     },
     computed: {
       totalPages(){
@@ -304,10 +305,26 @@
         // @todo: saving in the cookie the logged status
         this.$router.push({ name: 'Locked', params: {fromHome: 'yep' }})
       },
+      onPageLoad(){
+        /**
+         *  Loading data on page lod when the DOM is ready
+         *  for changes
+         *  */
+        // Getting the background image
+        let max = 30;
+        let min = 1;
+        let randInt = Math.floor(Math.random() * (+max - +min)) + +min;
+        console.info("Random background id: "+randInt)
+        document.getElementById("tm-wrapper").style.backgroundImage = 'url(https://dir1.nextblu.com/tooomail/assets/wallpaper/'+randInt+'.jpg)';
+
+      },
       openLoadingFullScreen(){
+        let vm = this;
         this.fullscreenLoading = true;
+
         setTimeout(() => {
           this.fullscreenLoading = false;
+          vm.$message.success("Hey welcome back!")
         }, 2000);
       },
       openEmail(index){
@@ -362,14 +379,12 @@
 
 
   .tm-search-bar {
-    margin-bottom: 15px;
     color: #c8cae3;
     font-size: 1.4rem;
     background-color: #EBEBF6;
     padding: 10px 15px;
     border-radius: 3px;
-    margin-left: 30px;
-    margin-top: 10px;
+    margin: 10px 10px 15px;
   }
   .tm-search-bar input {
     border: none;
@@ -383,7 +398,7 @@
     float: right;
   }
 
-  #mail-list {
+  /*#mail-list {
     flex-wrap: wrap;
     margin-top: 16px;
     margin-left: 30px;
@@ -394,7 +409,7 @@
     margin-top: 10px;
     border-radius: 10px;
     background: #EEF1F6;
-    width: 100%;
+    width: 90%;
     color: black;
   }
   #mail-list .mail-item:hover {
@@ -407,9 +422,6 @@
     height: auto;
   }
 
-  #mail-list .mail-item .mail-item-title-bar {
-    /*justify-content: space-between;*/
-  }
   #mail-list .mail-item .mail-item-title-bar p {
     border-radius: 50%;
     width: 36px;
@@ -427,6 +439,142 @@
   #mail-list .mail-item div:nth-child(3) p {
     color: rgba(0, 0, 0, 0.54);
     font-size: 12px;
+  }*/
+
+  .mail-row-col{
+    height: 100vh;
+    min-width: 20%;
+    background: linear-gradient(to bottom, #313a5a 0%,#424a6b 100%);
+  }
+
+  #mail-list {
+    margin-right: 0px;
+    position: inherit;
+  }
+
+  .Email {
+    box-sizing: border-box;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.11);
+    padding: 5px;
+    width: 100%;
+    max-width: 90%;
+    max-height: 100px;
+    overflow: hidden;
+    margin: 3px auto;
+    transition: all .3s;
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    position: relative;
+    opacity: 1;
+  }
+
+  .Email.light {
+    background: rgba(255, 255, 255, .4);
+  }
+
+  .Email.active {
+    margin-top: -76px;
+    padding: 10px 0px;
+    background: #21294a;
+    color: #fff;
+    z-index: 15;
+    max-width: 100%;
+    cursor: initial;
+    border-radius: 0px;
+  }
+
+  .Email.deactive {
+    max-height: 0px;
+    padding: 0px;
+    margin: 0px auto;
+    opacity: 0;
+  }
+
+  .Email .ImgWrapper {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Email .img {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 100%;
+    position: relative;
+  }
+
+  .Email .img.notif:before {
+    content: " ";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: #5bc3e4;
+    border-radius: 100%;
+    border: 2px solid #868b9d;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    opacity: 1;
+    transition: all .3s;
+  }
+
+  .Email.active .img.notif:before {
+    opacity: 0;
+  }
+
+  .EmailTitle {
+    width: 80%;
+    position: relative;
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .EmailTitle .EmailTime {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 12px;
+    font-weight: 100;
+    margin: 0px;
+    padding: 5px;
+  }
+
+  .EmailTitle h1 {
+    margin: 0px;
+    padding: 0px;
+    font-size: 15px;
+    line-height: 1em;
+    font-weight: 500;
+    width: 100%;
+  }
+
+  .EmailTitle h2 {
+    margin: 0px;
+    padding: 3px 0px;
+    font-size: 12px;
+    line-height: 1em;
+    font-weight: 300;
+  }
+
+  .EmailTitle p.EmailPreview {
+    margin: 5px 0px;
+    max-height: 25px;
+    padding: 0px;
+    font-size: 12px;
+    font-weight: 100;
+    opacity: .8;
+    overflow: hidden;
+    transition: all .3s;
+  }
+
+  .Email.active .EmailTitle p.EmailPreview {
+    max-height: 0px;
   }
 
 
@@ -439,11 +587,10 @@
   .tm-wrapper {
     max-width: 100%;
     height: 100vh;
-    margin: 0 0;
     background-color: #EEF1F6;
     max-height: 100%;
     overflow-y: auto;
-    background-image: url("https://source.unsplash.com/user/erondu");
+    background-image: url("//");
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -555,13 +702,10 @@
     font-size: 14px;
   }
 
-  .element-container {
-    color: #909191;
-    background-color: white;
-    padding: 10px;
-    margin: 6px;
-    width: auto;
-    border-radius: 6px;
+  .el-menu-vertical-demo {
+    width: 100%;
+    margin-right: 0;
+    border-right: rgba(216,216,216,0.6);
   }
 
 
