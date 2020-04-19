@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <el-container>
+    <el-container v-loading.fullscreen.lock="fullscreenLoading">
 
 
       <el-row :gutter="24">
@@ -32,6 +32,10 @@
             </el-submenu>
             <el-menu-item index="2">
               <i class="el-icon-menu"></i>
+              <span slot="title">Inbox</span>
+            </el-menu-item>
+            <el-menu-item index="-1" @click="isWriting = true">
+              <i class="el-icon-edit-outline"></i>
               <span slot="title">Inbox</span>
             </el-menu-item>
             <el-menu-item index="3">
@@ -69,7 +73,8 @@
 
           </el-menu>
         </el-col>
-        <el-col :span="6" v-loading="loading = false">
+        <div class="page-container">
+        <el-col :span="6">
 
           <div class="tm-search-bar">
             <input type="text" id="search_bar" v-model="search"  placeholder="Search...">
@@ -148,6 +153,10 @@
 
 
         </el-col>
+        </div>
+
+
+
       </el-row>
 
 
@@ -217,6 +226,7 @@
       return {
         activeIndex2: '1',
         loading: true,
+        fullscreenLoading: false,
         src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
         isCollapse: true,
         form: {
@@ -251,7 +261,13 @@
             body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
             sent: '8:12 AM'
           }
-        ]
+        ],
+
+        // SAVING THE TYPE OF PAGE TO SHOW
+        isMainApp: true,
+        isSettingsPage: false,
+        isWriteEmailPage: false,
+        isProfilePage: false,
 
 
       }
@@ -288,6 +304,12 @@
         // @todo: saving in the cookie the logged status
         this.$router.push({ name: 'Locked', params: {fromHome: 'yep' }})
       },
+      openLoadingFullScreen(){
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 2000);
+      },
       openEmail(index){
         this.selectedIndex = index;
       },
@@ -303,8 +325,22 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
+
+      requireNewMailRow(rowType){
+        // Getting the new mail row from the backend
+        /**
+         * This function will reload the mail row.
+         * @param {string} rowType     Indicates the page to load.
+         *
+         * The mail row is saved in data [emails]
+         */
+
+
+      }
+
     },
     created(){
+      this.openLoadingFullScreen()
       this.selectedIndex = 0;
     }
   }
