@@ -377,7 +377,6 @@
          *
          * The mail row is saved in data [emails]
          */
-        this.emails= [];
         this.logger("Getting mail data for "+rowType)
         let vm = this;
         let maildata;
@@ -393,30 +392,35 @@
           case "unread":
             eel.get_unread()((data) => {
               maildata = data;
+              vm.updateMailData(data);
               console.log(data)
             });
             break;
           case "sent":
             eel.get_sent()((data) => {
               maildata = data;
+              vm.updateMailData(data);
               console.log(data)
             });
             break;
           case "flagged":
             eel.get_flagged()((data) => {
               maildata = data;
+              vm.updateMailData(data);
               console.log(data)
             });
             break;
           case "drafts":
             eel.get_unread()((data) => {
               maildata = data;
+              vm.updateMailData(data);
               console.log(data)
             });
             break;
           case "spam":
             eel.get_deleted()((data) => {
               maildata = data;
+              vm.updateMailData(data);
               console.log(data)
             });
             break;
@@ -432,14 +436,16 @@
             }
         */
         let vm = this;
+        let appdata = []
         data.forEach(function (data) {
-          vm.emails.push({
+          appdata.push({
             "sender": { "name": data.From_name, "email": data.From_mail},
             "subject": data.Subject,
             "body": data.bodyHTML,
             "sent": data.datetimes
           });
         })
+        vm.emails = appdata;
       },
       logger(message, type=null){
         /*
