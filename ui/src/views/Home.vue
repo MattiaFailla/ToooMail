@@ -260,6 +260,72 @@
             subject: "Material expenses",
             body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
             sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
+          },
+          {
+            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
+            subject: "Material expenses",
+            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
+            sent: '8:12 AM'
           }
         ],
 
@@ -316,7 +382,6 @@
         let randInt = Math.floor(Math.random() * (+max - +min)) + +min;
         console.info("Random background id: "+randInt)
         document.getElementById("tm-wrapper").style.backgroundImage = 'url(https://dir1.nextblu.com/tooomail/assets/wallpaper/'+randInt+'.jpg)';
-
       },
       openLoadingFullScreen(){
         let vm = this;
@@ -369,6 +434,26 @@
     font-family: "Poppins", Arial,serif;
   }
 
+  /* scroll bar */
+  .scroll, .scroll-x, .scroll-y {
+    -webkit-overflow-scrolling: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(216, 216, 216, 0.8);
+    border-radius: 10px;
+  }
+
+
   .user-avatar {
     position: absolute;
     left: 19%;
@@ -398,52 +483,11 @@
     float: right;
   }
 
-  /*#mail-list {
-    flex-wrap: wrap;
-    margin-top: 16px;
-    margin-left: 30px;
-    justify-content: space-between;
-  }
-  #mail-list .mail-item {
-    padding: 16px;
-    margin-top: 10px;
-    border-radius: 10px;
-    background: #EEF1F6;
-    width: 90%;
-    color: black;
-  }
-  #mail-list .mail-item:hover {
-    background: #ddd;
-    cursor: pointer;
-  }
-
-  .mail-same-height {
-    display: inline-block;
-    height: auto;
-  }
-
-  #mail-list .mail-item .mail-item-title-bar p {
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    color: black;
-    background-color: white;
-  }
-  #mail-list .mail-item div:nth-child(2) {
-    margin-top: 16px;
-  }
-  #mail-list .mail-item div:nth-child(2) p:nth-child(2) {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.8);
-  }
-  #mail-list .mail-item div:nth-child(3) p {
-    color: rgba(0, 0, 0, 0.54);
-    font-size: 12px;
-  }*/
-
   .mail-row-col{
     height: 100vh;
     min-width: 20%;
+    max-height: 100vh;
+    overflow-y: scroll;
     background: linear-gradient(to bottom, #313a5a 0%,#424a6b 100%);
   }
 
@@ -626,7 +670,8 @@
   #mail-detail #overlap {
     height: 150px;
     border-radius: 10px 10px 0px 0px;
-    background: #ff4133;
+    background: #001f3f;
+    border-color: #001f3f;
     z-index: 2;
   }
   #mail-detail #overlap #mail-actions {
@@ -657,7 +702,6 @@
     border: 0px solid transparent;
     padding: 8px 24px;
     border-radius: 30px;
-    font-family: 'Poppins';
     display: flex;
     align-items: center;
     font-size: 12px;
