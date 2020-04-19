@@ -28,6 +28,7 @@ import configuration
 logger = configuration.get_current().logger
 
 # Set web files folder
+# eel.init('ui')
 eel.init('web')
 
 
@@ -523,10 +524,10 @@ if __name__ == '__main__':
     # eel.say_hello_js('Server connected.')  # Call a Javascript function
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
-        processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
-                     range(4)]
+        """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
+                     range(4)]"""
 
-        eel.start(template, block=True, port=8686)  # Start
+        eel.start(template, block=True, port=8686, mode=False)  # Start
     else:
         eel.start(template, block=True, port=8686)  # Start
 

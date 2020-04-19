@@ -88,7 +88,7 @@
                  v-for="(email, index) in emails.filter(data => !search || data.subject.toLowerCase().includes(search.toLowerCase()))" :key="index">
 
 
-              <div class="Email dark">
+              <div class="Email dark" v-if="emails.length > 0">
                 <div class="ImgWrapper">
                   <div class="img notif">
                   </div>
@@ -97,9 +97,11 @@
                   <p class="EmailTime">{{email.sent}}</p>
                   <h1>{{email.sender.name}}</h1>
                   <h2>{{email.subject}}</h2>
-                  <p class="EmailPreview">Hi Matt! Are you available for...</p>
+                  <!--<p class="EmailPreview">Hi Matt! Are you available for...</p>-->
                 </div>
               </div>
+
+
             </div>
           </div>
 
@@ -142,7 +144,7 @@
                             <p>{{selectedEmail.subject}}</p>
                             <p>{{selectedEmail.sent}}</p>
                           </div>
-                          <p>{{selectedEmail.body}}</p>
+                          <p v-html="selectedEmail.body"></p>
                         </div>
                       </div>
 
@@ -250,83 +252,17 @@
 
         emails: [
           {
-            sender: { name: "Jane Doe", email: "janedoe@gmail.com" },
-            subject: "Necessary newspaper",
+            sender: { name: "Next Blu", email: "hello@nextblu.com" },
+            subject: "Some exciting news",
             body: "Necessary ye contented newspaper zealously breakfast he prevailed. Melancholy middletons yet understood decisively boy law she. Answer him easily are its barton little. Oh no though mother be things simple itself. Dashwood horrible he strictly on as. Home fine in so am good body this hope.",
             sent: '7:11 AM'
-          },
+          }/*,
           {
             sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
             subject: "Material expenses",
             body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
             sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          },
-          {
-            sender: { name: "Jack Doe", email: "jackdoe@gmail.com" },
-            subject: "Material expenses",
-            body: "Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor. Him had wound use found hoped. Of distrusts immediate enjoyment curiosity do. Marianne numerous saw thoughts the humoured. ",
-            sent: '8:12 AM'
-          }
+          },*/
         ],
 
         // SAVING THE TYPE OF PAGE TO SHOW
@@ -334,6 +270,9 @@
         isSettingsPage: false,
         isWriteEmailPage: false,
         isProfilePage: false,
+
+        // USER INFOS
+        username: '',
 
 
       }
@@ -381,6 +320,19 @@
         let randInt = Math.floor(Math.random() * (+max - +min)) + +min;
         console.info("Random background id: "+randInt)
         document.getElementById("tm-wrapper").style.backgroundImage = 'url(https://dir1.nextblu.com/tooomail/assets/wallpaper/'+randInt+'.jpg)';
+
+        // Getting user info and pong status
+        let vm = this;
+        eel.pong()((val) => {
+          console.info(val);
+        })
+
+        eel.get_username()((username) => {
+          vm.username = username;
+        })
+
+        this.requireNewMailRow();
+
       },
       openLoadingFullScreen(){
         let vm = this;
@@ -388,7 +340,7 @@
 
         setTimeout(() => {
           this.fullscreenLoading = false;
-          vm.$message.success("Hey welcome back!")
+          vm.$message.info("Hey "+vm.username+" welcome back!")
         }, 2000);
       },
       openEmail(index){
@@ -406,8 +358,7 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
-
-      requireNewMailRow(rowType){
+      requireNewMailRow(rowType="inbox") {
         // Getting the new mail row from the backend
         /**
          * This function will reload the mail row.
@@ -415,7 +366,55 @@
          *
          * The mail row is saved in data [emails]
          */
-
+        this.logger("Getting mail data for "+rowType)
+        let vm = this;
+        let maildata;
+        switch (rowType) {
+          default:
+          case "inbox":
+            eel.get_mails(10)((data) => {
+              maildata = data;
+              vm.updateMailData(data);
+              console.log(data)
+            });
+            break;
+          case "unread":
+            eel.get_unread()((data) => {
+              maildata = data;
+              console.log(data)
+            });
+            break;
+        }
+      },
+      updateMailData(data){
+        this.logger("Updating the mail row data.");
+        /*
+        sender: { name: "Jane Doe", email: "janedoe@gmail.com" },
+            subject: "Necessary newspaper",
+            body: "Necessary ye contented newspaper zealously breakfast he prevailed. Melancholy middletons yet understood decisively boy law she. Answer him easily are its barton little. Oh no though mother be things simple itself. Dashwood horrible he strictly on as. Home fine in so am good body this hope.",
+            sent: '7:11 AM'
+            }
+        */
+        let vm = this;
+        data.forEach(function (data) {
+          vm.emails.push({
+            "sender": { "name": data.From_name, "email": data.From_mail},
+            "subject": data.Subject,
+            "body": data.bodyHTML,
+            "sent": data.datetimes
+          });
+        })
+      },
+      logger(message, type=null){
+        /*
+        Logging data to the backend server
+         */
+        if (type === "error") {
+          console.error(message);
+          eel.ui_log_error(message);
+        }
+        console.info(message);
+        eel.ui_log(message)();
 
       }
 
@@ -517,6 +516,10 @@
   }
 
   .Email.light {
+    background: rgba(255, 255, 255, .4);
+  }
+
+  .NoDataMail {
     background: rgba(255, 255, 255, .4);
   }
 
@@ -623,15 +626,13 @@
     max-height: 0px;
   }
 
-
-
-
   .mail-body-container {
     height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .tm-wrapper {
-    max-width: 100%;
     height: 100vh;
     background-color: #EEF1F6;
     max-height: 100%;
@@ -660,14 +661,14 @@
     align-items: center;
   }
 
-
-
   #mail-detail {
     margin: 10px;
     background: white;
     /*margin-left: 32px;*/
     border-radius: 10px;
     z-index: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
   #mail-detail #overlap {
     height: 150px;
