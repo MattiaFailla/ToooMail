@@ -341,7 +341,6 @@
 
     mounted() {
       var cookies = this.$cookies.get("isLoggedIn");  // return value
-
       // check the cookie
       if (cookies == null) {
         console.log("USER NOT LOGGED.");
@@ -429,6 +428,9 @@
 </script>
 
 <style scoped>
+
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans:300|Roboto+Mono);
+
   #home {
     overflow-x: hidden;
     font-family: "Poppins", Arial,serif;
@@ -720,7 +722,7 @@
     color: white;
   }
   #mail-detail #overlap #mail-actions div:nth-child(2) .btn-hollow:hover {
-    background: #f45b50;
+    background: rgba(244, 91, 80, 0.88);
   }
   #mail-detail #overlap #mail-actions div:nth-child(2) > .btn {
     margin-right: 16px;
