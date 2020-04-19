@@ -30,27 +30,33 @@
                 <el-menu-item index="1-3">Create a new folder</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+
+
             <el-menu-item index="2">
+              <el-badge :value="numberUnread" :max="99" type="info" >
               <i class="el-icon-menu"></i>
               <span slot="title">Inbox</span>
+              </el-badge>
             </el-menu-item>
+
+
             <el-menu-item index="-1" @click="isWriting = true">
               <i class="el-icon-edit-outline"></i>
-              <span slot="title">Inbox</span>
+              <span slot="title">Write an email</span>
             </el-menu-item>
-            <el-menu-item index="3">
+            <el-menu-item index="3" @click="requireNewMailRow('sent')">
               <i class="el-icon-s-promotion"></i>
               <span slot="title">Sent</span>
             </el-menu-item>
-            <el-menu-item index="4">
+            <el-menu-item index="4" @click="requireNewMailRow('flagged')">
               <i class="el-icon-s-flag"></i>
               <span slot="title">Flagged</span>
             </el-menu-item>
-            <el-menu-item index="5">
+            <el-menu-item index="5" @click="requireNewMailRow('drafts')">
               <i class="el-icon-document"></i>
               <span slot="title">Drafts</span>
             </el-menu-item>
-            <el-menu-item index="6">
+            <el-menu-item index="6" @click="requireNewMailRow('spam')">
               <i class="el-icon-delete"></i>
               <span slot="title">Spam</span>
             </el-menu-item>
@@ -274,7 +280,8 @@
         // USER INFOS
         username: '',
 
-
+        // MAIL HELPER
+        numberUnread: 0
       }
     },
 
@@ -331,6 +338,10 @@
           vm.username = username;
         })
 
+        eel.get_number_unread()((number) => {
+          vm.numberUnread = number;
+        })
+
         this.requireNewMailRow();
 
       },
@@ -366,13 +377,14 @@
          *
          * The mail row is saved in data [emails]
          */
+        this.emails= [];
         this.logger("Getting mail data for "+rowType)
         let vm = this;
         let maildata;
         switch (rowType) {
           default:
           case "inbox":
-            eel.get_mails(10)((data) => {
+            eel.get_mails(50)((data) => {
               maildata = data;
               vm.updateMailData(data);
               console.log(data)
@@ -380,6 +392,30 @@
             break;
           case "unread":
             eel.get_unread()((data) => {
+              maildata = data;
+              console.log(data)
+            });
+            break;
+          case "sent":
+            eel.get_sent()((data) => {
+              maildata = data;
+              console.log(data)
+            });
+            break;
+          case "flagged":
+            eel.get_flagged()((data) => {
+              maildata = data;
+              console.log(data)
+            });
+            break;
+          case "drafts":
+            eel.get_unread()((data) => {
+              maildata = data;
+              console.log(data)
+            });
+            break;
+          case "spam":
+            eel.get_deleted()((data) => {
               maildata = data;
               console.log(data)
             });
