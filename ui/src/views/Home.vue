@@ -356,10 +356,7 @@
                 document.getElementById("tm-wrapper").style.backgroundImage = 'url(https://dir1.nextblu.com/tooomail/assets/wallpaper/' + randInt + '.jpg)';
 
                 // Getting user info and pong status
-                let vm = this;
-                eel.pong()((val) => {
-                    console.info(val);
-                })
+
 
                 eel.get_username()((username) => {
                     vm.username = username;
@@ -509,6 +506,21 @@
             /**
              * This function will be fired before the DOM creation.
              */
+            let vm = this;
+            try {
+                eel.pong()((val) => {
+                    console.info(val);
+                })
+            }catch (e) {
+                console.error(e);
+                console.info("Is the server up and running?");
+                vm.$message.error({
+                    message: "Something really bad happened. Please close and reopen the app.",
+                    duration: 0
+                }
+            )
+                return
+            }
             this.openLoadingFullScreen()
             this.selectedIndex = 0;
         }
