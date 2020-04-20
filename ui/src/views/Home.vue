@@ -100,7 +100,7 @@
                                     </div>-->
                                 </div>
                                 <div class="EmailTitle">
-                                    <p class="EmailTime">{{email.sent}}</p>
+                                    <p class="EmailTime">{{email.sent|datetime}}</p>
                                     <h1 class="EmailSenderName">{{email.sender.name}}</h1>
                                     <h2 class="EmailSubject">{{email.subject}}</h2>
                                     <!--<p class="EmailPreview">Hi Matt! Are you available for...</p>-->
