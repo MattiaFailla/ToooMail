@@ -507,6 +507,7 @@
              * This function will be fired before the DOM creation.
              */
             let vm = this;
+            let runApp = true;
             try {
                 eel.pong()((val) => {
                     console.info(val);
@@ -517,12 +518,14 @@
                 vm.$message.error({
                     message: "Something really bad happened. Please close and reopen the app.",
                     duration: 0
-                }
-            )
-                return
+                    }
+                )
+                runApp = false;
             }
-            this.openLoadingFullScreen()
-            this.selectedIndex = 0;
+            if (runApp){
+                this.openLoadingFullScreen()
+                this.selectedIndex = 0;
+            }
         }
     }
 </script>
