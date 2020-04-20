@@ -147,8 +147,23 @@
                                     </div>
                                     <div id="mail-content">
                                         <div>
-                                            <p>{{selectedEmail.subject}}</p>
-                                            <p>{{selectedEmail.sent}}</p>
+
+
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <p>{{selectedEmail.subject}}</p>
+                                                    <p>{{selectedEmail.sent}}</p>
+                                                </el-col>
+                                                <el-col :span="12">
+                                                    <el-button icon="el-icon-search" circle></el-button>
+                                                    <el-button type="primary" icon="el-icon-edit" circle></el-button>
+                                                    <el-button type="success" icon="el-icon-check" circle></el-button>
+                                                    <el-button type="info" icon="el-icon-message" circle></el-button>
+                                                    <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+                                                    <el-button type="danger" icon="el-icon-delete" circle></el-button>
+
+                                                </el-col>
+                                            </el-row>
                                         </div>
                                         <p v-html="selectedEmail.body"></p>
                                     </div>
