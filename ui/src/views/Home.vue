@@ -77,7 +77,7 @@
 
                     </el-menu>
                 </el-col>
-                <el-col :span="7" class="mail-row-col">
+                <el-col :span="7" class="mail-row-col" v-loading="isLoadingMailsRow" element-loading-text="We are getting the latest emails.. 🚀">
 
                     <div class="tm-search-bar">
                         <input id="search_bar" placeholder="Search..." type="text" v-model="search">
@@ -85,7 +85,7 @@
                     </div>
 
 
-                    <div class="flex-column" id="mail-list">
+                    <div class="flex-column" id="mail-list" v-if="!isLoadingMailsRow">
                         <div :class="{selected: isSelected(index)}" :key="index"
                              @click="openEmail(index)"
                              class="mail-itemm"
@@ -281,7 +281,8 @@
                 username: '',
 
                 // MAIL HELPER
-                numberUnread: 0
+                numberUnread: 0,
+                isLoadingMailsRow: false
             }
         },
 
@@ -387,6 +388,7 @@
                  * The mail row is saved in data [emails]
                  */
                 this.logger("Getting mail data for " + rowType)
+                this.isLoadingMailsRow = true;
                 let vm = this;
                 let maildata;
                 switch (rowType) {
@@ -434,6 +436,7 @@
                         });
                         break;
                 }
+
             },
             updateMailData(data) {
                 /***
@@ -460,6 +463,7 @@
                     });
                 })
                 vm.emails = appdata;
+                vm.isLoadingMailsRow = false
             },
             logger(message, type = null) {
                 /** Logging data back to tentalog and std:log
@@ -557,7 +561,7 @@
         height: 100vh;
         min-width: 20%;
         max-height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         background: linear-gradient(to bottom, #313a5a 0%, #424a6b 100%);
     }
 
