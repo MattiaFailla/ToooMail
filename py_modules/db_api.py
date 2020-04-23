@@ -74,7 +74,7 @@ class DBApi:
 
     def get(self, field: object = "", expression: object = "") -> object:
         cur = self.conn.cursor()
-        cur.execute("SELECT " + field + " FROM " + self.table + " " + expression + "")
+        cur.execute("SELECT ? FROM ? ?", (field, self.table, expression,))
         rows = cur.fetchall()
         data = []
         for row in rows:
@@ -98,45 +98,53 @@ class DBApi:
 
     def get_last_email_id(self, user_id):
         cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE user_id = " + str(user_id) + " ORDER BY uuid DESC LIMIT 1")
+        cur.execute("SELECT uuid FROM mails WHERE user_id = ? ORDER BY uuid DESC LIMIT 1", (user_id,))
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
-
+        self.conn.close()
         return data
+
+    def get_last_email_date(self, user_id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT received FROM mails WHERE user_id = ? ORDER BY received DESC LIMIT 1", (user_id,))
+        row = cur.fetchone()
+        self.conn.close()
+        return row[0]
 
     def get_mail(self, step=None, user_id=0, folder="Inbox"):
         if step is not None:
             cur = self.conn.cursor()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = " + str(user_id) + " ORDER BY received DESC LIMIT 100")
+                "SELECT * FROM mails WHERE user_id = ? ORDER BY received DESC LIMIT 100", (user_id,))
             rows = cur.fetchall()
             data = []
             for row in rows:
                 data.append(row)
+            self.conn.close()
             return data
         else:
             cur = self.conn.cursor()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = " + str(
-                    user_id) + " AND folder LIKE '%" + folder + "%' ORDER BY received DESC")
+                "SELECT * FROM mails WHERE user_id = ? AND folder LIKE '% ? %' ORDER BY received DESC", (user_id,folder,))
             rows = cur.fetchall()
             data = []
             for row in rows:
                 data.append(row)
+            self.conn.close()
             return data
 
     def get_specific_email(self, uuid):
         cur = self.conn.cursor()
         cur.execute(
-            "SELECT * FROM mails WHERE uuid = " + str(uuid) + "")
+            "SELECT * FROM mails WHERE uuid = ?", (uuid,))
         rows = cur.fetchall()
         data = []
         for row in rows:
             data.append(row)
+        self.conn.close()
         return data
-
 
     @staticmethod
     def upload_config():
@@ -150,8 +158,7 @@ class DBApi:
 
     def get_next_uuid_set(self, uid, user_id, folder):
         cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE uuid > " + str(uid) + " AND user_id = " + str(
-            user_id) + " AND folder = '" + folder + "' ORDER BY uuid LIMIT 30")
+        cur.execute("SELECT uuid FROM mails WHERE uuid > ? AND user_id =? AND folder = '?' ORDER BY uuid LIMIT 30",  (str(uid), str(user_id), folder,))
         rows = cur.fetchall()
         data = []
         for row in rows:
@@ -161,7 +168,7 @@ class DBApi:
     def get_files_information(self, uid, user_id):
         cur = self.conn.cursor()
         cur.execute(
-            "SELECT real_filename, deleted FROM files WHERE uuid = " + str(uid) + " AND user_id = " + str(user_id) + "")
+            "SELECT real_filename, deleted FROM files WHERE uuid = ? AND user_id = ?", (str(uid),str(user_id),))
         rows = cur.fetchall()
         data = []
         for row in rows:
@@ -171,7 +178,7 @@ class DBApi:
     def mark_as_seen(self, uid):
         cur = self.conn.cursor()
         cur.execute(
-            "UPDATE mails SET opened = 1 WHERE uuid = " + str(uid) + "")
+            "UPDATE mails SET opened = 1 WHERE uuid = ?", (uid,))
         self.conn.commit()
 
     def get_unopened(self):
@@ -192,11 +199,11 @@ class Migration:
             self.date_millis = int((datetime.strptime(self.date_string, "%Y-%m-%d") -
                                     datetime.utcfromtimestamp(0)).total_seconds())
             spec = importlib.util.spec_from_file_location(file_name.replace('.py', ''),
-                                                          MIGRATIONS_LOCATION+'/'+file_name)
+                                                          MIGRATIONS_LOCATION + '/' + file_name)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             self.sql_script = module.update()
-            self.checksum = hashlib.md5((self.file_name+self.sql_script).encode()).hexdigest()
+            self.checksum = hashlib.md5((self.file_name + self.sql_script).encode()).hexdigest()
         else:
             raise NotAMigrationException('The given name does not represent a valid migration')
 
