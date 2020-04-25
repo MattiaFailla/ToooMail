@@ -1,6 +1,5 @@
 import json
 import dateutil.parser
-from typing import List, Any
 import configuration
 from py_modules import backend_api
 from py_modules.db_api import DBApi
@@ -73,7 +72,6 @@ class MailApi:
                 dict_mails.append(temp_mail)
             except Exception as e:
                 logger.error('Error retrieving emails', e)
-
         return dict_mails
 
     def get_folder(self, folder_name="Inbox"):
