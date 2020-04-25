@@ -9,3 +9,5 @@ numpy==1.16.4
 python-dateutil==2.8.0
 urllib3==1.25.3
 yarg==0.1.9
+plyer
+dbus-python==1.2.16; platform_system == 'Linux'

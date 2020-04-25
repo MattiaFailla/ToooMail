@@ -19,8 +19,14 @@ class Configuration:
             parsed_file = json.loads(config_file.read())
             self.__db_location = parsed_file['db_location']
             self.__migrations_location = parsed_file['db_migrations_location']
+            self.__assets_location = parsed_file['assets_location']
             self.__logger = logging.getLogger('root')
             self.__mail_server_settings = [setting for setting in json.load(mail_server_file)]
+
+
+    @property
+    def assets_location(self):
+        return os.path.abspath(self.__assets_location)
 
     @property
     def db_location(self):

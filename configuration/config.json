@@ -1,4 +1,5 @@
 {
     "db_location": "./.db/app.db",
-    "db_migrations_location": "./.db/migrations"
+    "db_migrations_location": "./.db/migrations",
+    "assets_location": "./.assets"
 }
