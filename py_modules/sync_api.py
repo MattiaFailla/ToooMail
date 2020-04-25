@@ -50,6 +50,12 @@ class SYNCApi:
         DBApi().mark_as_seen(uid=uid)
 
     @staticmethod
+    def mark_flag(uid):
+        ImapApi().mark_flag(uid=uid)
+        DBApi().mark_flag(uid=uid)
+
+
+    @staticmethod
     def get_folder(folder_name):
         ImapApi().get_folder_mails_from_server(folder_name=folder_name)
 
