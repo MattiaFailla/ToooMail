@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from "../views/Login.vue";
 import LockedOut from "../views/LockedOut.vue";
+import NoConnection from "../views/NoConnection.vue";
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ Vue.use(VueRouter)
       path: '/locked',
       name: 'Locked',
       component: LockedOut
+    },
+    {
+      path: '/error',
+      name: 'NoConnection',
+      component: NoConnection
     },
   {
     path: '/about',

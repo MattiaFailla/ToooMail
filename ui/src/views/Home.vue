@@ -77,7 +77,8 @@
 
                     </el-menu>
                 </el-col>
-                <el-col :span="7" class="mail-row-col" v-loading="isLoadingMailsRow" element-loading-text="We are getting the latest emails.. 🚀">
+                <el-col :span="7" class="mail-row-col" element-loading-text="We are getting the latest emails.. 🚀"
+                        v-loading="isLoadingMailsRow">
 
                     <div class="tm-search-bar">
                         <input id="search_bar" placeholder="Search..." type="text" v-model="search">
@@ -100,7 +101,7 @@
                                     </div>-->
                                 </div>
                                 <div class="EmailTitle">
-                                    <p class="EmailTime">{{email.sent|datetime}}</p>
+                                    <p class="EmailTime">{{email.sent}}</p>
                                     <h1 class="EmailSenderName">{{email.sender.name}}</h1>
                                     <h2 class="EmailSubject">{{email.subject}}</h2>
                                     <!--<p class="EmailPreview">Hi Matt! Are you available for...</p>-->
@@ -146,21 +147,31 @@
                                         </div>
                                     </div>
                                     <div id="mail-content">
-                                        <div>
+                                        <div style="width: 100%">
 
 
-                                            <el-row>
+                                            <el-row class="top-email-row">
                                                 <el-col :span="12">
                                                     <p>{{selectedEmail.subject}}</p>
                                                     <p>{{selectedEmail.sent}}</p>
                                                 </el-col>
                                                 <el-col :span="12">
-                                                    <el-button icon="el-icon-search" circle></el-button>
-                                                    <el-button type="primary" icon="el-icon-edit" circle></el-button>
-                                                    <el-button type="success" icon="el-icon-check" circle></el-button>
-                                                    <el-button type="info" icon="el-icon-message" circle></el-button>
-                                                    <el-button type="warning" icon="el-icon-star-off" circle></el-button>
-                                                    <el-button type="danger" icon="el-icon-delete" circle></el-button>
+                                                    <el-tooltip content="Print" placement="top">
+                                                    <el-button circle icon="el-icon-printer" type="primary"></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip content="Mark as read" placement="top">
+                                                    <el-button circle icon="el-icon-check" type="success"></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip content="Answer" placement="top">
+                                                    <el-button circle icon="el-icon-message" type="info"></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip content="Star" placement="top">
+                                                    <el-button circle icon="el-icon-star-off"
+                                                               type="warning"></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip content="Delete" placement="top">
+                                                    <el-button circle icon="el-icon-delete" type="danger"></el-button>
+                                                    </el-tooltip>
 
                                                 </el-col>
                                             </el-row>
@@ -185,7 +196,10 @@
                     :before-close="handleClose"
                     :visible.sync="isWriting"
                     title="Write a new email"
-                    width="60%">
+                    width="70%"
+                    center
+                    top="2vh"
+            >
 
         <span>
           <el-form :model="form" ref="form">
@@ -225,15 +239,10 @@
             </el-form-item>
           </el-form>
         </span>
-
-                <span class="dialog-footer" slot="footer">
-
-
-          <el-button @click="dialogVisible = false">Cancel</el-button>
-    <el-button @click="dialogVisible = false" type="primary">Confirm</el-button>
-
-
-  </span>
+        <span class="dialog-footer" slot="footer">
+            <el-button @click="dialogVisible = false">Cancel</el-button>
+            <el-button @click="dialogVisible = false" type="primary">Confirm</el-button>
+          </span>
             </el-dialog>
 
         </el-container>
@@ -297,7 +306,8 @@
 
                 // MAIL HELPER
                 numberUnread: 0,
-                isLoadingMailsRow: false
+                isLoadingMailsRow: false,
+
             }
         },
 
@@ -356,6 +366,7 @@
                 document.getElementById("tm-wrapper").style.backgroundImage = 'url(https://dir1.nextblu.com/tooomail/assets/wallpaper/' + randInt + '.jpg)';
 
                 // Getting user info and pong status
+                let vm = this;
 
 
                 eel.get_username()((username) => {
@@ -465,18 +476,34 @@
                 let vm = this;
                 let appdata = []
                 data.forEach(function (data) {
-                    let profilePic = "https://eu.ui-avatars.com/api/?name="+data.From_name
+                    let profilePic = "https://eu.ui-avatars.com/api/?name=" + data.From_name
                     appdata.push({
                         "sender": {"name": data.From_name, "email": data.From_mail},
                         "subject": data.Subject,
                         "body": data.bodyHTML,
                         "sent": data.datetimes,
-                        "profilePic": profilePic
+                        "profilePic": profilePic,
+                        "uid": data.uid
                     });
                 })
                 vm.emails = appdata;
                 vm.isLoadingMailsRow = false
             },
+            markMailAsSeen(uid){
+                eel.mark_as_seen(uid)((data) => {
+                    this.logger("Mail marked as seen.")
+                });
+            },
+            answerAMail(uid){
+
+            },
+            starAMail(uid){
+
+            },
+            deleteAMail(uid){
+
+            },
+
             logger(message, type = null) {
                 /** Logging data back to tentalog and std:log
                  *
@@ -512,18 +539,20 @@
                 eel.pong()((val) => {
                     console.info(val);
                 })
-            }catch (e) {
+            } catch (e) {
                 console.error(e);
                 console.info("Is the server up and running?");
                 vm.$message.error({
-                    message: "Something really bad happened. Please close and reopen the app.",
-                    duration: 0
+                        message: "Something really bad happened. Please close and reopen the app.",
+                        duration: 0
                     }
                 )
+                this.$router.push({name: 'NoConnection', params: {fromHome: 'yep'}})
                 runApp = false;
             }
-            if (runApp){
+            if (runApp) {
                 this.openLoadingFullScreen()
+
                 this.selectedIndex = 0;
             }
         }
@@ -596,7 +625,7 @@
     }
 
     #mail-list {
-        margin-right: 0px;
+        margin-right: 0;
         position: inherit;
     }
 
@@ -619,14 +648,15 @@
         height: 70px;
     }
 
-    .Email:hover{
+    .Email:hover {
         background: rgba(255, 255, 255, 0.15);
     }
 
-    .EmailSenderName{
+    .EmailSenderName {
         color: white;
     }
-    .EmailSubject{
+
+    .EmailSubject {
         color: white;
     }
 
@@ -642,13 +672,13 @@
         z-index: 15;
         max-width: 100%;
         cursor: initial;
-        border-radius: 0px;
+        border-radius: 0;
     }
 
     .Email.deactive {
-        max-height: 0px;
-        padding: 0px;
-        margin: 0px auto;
+        max-height: 0;
+        padding: 0;
+        margin: 0 auto;
         opacity: 0;
     }
 
@@ -696,17 +726,17 @@
 
     .EmailTitle .EmailTime {
         position: absolute;
-        top: 0px;
-        right: 0px;
-        font-size: 12px;
+        top: 0;
+        right: 0;
+        font-size: 11px;
         font-weight: 100;
-        margin: 0px;
+        margin: 0;
         padding: 5px;
     }
 
     .EmailTitle h1 {
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
         font-size: 15px;
         line-height: 1em;
         font-weight: 500;
@@ -714,17 +744,17 @@
     }
 
     .EmailTitle h2 {
-        margin: 0px;
-        padding: 3px 0px;
+        margin: 0;
+        padding: 3px 0;
         font-size: 12px;
         line-height: 1em;
         font-weight: 300;
     }
 
     .EmailTitle p.EmailPreview {
-        margin: 5px 0px;
+        margin: 5px 0;
         max-height: 25px;
-        padding: 0px;
+        padding: 0;
         font-size: 12px;
         font-weight: 100;
         opacity: .8;
@@ -733,7 +763,7 @@
     }
 
     .Email.active .EmailTitle p.EmailPreview {
-        max-height: 0px;
+        max-height: 0;
     }
 
     .mail-body-container {
@@ -783,11 +813,11 @@
 
     #mail-detail #overlap {
         height: 150px;
-        border-radius: 10px 10px 0px 0px;
+        border-radius: 10px 10px 0 0;
         background: #001f3f;
         border-color: #001f3f;
         z-index: 2;
-        width-min: 100%;
+        min-width: 100%;
     }
 
     #mail-detail #overlap #mail-actions {
@@ -795,7 +825,7 @@
     }
 
     #mail-detail #overlap #mail-actions > div {
-        margin: 24px 16px 0px 16px;
+        margin: 24px 16px 0 16px;
     }
 
     #mail-detail #overlap #mail-actions > div > p {
@@ -820,7 +850,7 @@
     #mail-detail #overlap #mail-actions div:nth-child(2) .btn {
         background: white;
         color: black;
-        border: 0px solid transparent;
+        border: 0 solid transparent;
         padding: 8px 24px;
         border-radius: 30px;
         display: flex;
@@ -850,6 +880,10 @@
 
     #mail-detail #overlap #mail-actions div:nth-child(2) > .btn {
         margin-right: 16px;
+    }
+
+    #mail-detail .top-email-row{
+        text-align: center;
     }
 
     #mail-detail #mail-content {

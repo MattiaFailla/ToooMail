@@ -12,7 +12,8 @@
                         <br>
                         <input id="imap" v-bind="imapserver" placeholder="Server IMAP" type="text"/>
                         <input id="smtp" v-bind="smtpserver" placeholder="Server SMTP" type="text"/>
-                        <!--<span>Set server configuration</span>
+                        <div v-if="mustShowAdvanced">
+                        <span>Set server configuration</span>
                         <select id="platform_selector" name="platform_selector" onchange="setServerSettings()">
                             <option value="-1">--- Custom platform ---</option>
                         </select>
@@ -23,7 +24,8 @@
                         </div>
                         <div class="inline">
                             <input id="ssl_context" type="checkbox" value="ssl_context">SSL_CONTEXT
-                        </div>-->
+                        </div>
+                        </div>
 
                         <button type="submit" @click="providerSignin()">Sign Up</button>
                     </div>
@@ -62,7 +64,7 @@
 
             <footer>
                 <p>
-                    This is a BETA version. <i class="fa fa-heart"></i> Read more about NextBlu login system <a>here</a>.
+                    This is an ALPHA version. <i class="fa fa-heart"></i> Read more about NextBlu login system <a>here</a>.
                 </p>
             </footer>
         </div>
@@ -85,27 +87,32 @@
                 usermail: '',
                 password: '',
                 imapserver: '',
-                smtpserver: ''
+                smtpserver: '',
+
+                mustShowAdvanced: false
             };
         },
         methods: {
             nextSigning(){
                 let username = this.next_username;
                 let password = this.next_password;
+                try {
+                    let verification_imap = eel.check_imap_connection(username, password, "mail.nextblu.com", false, null, true)();
+                    let verification_smtp = eel.check_smtp_connection(username, password, "mail.nextblu.com")();
+                    if (verification_imap && verification_smtp) {
+                        eel.user_registration(username, username, password, "mail.nextblu.com", "mail.nextblu.com", "1");
+                        //this.$router.push('Home')
 
-                let verification_imap = eel.check_imap_connection(username, password, "mail.nextblu.com", false, null, true)();
-                let verification_smtp = eel.check_smtp_connection(username, password, "mail.nextblu.com")();
-                if (verification_imap && verification_smtp) {
-                    eel.user_registration(username, username, password, "mail.nextblu.com", "mail.nextblu.com", "1");
-                    //this.$router.push('Home')
+                        // @todo: VALIDATE THE COOKIE
 
-                    // @todo: VALIDATE THE COOKIE
-
-                    this.$router.push({ name: 'Home', params: {firstLogin: 'yep' }})
-                } else {
-                    //toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
-                    this.$toasted.error("We can't login into your inbox. Please verify your password or email address.");
-                    console.log("User informations incorrect");
+                        this.$router.push({ name: 'Home', params: {firstLogin: 'yep' }})
+                    } else {
+                        //toastr.error("We can't login into your inbox. Please verify your password or email address.", "Incorrect informations");
+                        this.$toasted.error("We can't login into your inbox. Please verify your password or email address.");
+                        console.log("User informations incorrect");
+                    }
+                }catch (e) {
+                    this.$toasted.error("Something bad happened: "+e);
                 }
             },
             providerSignin(){
@@ -115,11 +122,19 @@
                 let imap_address = this.imapserver;
                 let smtp_address = this.smtpserver;
 
-                if (eel.custom_user_registration(username, usermail, password, imap_address, smtp_address)){
-                    // @todo: Redirect to home
-                    // @todo: validate the cookie
-                }else{
-                    // We can't find any settings -> showing the user an advanced tab with an error toast.
+                try {
+
+
+                    if (eel.custom_user_registration(username, usermail, password, imap_address, smtp_address)) {
+                        // @todo: Redirect to home
+                        // @todo: validate the cookie
+                    } else {
+                        // We can't find any settings -> showing the user an advanced tab with an error toast.
+                        this.$toasted.info("It seems that we have some difficulties loggin in your inbox. Please " +
+                            "review your settings! ");
+                    }
+                }catch (e) {
+                    this.$toasted.error("Something bad happened: "+e);
                 }
 
             }

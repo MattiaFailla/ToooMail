@@ -127,7 +127,7 @@ class DBApi:
         else:
             cur = self.conn.cursor()
             cur.execute(
-                "SELECT * FROM mails WHERE user_id = ? AND folder LIKE '% ? %' ORDER BY received DESC", (user_id,folder,))
+                "SELECT * FROM mails WHERE user_id = ? AND folder LIKE ? ORDER BY received DESC", (user_id, folder,))
             rows = cur.fetchall()
             data = []
             for row in rows:
@@ -158,7 +158,8 @@ class DBApi:
 
     def get_next_uuid_set(self, uid, user_id, folder):
         cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE uuid > ? AND user_id =? AND folder = '?' ORDER BY uuid LIMIT 30",  (str(uid), str(user_id), folder,))
+        cur.execute("SELECT uuid FROM mails WHERE uuid > ? AND user_id =? AND folder = '?' ORDER BY uuid LIMIT 30",
+                    (str(uid), str(user_id), folder,))
         rows = cur.fetchall()
         data = []
         for row in rows:
@@ -168,7 +169,7 @@ class DBApi:
     def get_files_information(self, uid, user_id):
         cur = self.conn.cursor()
         cur.execute(
-            "SELECT real_filename, deleted FROM files WHERE uuid = ? AND user_id = ?", (str(uid),str(user_id),))
+            "SELECT real_filename, deleted FROM files WHERE uuid = ? AND user_id = ?", (str(uid), str(user_id),))
         rows = cur.fetchall()
         data = []
         for row in rows:

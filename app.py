@@ -239,7 +239,7 @@ def get_sent():
 @eel.expose
 def delete_mail(uid):
     # @todo: delete the mail both local and remote
-    DBApi('mails').delete(what=uid, where='')
+    DBApi('mails').delete(what=uid, where='uuid')
 
 
 @eel.expose
@@ -493,7 +493,14 @@ def get_username():
 
 
 def sync():
+    logger.info("Starting sync in separate thread.")
     SYNCApi().download_new_mails_from_server()
+
+
+def download_from_latest_datetime():
+    logger.debug("Starting today mail download in separate thread.")
+    ImapApi().download_mails_from_last_saved_datetimemail()
+    logger.info("Sync of the current day completed.")
 
 
 @eel.expose
@@ -530,6 +537,12 @@ def force_download_from_imap_server(howmany):
 if __name__ == '__main__':
     say_hello_py('Server')
     # eel.say_hello_js('Server connected.')  # Call a Javascript function
+
+    # @todo on start check the inbox
+
+    # eel.spawn(sync)
+    eel.spawn(download_from_latest_datetime)
+
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
         """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in

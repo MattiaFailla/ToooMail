@@ -2,6 +2,7 @@ import datetime
 from email.utils import parsedate_to_datetime
 import json
 from os import path
+import dateutil.parser
 
 from imbox import Imbox
 
@@ -390,7 +391,6 @@ class ImapApi:
                 starttls=self.starttls,
         ) as imbox:
 
-            # Gets all messages after the day x
             all_inbox_messages = imbox.messages()
 
             i = 0
@@ -465,3 +465,28 @@ class ImapApi:
             print(last_uid[0][0])
             print(str(last_uid[0][0]) + ':*')
             return len(imbox.messages(uid__range=str(last_uid[0][0]) + ':*'))
+
+    def download_mails_from_last_saved_datetimemail(self):
+        """ We can sync the app using the greatest date in messages table
+            and start the download from that spacific datetime
+        """
+        try:
+            last_email_raw_date = DBApi().get_last_email_date(1)
+        except TypeError:
+            last_email_raw_date = datetime.datetime.now().isoformat()
+        print(last_email_raw_date)
+        parsed_date = dateutil.parser.parse(last_email_raw_date)
+        mails = []
+        with Imbox(
+                self.server,
+                username=self.userName,
+                password=self.password,
+                ssl=self.ssl,
+                ssl_context=self.ssl_context,
+                starttls=self.starttls,
+        ) as imbox:
+            inbox_messages_received_after = imbox.messages(date__gt=datetime.date(parsed_date.year, parsed_date.month, parsed_date.day))
+
+            for uid, message in reversed(inbox_messages_received_after):
+                mail = self.mail_parsing_from_server(uid, message, "1", "Inbox")
+                mails.append(mail)
