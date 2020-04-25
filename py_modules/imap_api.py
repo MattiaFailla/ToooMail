@@ -145,6 +145,21 @@ class ImapApi:
 
         return appmails
 
+    def mark_flag(self, uid):
+        try:
+            with Imbox(
+                    self.server,
+                    username=self.userName,
+                    password=self.password,
+                    ssl=self.ssl,
+                    ssl_context=self.ssl_context,
+                    starttls=self.starttls,
+            ) as imbox:
+                imbox.mark_flag(uid)
+                return True
+        except Exception as e:
+            return False, e
+
     def check_imap_connection(self):
         """
         Checking if imap connection is successful
