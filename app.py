@@ -15,15 +15,13 @@ import eel
 # import python imaplib wrapper module
 from imbox import Imbox
 
+import configuration
 from py_modules import backend_api
 from py_modules.db_api import DBApi
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
-
-import multiprocessing
-import configuration
 
 logger = configuration.get_current().logger
 
@@ -165,6 +163,7 @@ def get_mail_by_uuid(uuid):
 def mark_as_seen(uid):
     SYNCApi.mark_as_seen(uid=str(uid))
     return True
+
 
 def mark_flag(uid):
     SYNCApi.mark_flag(uid=str(uid))
@@ -524,16 +523,8 @@ def ui_log_error(message):
 
 def check_incoming():
     while True:
-        print("NEW EMAILS:")
         print(ImapApi().check_new_emails())
         eel.sleep(1.0)  # Use eel.sleep(), not time.sleep()
-
-
-def force_download_from_imap_server(howmany):
-    # @todo
-    # Forcing the download of X emails from the remote server
-    # starting from the email with the lowest uid to X in reverse (9-8-7-6..)
-    return False
 
 
 if __name__ == '__main__':
