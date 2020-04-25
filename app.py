@@ -166,6 +166,10 @@ def mark_as_seen(uid):
     SYNCApi.mark_as_seen(uid=str(uid))
     return True
 
+def mark_flag(uid):
+    SYNCApi.mark_flag(uid=str(uid))
+    return True
+
 
 @eel.expose
 def get_number_unread():
@@ -531,8 +535,6 @@ def force_download_from_imap_server(howmany):
     # starting from the email with the lowest uid to X in reverse (9-8-7-6..)
     return False
 
-
-# eel.spawn(check_incoming) # FIXME
 
 if __name__ == '__main__':
     say_hello_py('Server')
