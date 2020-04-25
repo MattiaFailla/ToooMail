@@ -477,9 +477,14 @@ class ImapApi:
                 starttls=self.starttls,
         ) as imbox:
             last_uid = DBApi().get_last_email_id(user_id=1)
-            print(last_uid[0][0])
-            print(str(last_uid[0][0]) + ':*')
-            return len(imbox.messages(uid__range=str(last_uid[0][0]) + ':*'))
+            last_uid = str(last_uid[0][0])
+
+            messages = imbox.messages(uid__range='46664:*')
+
+            for uid, message in messages:
+                print(uid)
+
+            return last_uid, len(messages[0])
 
     def download_mails_from_last_saved_datetimemail(self):
         """ We can sync the app using the greatest date in messages table

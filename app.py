@@ -523,18 +523,23 @@ def ui_log_error(message):
 
 def check_incoming():
     while True:
-        print(ImapApi().check_new_emails())
-        eel.sleep(1.0)  # Use eel.sleep(), not time.sleep()
+        last_uid, new_emails_number = ImapApi().check_new_emails()
+        if new_emails_number > 0:
+            logger.info(f'Numero di nuove mail {new_emails_number}')
+            logger.debug(f' Ultimo UID: {last_uid}')
+            # ImapApi().save_greater_than_uuid_from_server(last_uid)
+        eel.sleep(30.0)  # Use eel.sleep(), not time.sleep()
 
 
 if __name__ == '__main__':
     say_hello_py('Server')
-    # eel.say_hello_js('Server connected.')  # Call a Javascript function
 
-    # @todo on start check the inbox
+    # download mail from today
+    # eel.spawn(download_from_latest_datetime)
+    # checking incoming emails
 
-    # eel.spawn(sync)
-    eel.spawn(download_from_latest_datetime)
+    # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
+    # eel.spawn(check_incoming)
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
