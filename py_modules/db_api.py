@@ -135,6 +135,12 @@ class DBApi:
             self.conn.close()
             return data
 
+    def mark_flag(self, uid):
+        cur = self.conn.cursor()
+        cur.execute(
+            "UPDATE mails ", (uid,))
+        self.conn.commit()
+
     def get_specific_email(self, uuid):
         cur = self.conn.cursor()
         cur.execute(
