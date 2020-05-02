@@ -556,13 +556,13 @@ if __name__ == '__main__':
     # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
     # eel.spawn(check_incoming)
 
-    logger.info(DBApi().search_mail(text="Aprile"))
+    logger.info(DBApi().search_mail(text="The Traffic Tales, part 5 (a win-win traffic channel)"))
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
         """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
                      range(4)]"""
-
+        ImapApi().get_today_mails()
         eel.start(template, block=True, port=8686, mode=False)  # Start
     else:
         eel.start(template, block=True, port=8686)  # Start

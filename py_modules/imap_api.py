@@ -182,6 +182,7 @@ class ImapApi:
         """
         Getting inbox messages from the server
         """
+        logger.debug("Starting the download of email of today.")
         with Imbox(
                 self.server,
                 username=self.userName,

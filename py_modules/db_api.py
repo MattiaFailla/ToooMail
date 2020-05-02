@@ -197,7 +197,7 @@ class DBApi:
     def search_mail(self, text):
         cur = self.conn.cursor()
         print(text)
-        cur.execute("SELECT uuid FROM mails WHERE subject LIKE ?", ('%'+text+'%',))
+        cur.execute("SELECT * FROM mails WHERE subject LIKE ?", ('%'+text+'%',))
         rows = cur.fetchall()
         data = []
         print(rows)
