@@ -547,7 +547,7 @@ def check_incoming():
 
 
 if __name__ == '__main__':
-    say_hello_py('Server')
+    say_hello_py('ToooMail server')
 
     # download mail from today
     # eel.spawn(download_from_latest_datetime)

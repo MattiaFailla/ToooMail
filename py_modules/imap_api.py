@@ -513,6 +513,24 @@ class ImapApi:
                 mails.append(mail)
 
     def search_mail(self, text):
+        """
+        This function will search the given text in the recent field of emails.
+
+        :param text: The text to search
+        :return: The email subject and body with the UID
+        """
         with MailBox(self.server).login(self.userName, self.password) as mailbox:
-            result = mailbox.fetch(Q(text=text, subject=text))
-            print(result)
+            messages = mailbox.fetch(Q(subject=text, recent=True))
+            data = []
+            for msg in messages:
+                data.append(
+                    {
+                        "uid": msg.uid,
+                        "subject": msg.subject,
+                        "body": msg.html
+                    }
+                )
+            if data:
+                return True, data
+            else:
+                return False, []
