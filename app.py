@@ -557,7 +557,7 @@ if __name__ == '__main__':
     # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
     # eel.spawn(check_incoming)
 
-    logger.info(DBApi().search_mail(text="The Traffic Tales, part 5 (a win-win traffic channel)"))
+    logger.info(DBApi().search_mail(text="Informa"))
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
