@@ -145,6 +145,21 @@ class ImapApi:
 
         return appmails
 
+    def mark_flag(self, uid):
+        try:
+            with Imbox(
+                    self.server,
+                    username=self.userName,
+                    password=self.password,
+                    ssl=self.ssl,
+                    ssl_context=self.ssl_context,
+                    starttls=self.starttls,
+            ) as imbox:
+                imbox.mark_flag(uid)
+                return True
+        except Exception as e:
+            return False, e
+
     def check_imap_connection(self):
         """
         Checking if imap connection is successful
@@ -462,9 +477,14 @@ class ImapApi:
                 starttls=self.starttls,
         ) as imbox:
             last_uid = DBApi().get_last_email_id(user_id=1)
-            print(last_uid[0][0])
-            print(str(last_uid[0][0]) + ':*')
-            return len(imbox.messages(uid__range=str(last_uid[0][0]) + ':*'))
+            last_uid = str(last_uid[0][0])
+
+            messages = imbox.messages(uid__range='46664:*')
+
+            for uid, message in messages:
+                print(uid)
+
+            return last_uid, len(messages[0])
 
     def download_mails_from_last_saved_datetimemail(self):
         """ We can sync the app using the greatest date in messages table

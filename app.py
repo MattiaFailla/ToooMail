@@ -15,15 +15,13 @@ import eel
 # import python imaplib wrapper module
 from imbox import Imbox
 
+import configuration
 from py_modules import backend_api
 from py_modules.db_api import DBApi
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
-
-import multiprocessing
-import configuration
 
 logger = configuration.get_current().logger
 
@@ -164,6 +162,11 @@ def get_mail_by_uuid(uuid):
 @eel.expose
 def mark_as_seen(uid):
     SYNCApi.mark_as_seen(uid=str(uid))
+    return True
+
+
+def mark_flag(uid):
+    SYNCApi.mark_flag(uid=str(uid))
     return True
 
 
@@ -520,28 +523,23 @@ def ui_log_error(message):
 
 def check_incoming():
     while True:
-        print("NEW EMAILS:")
-        print(ImapApi().check_new_emails())
-        eel.sleep(1.0)  # Use eel.sleep(), not time.sleep()
+        last_uid, new_emails_number = ImapApi().check_new_emails()
+        if new_emails_number > 0:
+            logger.info(f'Numero di nuove mail {new_emails_number}')
+            logger.debug(f' Ultimo UID: {last_uid}')
+            # ImapApi().save_greater_than_uuid_from_server(last_uid)
+        eel.sleep(30.0)  # Use eel.sleep(), not time.sleep()
 
-
-def force_download_from_imap_server(howmany):
-    # @todo
-    # Forcing the download of X emails from the remote server
-    # starting from the email with the lowest uid to X in reverse (9-8-7-6..)
-    return False
-
-
-# eel.spawn(check_incoming) # FIXME
 
 if __name__ == '__main__':
     say_hello_py('Server')
-    # eel.say_hello_js('Server connected.')  # Call a Javascript function
 
-    # @todo on start check the inbox
+    # download mail from today
+    # eel.spawn(download_from_latest_datetime)
+    # checking incoming emails
 
-    # eel.spawn(sync)
-    eel.spawn(download_from_latest_datetime)
+    # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
+    # eel.spawn(check_incoming)
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':

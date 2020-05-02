@@ -1,8 +1,6 @@
 <template>
     <div class="home">
         <el-container v-loading.fullscreen.lock="fullscreenLoading">
-
-
             <el-row class="row-bg" type="flex">
                 <el-col :span="1">
                     <el-menu :collapse="isCollapse" @close="handleClose"
@@ -60,7 +58,7 @@
                             <i class="el-icon-delete"></i>
                             <span slot="title">Spam</span>
                         </el-menu-item>
-                        <el-menu-item index="7">
+                        <el-menu-item index="7"  @click="profileDialogVisible = true">
                             <i class="el-icon-setting"></i>
                             <span slot="title">Settings</span>
                         </el-menu-item>
@@ -69,11 +67,9 @@
                             <span slot="title">Lock the session</span>
                         </el-menu-item>
 
-
-                        <el-avatar class="user-avatar"
+                        <el-avatar @click="profileDialogVisible = true" class="user-avatar"
                                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png">
                         </el-avatar>
-
 
                     </el-menu>
                 </el-col>
@@ -176,7 +172,7 @@
                                                 </el-col>
                                             </el-row>
                                         </div>
-                                        <p v-html="selectedEmail.body"></p>
+                                        <div v-html="selectedEmail.body"></div>
                                     </div>
                                 </div>
 
@@ -201,54 +197,77 @@
                     top="2vh"
             >
 
-        <span>
-          <el-form :model="form" ref="form">
-            <el-form-item label="Recipient email">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
+            <span>
+              <el-form :model="form" ref="form">
+                <el-form-item label="Recipient email">
+                  <el-input v-model="form.name"></el-input>
+                </el-form-item>
 
-            <el-form-item label="Instant delivery">
-              <el-switch v-model="form.delivery"></el-switch>
-            </el-form-item>
-            <el-form-item label="Select an automatic delivery date" v-if="!form.delivery">
-              <el-col :span="5">
-                <el-date-picker placeholder="Pick a date" style="width: 100%;" type="date"
-                                v-model="form.date1"></el-date-picker>
-              </el-col>
-              <el-col :span="2" class="line">-</el-col>
-              <el-col :span="5">
-                <el-time-picker placeholder="Pick a time" style="width: 100%;" v-model="form.date2"></el-time-picker>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="Add attachments"><br>
-              <el-upload
-                      :file-list="form.files"
-                      class="upload-demo"
-                      drag
-                      multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
-                <div class="el-upload__tip" slot="tip">Files with a size less than 500mb</div>
-              </el-upload>
-            </el-form-item>
-            <el-form-item label="Mail">
-              <el-input type="textarea" v-model="form.desc"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button @click="isWriting = false" type="primary">Save for later</el-button>
-            </el-form-item>
-          </el-form>
-        </span>
-        <span class="dialog-footer" slot="footer">
-            <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button @click="dialogVisible = false" type="primary">Confirm</el-button>
-          </span>
+                <el-form-item label="Instant delivery">
+                  <el-switch v-model="form.delivery"></el-switch>
+                </el-form-item>
+                <el-form-item label="Select an automatic delivery date" v-if="!form.delivery">
+                  <el-col :span="5">
+                    <el-date-picker placeholder="Pick a date" style="width: 100%;" type="date"
+                                    v-model="form.date1"></el-date-picker>
+                  </el-col>
+                  <el-col :span="2" class="line">-</el-col>
+                  <el-col :span="5">
+                    <el-time-picker placeholder="Pick a time" style="width: 100%;" v-model="form.date2"></el-time-picker>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="Add attachments"><br>
+                  <el-upload
+                          :file-list="form.files"
+                          class="upload-demo"
+                          drag
+                          multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+                    <div class="el-upload__tip" slot="tip">Files with a size less than 500mb</div>
+                  </el-upload>
+                </el-form-item>
+                <el-form-item label="Mail">
+                  <el-input type="textarea" v-model="form.desc"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="isWriting = false" type="primary">Save for later</el-button>
+                </el-form-item>
+              </el-form>
+            </span>
+            <span class="dialog-footer" slot="footer">
+                <el-button @click="dialogVisible = false">Cancel</el-button>
+                <el-button @click="dialogVisible = false" type="primary">Confirm</el-button>
+            </span>
+            </el-dialog>
+
+            <el-dialog title="My profile" :visible.sync="profileDialogVisible" size="full" :before-close="handleClose">
+
+                <el-row>
+                    <el-col :span="8">
+                        <el-card :body-style="{ padding: '0px' }">
+                            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                            <div style="padding: 14px;">
+                                <span>Hey Mattia</span>
+                                <div class="bottom clearfix">
+                                    <time class="time">TODAY</time>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+
+
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="profileDialogVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="profileDialogVisible = false">Confirm</el-button>
+                </span>
+
             </el-dialog>
 
         </el-container>
     </div>
 </template>
-
 <script>
 
     export default {
@@ -300,6 +319,7 @@
                 isSettingsPage: false,
                 isWriteEmailPage: false,
                 isProfilePage: false,
+                profileDialogVisible: false,
 
                 // USER INFOS
                 username: '',
@@ -654,10 +674,14 @@
 
     .EmailSenderName {
         color: white;
+        font-weight: normal !important;
+        font-family: inherit;
     }
 
     .EmailSubject {
         color: white;
+        font-weight: normal !important;
+        font-family: inherit;
     }
 
     .NoDataMail {
