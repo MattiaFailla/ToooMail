@@ -10,3 +10,4 @@ python-dateutil==2.8.0
 urllib3==1.25.3
 yarg==0.1.9
 plyer
+imap_tools
