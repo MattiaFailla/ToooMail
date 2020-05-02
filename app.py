@@ -291,6 +291,7 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
         'created': datetime.datetime.now().isoformat(),
     }
     UserApi.user_registration(datagram=data)
+    ImapApi().get_today_mails()
 
 
 @eel.expose
@@ -562,7 +563,6 @@ if __name__ == '__main__':
     if template == 'index.html':
         """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
                      range(4)]"""
-        ImapApi().get_today_mails()
         eel.start(template, block=True, port=8686, mode=False)  # Start
     else:
         eel.start(template, block=True, port=8686)  # Start
