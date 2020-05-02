@@ -197,7 +197,7 @@ class DBApi:
     def search_mail(self, text):
         cur = self.conn.cursor()
         print(text)
-        cur.execute("SELECT uuid FROM mails WHERE subject like '%'||?||'%' ORDER BY uuid LIMIT 30", (text,))
+        cur.execute("SELECT uuid FROM mails WHERE subject LIKE '%'||?||'%' ORDER BY uuid LIMIT 30", (text,))
         rows = cur.fetchall()
         data = []
         print(rows)
@@ -207,14 +207,14 @@ class DBApi:
 
 
 class DBHelper:
-
+    @staticmethod
     def insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls):
         """Insert custom registration settings to the appropriate table (mail_server_settings)
 
         :param imapserver: IMAP server address
         :type imapserver: str
-        :param stmpserver: STMP server address
-        :type stmpserver: str
+        :param smtpserver: STMP server address
+        :type smtpserver: str
         :param ssl: SSL usage
         :type ssl: bool
         :param ssl_context: SSL context usage
