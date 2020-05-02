@@ -412,7 +412,6 @@ def guess_imap(user, passwrd, server):
         (True, True),
         (False, True),
         (True, False),
-        (False, False),
         (False, False)
             ]
     for i in settings:
@@ -426,7 +425,7 @@ def guess_imap(user, passwrd, server):
                 ssl_context=None
             )
             test = connection.connection.check()
-            print(test)
+            logger.debug(f'guess for {server}, result {res}')
             if test[0] == 'OK':
                 setting = {
                     'port': connection.server.port,
@@ -441,6 +440,7 @@ def guess_imap(user, passwrd, server):
                 return {'success': True, 'settings': setting}
         except Exception as e:
             pass
+        time.sleep(2.0)
     return {'success': False, 'settings': None}
 
 
@@ -469,9 +469,9 @@ def guess_smtp(server):
             pass
         try:
             connection = smtplib.SMTP_SSL(server, i)
-            res = connection.starttls()
+            res = connection.ehlo()
             connection.close()
-            if res[0] == 220:
+            if res[0] == 250:
                 return {'success': True, 'settings': {'port': i, 'ssl': True}}
         except:
             pass
