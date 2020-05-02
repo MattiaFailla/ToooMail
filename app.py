@@ -556,6 +556,8 @@ if __name__ == '__main__':
     # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
     # eel.spawn(check_incoming)
 
+    logger.info(DBApi().search_mail(text="Aprile"))
+
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
         """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in

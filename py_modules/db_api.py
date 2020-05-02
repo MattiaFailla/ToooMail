@@ -194,6 +194,17 @@ class DBApi:
         (number_of_rows,) = cur.fetchone()
         return number_of_rows
 
+    def search_mail(self, text):
+        cur = self.conn.cursor()
+        print(text)
+        cur.execute("SELECT uuid FROM mails WHERE subject like '%'||?||'%' ORDER BY uuid LIMIT 30", (text,))
+        rows = cur.fetchall()
+        data = []
+        print(rows)
+        for row in rows:
+            data.append(row)
+        return data
+
 
 class DBHelper:
 
