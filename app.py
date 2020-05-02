@@ -17,7 +17,7 @@ from imbox import Imbox
 
 import configuration
 from py_modules import backend_api
-from py_modules.db_api import DBApi, insert_custom_registration
+from py_modules.db_api import DBApi, DBHelper
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
@@ -295,7 +295,7 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
 
 @eel.expose
 def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
-    mail_server_id = insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls)
+    mail_server_id = DBHelper.insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls)
     data = {
         'name': name,
         'surname': '',
