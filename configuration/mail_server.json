@@ -53,6 +53,6 @@
         "server_imap": "imap-mail.outlook.com",
         "ssl": true,
         "ssl_context": null,
-        "starttls": true
+        "starttls": false
     }
 ]
