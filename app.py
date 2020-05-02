@@ -23,6 +23,7 @@ from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
+from py_modules.smtp_api import SMTPApi
 
 logger = configuration.get_current().logger
 
@@ -322,54 +323,8 @@ def set_flag(uid):
 
 
 @eel.expose
-def send_mail(account, to, subject, body, attach):
-    # get user input
-    # input sender email address and password:
-    from_address = backend_api.get_user_info('mail')
-    password = backend_api.get_user_info('password')
-    # input receiver email address.
-    to_address = to
-    # input smtp server ip address:
-    smtp_server = backend_api.get_user_info('smtpserver')
-
-    # email object that has multiple part:
-    msg = MIMEMultipart()
-    msg['From'] = from_address
-    msg['To'] = to_address
-    msg['Subject'] = Header(subject, 'utf-8').encode()
-
-    # attache a MIMEText object to save email content
-    msg_content = MIMEText(body, 'plain', 'utf-8')
-    msg.attach(msg_content)
-
-    # to add an attachment is just add a MIMEBase object to read a picture locally.
-    # extracting list of attach from the attach object (vector)
-    """with open('/Users/jerry/img1.png', 'rb') as f:
-        # set attachment mime and file name, the image type is png
-        mime = MIMEBase('image', 'png', filename='img1.png')
-        # add required header data:
-        mime.add_header('Content-Disposition', 'attachment', filename='img1.png')
-        mime.add_header('X-Attachment-Id', '0')
-        mime.add_header('Content-ID', '<0>')
-        # read attachment file content into the MIMEBase object
-        mime.set_payload(f.read())
-        # encode with base64
-        encoders.encode_base64(mime)
-        # add MIMEBase object to MIMEMultipart object
-        msg.attach(mime)
-        
-        'smtp-mail.outlook.com'
-        """
-
-    mail_server = smtplib.SMTP(backend_api.get_user_info('imapserver'), 587)
-    mail_server.ehlo()
-    mail_server.starttls()
-    mail_server.ehlo()
-    mail_server.login(
-        backend_api.get_user_info('mail'), backend_api.get_user_info('password')
-    )
-    mail_server.sendmail(account, to, msg.as_string())
-    mail_server.close()
+def send_mail(subject, cc, to, body, attach=None):
+    SMTPApi().send_mail(subject, cc, to, body, attach)
 
 
 @eel.expose  # Expose this function to Javascript
