@@ -398,8 +398,16 @@ def guess_imap(user, passwrd, server):
     """
     This function tries to guess the imap server settings tring to
     connect with usual standard settings starting from the more secure
+    :param server: The server name as a string
+    :param passwrd: Password for the user4
+    :param user: Username as a string
+    :type user: str
+    :type passwrd: str
+    :type server: str
+    :return: A dictionary with the element 'success' as boolean and the element 'settings' as a dictionary of settings
+    for the connection
     """
-    # possible settings: port, ssl, tls
+    # possible settings: ssl, tls
     settings = [
         (True, True),
         (False, True),
@@ -437,52 +445,37 @@ def guess_imap(user, passwrd, server):
 
 
 @eel.expose
-def guess_smtp(mail):
+def guess_smtp(server):
     """
-    This function tries to find the imap/smtp address from a list of known servers
-    or tries to guess the server from the e-mail address.
-    It checks if the server answers to a socket call
-    :param mail:
-    :return:
+    This function tries to find the smtp settings using the more common ports.
+    :param server: The name of the target server as a String
+    :type server: str
+    :return: A dictionary with the element 'success' as boolean and the element 'settings' as a dictionary
+    that contains the 'port' number and 'ssl' or 'tls' as cryptographic protocol
     """
-    if mail:
+    ports = [
+        25,
+        587,
+        465
+    ]
+    for i in ports:
         try:
-            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
-        except Exception as e:
-            logger.error('Error guessing smtp', e)
-            return False
-    else:
-        return False
-    server = {
-        'gmail': 'smtp.gmail.com',
-        'yahoo': 'smtp.mail.yahoo.com',
-        'aol': 'smtp.aol.com',
-        'icloud': 'smtp.mail.me.com',
-        'me': 'smtp.mail.me.com',
-        'hotmail': 'smtp-mail.outlook.com',
-        'live': 'smtp-mail.outlook.com',
-    }
-    if domain in server.keys():
-        return server[domain]
-    else:
-        ip = None
-        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
-        for i in prefix:
-            try:
-                connection = socket.create_connection(
-                    (i + complete_domain, 465), timeout=2
-                )
-                if connection:
-                    ip = i + complete_domain
-                    connection.close()
-                    return ip
-            except:
-                pass
-            if ip:
-                return ip
-            else:
-                return False
+            connection = smtplib.SMTP(server, i)
+            res = connection.starttls()
+            connection.close()
+            if res[0] == 220:
+                return {'success': True, 'settings': {'port': i, 'tls': True}}
+        except:
+            pass
+        try:
+            connection = smtplib.SMTP_SSL(server, i)
+            res = connection.starttls()
+            connection.close()
+            if res[0] == 220:
+                return {'success': True, 'settings': {'port': i, 'ssl': True}}
+        except:
+            pass
+    return {'success': False, 'settings': None}
 
 
 @eel.expose
