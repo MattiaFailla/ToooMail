@@ -1,9 +1,7 @@
 import json
 import logging.config
 import os
-
-__file_dir = os.path.split(os.path.realpath(__file__))[0]
-logging.config.fileConfig(os.path.join(__file_dir, 'logging.ini'), disable_existing_loggers=False)
+from tentalog import Tentacle
 
 
 class Configuration:
@@ -19,8 +17,14 @@ class Configuration:
             parsed_file = json.loads(config_file.read())
             self.__db_location = parsed_file['db_location']
             self.__migrations_location = parsed_file['db_migrations_location']
-            self.__logger = logging.getLogger('root')
+            self.__assets_location = parsed_file['assets_location']
+            self.__logger = Tentacle(name='root').logger
             self.__mail_server_settings = [setting for setting in json.load(mail_server_file)]
+
+
+    @property
+    def assets_location(self):
+        return os.path.abspath(self.__assets_location)
 
     @property
     def db_location(self):
@@ -56,7 +60,6 @@ class Configuration:
 
 
 __current_configuration = Configuration()
-
 
 def get_current():
     return __current_configuration

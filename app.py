@@ -7,6 +7,7 @@ import logging
 import re
 import smtplib
 import socket
+import time
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -17,7 +18,7 @@ from imbox import Imbox
 
 import configuration
 from py_modules import backend_api
-from py_modules.db_api import DBApi
+from py_modules.db_api import DBApi, DBHelper
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
 from py_modules.sync_api import SYNCApi
@@ -296,7 +297,22 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
 
 @eel.expose
 def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
-    # @todo set custom imap settings on the server and get id
+    mail_server_id = DBHelper.insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls)
+    data = {
+        'name': name,
+        'surname': '',
+        'nickname': '',
+        'bio': '',
+        'mail': mail,
+        'password': passw,
+        'profilepic': '',
+        'imapserver': imapserver,
+        'smtpserver': smtpserver,
+        'is_logged_in': True,
+        'mail_server_setting': mail_server_id,
+        'created': datetime.datetime.now().isoformat(),
+    }
+    UserApi.user_registration(datagram=data)
     return True
 
 
@@ -351,98 +367,88 @@ def get_email_platform():
 
 
 @eel.expose
-def guess_imap(mail):
-    '''This function tries to find the imap/smtp address from a list of known servers
-        or tries to guess the server from the e-mail address.
-        It checks if the server answers to a socket call'''
-    if mail:
+def guess_imap(user, passwrd, server):
+    """
+    This function tries to guess the imap server settings tring to
+    connect with usual standard settings starting from the more secure
+    :param server: The server name as a string
+    :param passwrd: Password for the user4
+    :param user: Username as a string
+    :type user: str
+    :type passwrd: str
+    :type server: str
+    :return: A dictionary with the element 'success' as boolean and the element 'settings' as a dictionary of settings
+    for the connection
+    """
+    # possible settings: ssl, tls
+    settings = [
+        (True, True),
+        (False, True),
+        (True, False),
+        (False, False)
+            ]
+    for i in settings:
         try:
-            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+            connection = Imbox(
+                server,
+                username=user,
+                password=passwrd,
+                ssl=i[0],
+                starttls=i[1],
+                ssl_context=None
+            )
+            test = connection.connection.check()
+            logger.debug(f'guess for {server}, result {test}')
+            if test[0] == 'OK':
+                setting = {
+                    'port': connection.server.port,
+                    'ssl': i[0],
+                    'starttls': i[1],
+                    'ssl_context': None,
+                    'server': connection.hostname,
+                    'user': connection.username,
+                    'password': connection.password
+                }
+                connection.logout()
+                return {'success': True, 'settings': setting}
         except Exception as e:
-            # FIXME: catch specific exceptions instead of Exception
-            logger.error('Error guessing imap', e)
-            return False
-    else:
-        return False
-    server = {
-        'gmail': 'imap.gmail.com',
-        'yahoo': 'imap.mail.yahoo.com',
-        'aol': 'imap.aol.com',
-        'icloud': 'imap.mail.me.com',
-        'me': 'imap.mail.me.com',
-        'hotmail': 'imap-mail.outlook.com',
-        'live': 'imap-mail.outlook.com',
-    }
-    if domain in server.keys():
-        return server[domain]
-    else:
-        ip = None
-        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
-        for i in prefix:
-            try:
-                connection = socket.create_connection(
-                    (i + complete_domain, 993), timeout=2
-                )
-                if connection:
-                    ip = i + complete_domain
-                    connection.close()
-                    return ip
-            except:
-                pass
-            if ip:
-                return ip
-            else:
-                return False
+            pass
+        time.sleep(2.0)
+    return {'success': False, 'settings': None}
 
 
 @eel.expose
-def guess_smtp(mail):
+def guess_smtp(server):
     """
-    This function tries to find the imap/smtp address from a list of known servers
-    or tries to guess the server from the e-mail address.
-    It checks if the server answers to a socket call
-    :param mail:
-    :return:
+    This function tries to find the smtp settings using the more common ports.
+    :param server: The name of the target server as a String
+    :type server: str
+    :return: A dictionary with the element 'success' as boolean and the element 'settings' as a dictionary
+    that contains the 'port' number and 'ssl' or 'tls' as cryptographic protocol
     """
-    if mail:
+    ports = [
+        25,
+        587,
+        465
+    ]
+    for i in ports:
         try:
-            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
-        except Exception as e:
-            logger.error('Error guessing smtp', e)
-            return False
-    else:
-        return False
-    server = {
-        'gmail': 'smtp.gmail.com',
-        'yahoo': 'smtp.mail.yahoo.com',
-        'aol': 'smtp.aol.com',
-        'icloud': 'smtp.mail.me.com',
-        'me': 'smtp.mail.me.com',
-        'hotmail': 'smtp-mail.outlook.com',
-        'live': 'smtp-mail.outlook.com',
-    }
-    if domain in server.keys():
-        return server[domain]
-    else:
-        ip = None
-        prefix = ['mail.', 'smtp.', 'smtp.mail.', 'smtp-mail.']
-        for i in prefix:
-            try:
-                connection = socket.create_connection(
-                    (i + complete_domain, 465), timeout=2
-                )
-                if connection:
-                    ip = i + complete_domain
-                    connection.close()
-                    return ip
-            except:
-                pass
-            if ip:
-                return ip
-            else:
-                return False
+            connection = smtplib.SMTP(server, i)
+            res = connection.starttls()
+            connection.close()
+            if res[0] == 220:
+                return {'success': True, 'settings': {'port': i, 'tls': True}}
+        except:
+            pass
+        try:
+            connection = smtplib.SMTP_SSL(server, i)
+            res = connection.ehlo()
+            connection.close()
+            if res[0] == 250:
+                return {'success': True, 'settings': {'port': i, 'ssl': True}}
+        except:
+            pass
+    return {'success': False, 'settings': None}
 
 
 @eel.expose

@@ -195,6 +195,38 @@ class DBApi:
         return number_of_rows
 
 
+class DBHelper:
+
+    def insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls):
+        """Insert custom registration settings to the appropriate table (mail_server_settings)
+
+        :param imapserver: IMAP server address
+        :type imapserver: str
+        :param stmpserver: STMP server address
+        :type stmpserver: str
+        :param ssl: SSL usage
+        :type ssl: bool
+        :param ssl_context: SSL context usage
+        :type ssl_context: bool
+        :param starttls: TLS (Transport Layer Security) usage
+        :type starttls: bool
+        :returns: row id of the inserted custom registration data
+        :rtype: int
+        """
+        conn = sqlite3.connect(current_configuration.db_location)
+        c = conn.cursor()
+        service_name = "custom"
+        c.execute(
+            "INSERT INTO mail_server_settings (service_name, server_smtp, server_imap, ssl, ssl_context, starttls) "
+            "VALUES (?, ?, ?, ?, ?, ?);",
+            (service_name, smtpserver, imapserver, ssl, ssl_context, starttls)
+        )
+        mail_server_id = c.lastrowid
+        conn.commit()
+        conn.close()
+        return mail_server_id
+
+
 class Migration:
     def __init__(self, file_name):
         self.file_name = file_name

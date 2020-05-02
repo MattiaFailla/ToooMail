@@ -5,6 +5,7 @@ from os import path
 import dateutil.parser
 
 from imbox import Imbox
+from imap_tools import MailBox, Q, OR, AND
 
 from py_modules import backend_api
 from py_modules.db_api import DBApi
@@ -510,3 +511,8 @@ class ImapApi:
             for uid, message in reversed(inbox_messages_received_after):
                 mail = self.mail_parsing_from_server(uid, message, "1", "Inbox")
                 mails.append(mail)
+
+    def search_mail(self, text):
+        with MailBox(self.server).login(self.userName, self.password) as mailbox:
+            result = mailbox.fetch(Q(text=text, subject=text))
+            print(result)
