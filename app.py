@@ -425,7 +425,7 @@ def guess_imap(user, passwrd, server):
                 ssl_context=None
             )
             test = connection.connection.check()
-            logger.debug(f'guess for {server}, result {res}')
+            logger.debug(f'guess for {server}, result {test}')
             if test[0] == 'OK':
                 setting = {
                     'port': connection.server.port,
