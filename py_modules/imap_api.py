@@ -21,10 +21,10 @@ class ImapApi:
         self.userName = backend_api.get_user_info("mail")
         self.password = backend_api.get_user_info("password")
         self.server = backend_api.get_user_server_config("server_imap")
-        logger.debug("Getting userId: "+str(self.userId))
-        logger.debug("Getting mail: "+self.userName)
+        logger.debug("Getting userId: " + str(self.userId))
+        logger.debug("Getting mail: " + self.userName)
         logger.debug("Getting password: ***")
-        logger.debug("Getting imap address: "+self.server)
+        logger.debug("Getting imap address: " + self.server)
         # Getting the imap configuration
 
         ## Converting
@@ -43,10 +43,9 @@ class ImapApi:
         else:
             self.starttls = False
 
-        logger.debug("Getting ssl setting: "+str(self.ssl))
-        logger.debug("Getting ssl_context: "+str(self.ssl_context))
-        logger.debug("Getting srtattls setting: "+str(self.starttls))
-
+        logger.debug("Getting ssl setting: " + str(self.ssl))
+        logger.debug("Getting ssl_context: " + str(self.ssl_context))
+        logger.debug("Getting srtattls setting: " + str(self.starttls))
 
     def mail_parsing_from_server(self, uid, message, unread_uid, directory):
         """
@@ -505,7 +504,8 @@ class ImapApi:
                 ssl_context=self.ssl_context,
                 starttls=self.starttls,
         ) as imbox:
-            inbox_messages_received_after = imbox.messages(date__gt=datetime.date(parsed_date.year, parsed_date.month, parsed_date.day))
+            inbox_messages_received_after = imbox.messages(
+                date__gt=datetime.date(parsed_date.year, parsed_date.month, parsed_date.day))
 
             for uid, message in reversed(inbox_messages_received_after):
                 mail = self.mail_parsing_from_server(uid, message, "1", "Inbox")
