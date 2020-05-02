@@ -7,6 +7,7 @@ import logging
 import re
 import smtplib
 import socket
+import time
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -393,49 +394,46 @@ def get_email_platform():
 
 
 @eel.expose
-def guess_imap(mail):
-    '''This function tries to find the imap/smtp address from a list of known servers
-        or tries to guess the server from the e-mail address.
-        It checks if the server answers to a socket call'''
-    if mail:
+def guess_imap(user, passwrd, server):
+    """
+    This function tries to guess the imap server settings tring to
+    connect with usual standard settings starting from the more secure
+    """
+    # possible settings: port, ssl, tls
+    settings = [
+        (True, True),
+        (False, True),
+        (True, False),
+        (False, False),
+        (False, False)
+            ]
+    for i in settings:
         try:
-            domain = re.search(r'(@)(.*)(\.)', mail).group(2)
-            complete_domain = re.search(r'(@)(.*\..*)', mail).group(2)
+            connection = Imbox(
+                server,
+                username=user,
+                password=passwrd,
+                ssl=i[0],
+                starttls=i[1],
+                ssl_context=None
+            )
+            test = connection.connection.check()
+            print(test)
+            if test[0] == 'OK':
+                setting = {
+                    'port': connection.server.port,
+                    'ssl': i[0],
+                    'starttls': i[1],
+                    'ssl_context': None,
+                    'server': connection.hostname,
+                    'user': connection.username,
+                    'password': connection.password
+                }
+                connection.logout()
+                return {'success': True, 'settings': setting}
         except Exception as e:
-            # FIXME: catch specific exceptions instead of Exception
-            logger.error('Error guessing imap', e)
-            return False
-    else:
-        return False
-    server = {
-        'gmail': 'imap.gmail.com',
-        'yahoo': 'imap.mail.yahoo.com',
-        'aol': 'imap.aol.com',
-        'icloud': 'imap.mail.me.com',
-        'me': 'imap.mail.me.com',
-        'hotmail': 'imap-mail.outlook.com',
-        'live': 'imap-mail.outlook.com',
-    }
-    if domain in server.keys():
-        return server[domain]
-    else:
-        ip = None
-        prefix = ['mail.', 'imap.', 'imap.mail.', 'imap-mail.']
-        for i in prefix:
-            try:
-                connection = socket.create_connection(
-                    (i + complete_domain, 993), timeout=2
-                )
-                if connection:
-                    ip = i + complete_domain
-                    connection.close()
-                    return ip
-            except:
-                pass
-            if ip:
-                return ip
-            else:
-                return False
+            pass
+    return {'success': False, 'settings': None}
 
 
 @eel.expose
