@@ -295,7 +295,7 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
 
 @eel.expose
 def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
-    mail_server_id = insert_custom_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls)
+    mail_server_id = insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls)
     data = {
         'name': name,
         'surname': '',
