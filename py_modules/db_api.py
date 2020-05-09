@@ -194,16 +194,25 @@ class DBApi:
         (number_of_rows,) = cur.fetchone()
         return number_of_rows
 
+    def search_mail(self, text):
+        cur = self.conn.cursor()
+        cur.execute("SELECT uuid FROM mails WHERE subject LIKE ?", ('%'+text+'%',))
+        rows = cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row[0])
+        return data
+
 
 class DBHelper:
-
+    @staticmethod
     def insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls):
         """Insert custom registration settings to the appropriate table (mail_server_settings)
 
         :param imapserver: IMAP server address
         :type imapserver: str
-        :param stmpserver: STMP server address
-        :type stmpserver: str
+        :param smtpserver: STMP server address
+        :type smtpserver: str
         :param ssl: SSL usage
         :type ssl: bool
         :param ssl_context: SSL context usage

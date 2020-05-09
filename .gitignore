@@ -15,4 +15,4 @@ venv/
 /Pipfile
 /.logs/log.out*
 
-logs/
+logs/*
