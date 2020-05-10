@@ -72,7 +72,7 @@ class DBApi:
         self.conn.commit()
         return
 
-    def get(self, field: object = "", expression: object = "") -> object:
+    def get(self, field: object = "", expression: object = ""):
         cur = self.conn.cursor()
         cur.execute("SELECT {0} FROM {1} {2}".format(field, self.table, expression))
         rows = cur.fetchall()
