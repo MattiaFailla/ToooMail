@@ -1,4 +1,5 @@
 import datetime
+import imaplib
 from email.utils import parsedate_to_datetime
 import json
 from os import path
@@ -535,3 +536,23 @@ class ImapApi:
                 return True, data
             else:
                 return False, []
+
+    def mail_watcher(self):
+        M = imaplib.IMAP4_SSL(self.server)
+        M.login(self.userName, self.password)
+        result, message = M.select(readonly=1)
+        if result != 'OK':
+            raise Exception(message)
+        typ, data = M.search(None, '(UNSEEN UNDELETED)')
+        data[0] = data[0].decode("utf-8")
+        if data[0]:
+            last_uid = str(str.split(str(data[0]))[-1])
+            logger.debug(f'Latest received email uid: {last_uid}')
+            last_local_uid = DBApi().get_last_email_id(1)[0][0]
+            logger.debug(f'Latest local email uid: {last_local_uid}')
+        else:
+            logger.debug('No new emails.')
+
+
+
+

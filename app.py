@@ -573,6 +573,13 @@ def check_incoming():
         eel.sleep(30.0)  # Use eel.sleep(), not time.sleep()
 
 
+def watcher():
+    while True:
+        logger.info('Checking the remote server for incoming emails.')
+        ImapApi().mail_watcher()
+        eel.sleep(20)
+
+
 if __name__ == '__main__':
     say_hello_py('ToooMail server')
 
@@ -582,6 +589,8 @@ if __name__ == '__main__':
 
     # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
     # eel.spawn(check_incoming)
+
+    eel.spawn(watcher)
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
