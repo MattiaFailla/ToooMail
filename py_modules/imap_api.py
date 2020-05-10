@@ -543,13 +543,25 @@ class ImapApi:
         result, message = mailserver.select(readonly=True)
         if result != 'OK':
             raise Exception(message)
-        typ, data = mailserver.search(None, '(UNSEEN UNDELETED)')
+        retcode, data = mailserver.search(None, '(UNSEEN)')
         data[0] = data[0].decode("utf-8")
         if data[0]:
             last_uid = str(str.split(str(data[0]))[-1])
             logger.debug(f'Latest received email uid: {last_uid}')
             last_local_uid = DBApi().get_last_email_id(1)[0][0]
             logger.debug(f'Latest local email uid: {last_local_uid}')
+
+            # Testing imbox with extracted uid from remote server
+            with MailBox(self.server).login(self.userName, self.password) as mailbox:
+                messages = mailbox.fetch(Q(uid=last_uid))
+                for msg in messages:
+                    data.append(
+                        {
+                            "uid": msg.subject
+                        }
+                    )
+                print(data)
+
         else:
             logger.debug('No new emails.')
 
