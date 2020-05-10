@@ -4,13 +4,8 @@
 import datetime
 import json
 import logging
-import re
 import smtplib
-import socket
 import time
-from email.header import Header
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import eel
 # import python imaplib wrapper module
@@ -21,97 +16,15 @@ from py_modules import backend_api
 from py_modules.db_api import DBApi, DBHelper
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
+from py_modules.smtp_api import SMTPApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
-from py_modules.smtp_api import SMTPApi
 
 logger = configuration.get_current().logger
 
 # Set web files folder
 # eel.init('ui')
 eel.init('web')
-
-
-## HELPER
-def mail_parsing(uid, message, unread_uid, directory):
-    if len(message.body['html']) < 1:
-        sanitized_body = str(message.body['plain'][0])
-    else:
-        sanitized_body = str(message.body['html'][0])
-
-    from_name = message.sent_from[0]['name'] if message.sent_from else ''
-    from_mail = message.sent_from[0]['email'] if message.sent_from else ''
-    to_name = message.sent_to[0]['name'] if message.sent_to else ''
-    to_mail = message.sent_to[0]['email'] if message.sent_to else ''
-
-    date_message = message.date
-
-    # If html body is empty, load the plain
-    if sanitized_body == '[]':
-        sanitized_body = message.body['plain']
-
-    if uid.decode() in unread_uid:
-        unread = False
-    else:
-        unread = True
-
-    # Getting the subject
-    subject = str(message.subject) if str(message.subject) else '(No subject)'
-
-    # saving attach in the local disk and on the db
-    attach_names = []
-    for attach in message.attachments:
-        attach_name = attach.get('filename')
-        attach_names.append(attach_name)
-        content = attach.get('content').read()
-
-        if not attach_name or not content:
-            return
-
-        with open('.db/mails/attach/' + uid.decode() + '_' + attach_name, 'wb') as file:
-            file.write(content)
-        payload = {
-            'uuid': uid.decode(),
-            'subject': subject,
-            'real_filename': attach_name,
-            'saved_as': uid.decode() + '_' + attach_name,
-            'user_id': '1',
-            'deleted': 'false',
-            'datetime': date_message,
-        }
-        # saving the file information into the db
-        DBApi('files').insert(data=payload)
-
-    appmails = {
-        'uid': uid.decode(),
-        'From_name': str(from_name),
-        'from_mail': str(from_mail),
-        'To_name': str(to_name),
-        'To_mail': str(to_mail),
-        'Subject': str(subject),
-        'bodyHTML': str(sanitized_body),
-        'bodyPLAIN': str(message.body['plain']),
-        'attach': attach_names,
-        'directory': directory,
-        'datetimes': str(''),
-        'readed': unread,
-    }
-
-    # inserting the mail in the database
-    mail_payload = {
-        'uuid': uid.decode(),
-        'subject': str(subject),
-        'user_id': '1',
-        'readed': date_message,
-    }
-
-    DBApi('mails').insert(data=mail_payload)
-
-    with open('./.db/mails/' + str(uid.decode()) + '.json', 'w') as file:
-        json.dump(appmails, file)
-
-    return appmails
-
 
 @eel.expose
 def check_smtp_connection(username, password, smtp):
@@ -179,7 +92,8 @@ def get_number_unread():
 
 @eel.expose
 def get_unread():
-    mails = []
+    # @ TODO: Move this function to imapApi lib
+    """mails = []
     username = backend_api.get_user_info('mail')
     passw = backend_api.get_user_info('password')
     imapserver = backend_api.get_user_info('imapserver')
@@ -206,7 +120,7 @@ def get_unread():
             mail = mail_parsing(uid, message, unread_uid, 'Unread')
             mails.append(mail)
 
-        return mails
+        return mails"""
 
 
 # FROM FOLDER
@@ -387,7 +301,7 @@ def guess_imap(user, passwrd, server):
         (False, True),
         (True, False),
         (False, False)
-            ]
+    ]
     for i in settings:
         try:
             connection = Imbox(
@@ -505,8 +419,6 @@ if __name__ == '__main__':
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
-        """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
-                     range(4)]"""
         eel.start(template, block=True, port=8686, mode=False)  # Start
     else:
         eel.start(template, block=True, port=8686)  # Start
