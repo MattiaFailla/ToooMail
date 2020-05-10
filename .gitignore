@@ -16,3 +16,5 @@ venv/
 /.logs/log.out*
 
 logs/*
+
+logs/
