@@ -538,12 +538,12 @@ class ImapApi:
                 return False, []
 
     def mail_watcher(self):
-        M = imaplib.IMAP4_SSL(self.server)
-        M.login(self.userName, self.password)
-        result, message = M.select(readonly=1)
+        mailserver = imaplib.IMAP4_SSL(self.server)
+        mailserver.login(self.userName, self.password)
+        result, message = mailserver.select(readonly=True)
         if result != 'OK':
             raise Exception(message)
-        typ, data = M.search(None, '(UNSEEN UNDELETED)')
+        typ, data = mailserver.search(None, '(UNSEEN UNDELETED)')
         data[0] = data[0].decode("utf-8")
         if data[0]:
             last_uid = str(str.split(str(data[0]))[-1])
