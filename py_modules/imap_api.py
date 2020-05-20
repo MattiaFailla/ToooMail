@@ -1,17 +1,16 @@
 import datetime
 import imaplib
-from email.utils import parsedate_to_datetime
 import json
+from email.utils import parsedate_to_datetime
 from os import path
+
 import dateutil.parser
-
+from imap_tools import MailBox, Q
 from imbox import Imbox
-from imap_tools import MailBox, Q, OR, AND
-
-from py_modules import backend_api
-from py_modules.db_api import DBApi
 
 import configuration
+from py_modules import backend_api
+from py_modules.db_api import DBApi
 
 current_configuration = configuration.get_current()
 logger = current_configuration.logger
@@ -560,8 +559,6 @@ class ImapApi:
                             "uid": msg.subject
                         }
                     )
-                print(data)
-
         else:
             logger.debug('No new emails.')
 

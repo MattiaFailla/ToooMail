@@ -1,5 +1,7 @@
 import datetime
+
 from imbox import Imbox
+
 from py_modules.db_api import DBApi
 
 """
@@ -10,7 +12,8 @@ with system-based functions or that require access to the database
 
 """
 
-from pynotifier import Notification
+
+# from pynotifier import Notification
 
 
 def get_user_info(what):
