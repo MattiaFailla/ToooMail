@@ -489,13 +489,12 @@ class ImapApi:
 
     def download_mails_from_last_saved_datetimemail(self):
         """ We can sync the app using the greatest date in messages table
-            and start the download from that spacific datetime
+            and start the download from that specific datetime
         """
         try:
             last_email_raw_date = DBApi().get_last_email_date(1)
         except TypeError:
             last_email_raw_date = datetime.datetime.now().isoformat()
-        print(last_email_raw_date)
         parsed_date = dateutil.parser.parse(last_email_raw_date)
         mails = []
         with Imbox(

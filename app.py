@@ -586,6 +586,9 @@ if __name__ == '__main__':
     # Starting the watcher on separate thread
     eel.spawn(watcher)
 
+    # Downloading new emails
+    download_from_latest_datetime()
+
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
         eel.start(template, block=True, port=8686, mode=False)  # Start
