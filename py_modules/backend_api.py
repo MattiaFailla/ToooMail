@@ -2,10 +2,15 @@ import datetime
 from imbox import Imbox
 from py_modules.db_api import DBApi
 
+"""
+The main purpose of this file is to put the frontend in contact 
+with system-based functions or that require access to the database
 
-# from pynotifier import Notification
+*** This file is under heavy development and should not be taken as a reference ***
 
-# DOWNLOAD WITH LAST DATE
+"""
+
+from pynotifier import Notification
 
 
 def get_user_info(what):
@@ -137,7 +142,7 @@ def test_user_connection_data(imap, username, password):
 
 
 def first_download():
-    """ DOWNLOAD 200 MAILS FROM THE POSTAL
+    """ DOWNLOAD 200 MAILS FROM THE mail-box
     AND SAVE THEM IN THE DB
 
     Run only on the first login - When the
@@ -182,14 +187,6 @@ def first_download():
             ]
 
             DBApi("emails").insert(data)
-            """
-            # INSERT INTO THE DB
-            try:
-                c.execute('INSERT INTO emails (uid, from_name, from_mail, to_name, to_mail, subject, bodyHTML,
-                           bodyPLAIN, directory, datetimes) VALUES (?,?,?,?,?,?,?,?,)', data)
-            except sqlite3.IntegrityError as e:
-                continue
-            conn.commit()"""
 
 
 def notify(title, description, duration):
@@ -243,16 +240,3 @@ def elaborate_new_mails(new_messages):
 
     # Notify the frontend
     notify_frontend("new_messages")
-
-
-def check_for_incoming_mails():
-    threading.Timer(5.0, download_new_emails).start()  # check every five seconds
-    """ CONNECT TO THE ACCOUNT AND THEN DOWNLOAD THE WHOLE MAIL """
-    with Imbox(get_user_connection_data()) as imbox:
-        # get the last mail UID
-        last_uid = get("last_uid", "uid", "")
-        # Messages whose UID is greater than last_uid
-        last_messages = imbox.messages(uid__range="" + int(last_uid) + ":*")
-
-        if last_messages:
-            elaborate_new_mails(last_messages)

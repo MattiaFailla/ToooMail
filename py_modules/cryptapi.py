@@ -7,6 +7,10 @@ from hashlib import sha256
 
 backend = default_backend()
 
+"""
+The main purpose of this file is to support database encryption to secure user's password
+"""
+
 
 class ToooMailCrypt:
 
@@ -35,10 +39,8 @@ class ToooMailCrypt:
             self.save_password("ToooMail", sha256(self.email.encode()).hexdigest(), self.key_password)
         return email, pwd
 
-
     def get_password(self, service: str, username: str):
         return keyring.get_password("ToooMail", username)
 
     def save_password(self, service: str, username: str, password: str):
-            keyring.set_password("ToooMail", username, password)
-
+        keyring.set_password("ToooMail", username, password)
