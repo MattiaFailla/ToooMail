@@ -546,18 +546,21 @@ class ImapApi:
         if data[0]:
             last_uid = str(str.split(str(data[0]))[-1])
             logger.debug(f'Latest received email uid: {last_uid}')
-            last_local_uid = DBApi().get_last_email_id(1)[0][0]
-            logger.debug(f'Latest local email uid: {last_local_uid}')
+            success, last_local_uid = DBApi().get_last_email_id(1)[0][0]
+            if success:
+                logger.debug(f'Latest local email uid: {last_local_uid}')
 
-            # Testing imbox with extracted uid from remote server
-            with MailBox(self.server).login(self.userName, self.password) as mailbox:
-                messages = mailbox.fetch(Q(uid=last_uid))
-                for msg in messages:
-                    data.append(
-                        {
-                            "uid": msg.subject
-                        }
-                    )
+                # Testing imbox with extracted uid from remote server
+                with MailBox(self.server).login(self.userName, self.password) as mailbox:
+                    messages = mailbox.fetch(Q(uid=last_uid))
+                    for msg in messages:
+                        data.append(
+                            {
+                                "uid": msg.subject
+                            }
+                        )
+            else:
+                logger.debug('The database is empty. Skipping mail watcher rotation.')
         else:
             logger.debug('No new emails.')
 

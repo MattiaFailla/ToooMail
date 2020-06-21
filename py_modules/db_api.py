@@ -138,7 +138,9 @@ class DBApi:
         for row in rows:
             data.append(row)
         self.conn.close()
-        return data
+        if data is not None:
+            return True, data
+        return False, None
 
     def get_last_email_date(self, user_id):
         """
