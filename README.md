@@ -9,15 +9,6 @@
 </p>
 
 
-<p align="center">
-
-<video width="100%" controls>
-  <source src="https://github.com/MattiaFailla/ToooMail/blob/master/docs/tooomail.mp4" type="video/mp4">
-  Your browser does not support HTML5 video.
-</video>
-
-</p>
-
 * **Simple**: Extremely simple to use - so simple that it almost feels like magic!
 * **Powerful**: Manage HUGE mailboxes.
 * **Awesome**: Addons, News section, Calendar, Chat.. all in one place!

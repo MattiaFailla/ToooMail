@@ -2,127 +2,44 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import json
-import logging
-import re
 import smtplib
-import socket
 import time
-from email.header import Header
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import eel
-# import python imaplib wrapper module
 from imbox import Imbox
 
 import configuration
-from py_modules import backend_api
 from py_modules.db_api import DBApi, DBHelper
 from py_modules.imap_api import ImapApi
 from py_modules.mail_api import MailApi
+from py_modules.smtp_api import SMTPApi
 from py_modules.sync_api import SYNCApi
 from py_modules.user_api import UserApi
-from py_modules.smtp_api import SMTPApi
 
 logger = configuration.get_current().logger
 
 # Set web files folder
-# eel.init('ui')
+# eel.init('ui') # Used to develop the frontend in a separate environment
 eel.init('web')
 
 
-## HELPER
-def mail_parsing(uid, message, unread_uid, directory):
-    if len(message.body['html']) < 1:
-        sanitized_body = str(message.body['plain'][0])
-    else:
-        sanitized_body = str(message.body['html'][0])
-
-    from_name = message.sent_from[0]['name'] if message.sent_from else ''
-    from_mail = message.sent_from[0]['email'] if message.sent_from else ''
-    to_name = message.sent_to[0]['name'] if message.sent_to else ''
-    to_mail = message.sent_to[0]['email'] if message.sent_to else ''
-
-    date_message = message.date
-
-    # If html body is empty, load the plain
-    if sanitized_body == '[]':
-        sanitized_body = message.body['plain']
-
-    if uid.decode() in unread_uid:
-        unread = False
-    else:
-        unread = True
-
-    # Getting the subject
-    subject = str(message.subject) if str(message.subject) else '(No subject)'
-
-    # saving attach in the local disk and on the db
-    attach_names = []
-    for attach in message.attachments:
-        attach_name = attach.get('filename')
-        attach_names.append(attach_name)
-        content = attach.get('content').read()
-
-        if not attach_name or not content:
-            return
-
-        with open('.db/mails/attach/' + uid.decode() + '_' + attach_name, 'wb') as file:
-            file.write(content)
-        payload = {
-            'uuid': uid.decode(),
-            'subject': subject,
-            'real_filename': attach_name,
-            'saved_as': uid.decode() + '_' + attach_name,
-            'user_id': '1',
-            'deleted': 'false',
-            'datetime': date_message,
-        }
-        # saving the file information into the db
-        DBApi('files').insert(data=payload)
-
-    appmails = {
-        'uid': uid.decode(),
-        'From_name': str(from_name),
-        'from_mail': str(from_mail),
-        'To_name': str(to_name),
-        'To_mail': str(to_mail),
-        'Subject': str(subject),
-        'bodyHTML': str(sanitized_body),
-        'bodyPLAIN': str(message.body['plain']),
-        'attach': attach_names,
-        'directory': directory,
-        'datetimes': str(''),
-        'readed': unread,
-    }
-
-    # inserting the mail in the database
-    mail_payload = {
-        'uuid': uid.decode(),
-        'subject': str(subject),
-        'user_id': '1',
-        'readed': date_message,
-    }
-
-    DBApi('mails').insert(data=mail_payload)
-
-    with open('./.db/mails/' + str(uid.decode()) + '.json', 'w') as file:
-        json.dump(appmails, file)
-
-    return appmails
-
-
 @eel.expose
-def check_smtp_connection(username, password, smtp):
+def check_smtp_connection(mail_address, password, smtp):
+    """
+    This function, mainly used in registration, is helpful to verify smtp settings
+    :param mail_address: The username for the smtp server.
+    :param password: The password of the account
+    :param smtp: The smtp server address
+    :return: The success of the connection as Boolean
+    """
     try:
-        logger.debug(f'Sending mail to {username} on Welcome in ToooMail')
+        logger.debug(f'Sending mail to {mail_address} on Welcome in ToooMail')
 
         mail_server = smtplib.SMTP(smtp, 587)
         mail_server.ehlo()
         mail_server.starttls()
         mail_server.ehlo()
-        mail_server.login(username, password)
+        mail_server.login(mail_address, password)
         mail_server.close()
         return True
 
@@ -134,6 +51,16 @@ def check_smtp_connection(username, password, smtp):
 
 @eel.expose
 def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, starttls_field):
+    """
+    This function mainly used in registration is helpful to verify the imap setting
+    :param email: The mail as String
+    :param passw: The password as String
+    :param imap: The imap server address as String
+    :param ssl_field: The ssl flag.
+    :param ssl_context_field: The ssl_context flag
+    :param starttls_field: The starttls flag
+    :return: The success of the connection as Boolean
+    """
     try:
         with Imbox(
                 imap,
@@ -152,34 +79,59 @@ def check_imap_connection(email, passw, imap, ssl_field, ssl_context_field, star
 
 @eel.expose
 def get_mails(step):
+    """
+    This function return a list of 'step' length of emails for the Inbox
+    :param step: The number of emails as Int
+    :return: The list of emails
+    """
     # days -> number of days to be - from today
     return MailApi().get_mails(step=step)
 
 
 @eel.expose
 def get_mail_by_uuid(uuid):
+    """
+    This function return the mail payload for the given mail id.
+    :param uuid: The mail id
+    :return: The mail detail as a Dictionary
+    """
     return MailApi().get_specific_email(uuid=uuid)
 
 
 @eel.expose
 def mark_as_seen(uid):
+    """
+    This function mark as seen the given mail uid.
+    :param uid: The uid of the email
+    :return: Success as boolean
+    """
     SYNCApi.mark_as_seen(uid=str(uid))
     return True
 
 
 def mark_flag(uid):
+    """
+    This function flag an email.
+    :param uid: The id of the mail
+    :return: Success as boolean
+    """
     SYNCApi.mark_flag(uid=str(uid))
     return True
 
 
 @eel.expose
 def get_number_unread():
+    """
+    This function returns the number of unread emails.
+    :return: The number of unread emails as Int
+    """
     return SYNCApi().get_number_unread()
 
 
 @eel.expose
 def get_unread():
-    mails = []
+    # @ TODO: Move this function to imapApi lib
+    """mails = []
     username = backend_api.get_user_info('mail')
     passw = backend_api.get_user_info('password')
     imapserver = backend_api.get_user_info('imapserver')
@@ -206,24 +158,36 @@ def get_unread():
             mail = mail_parsing(uid, message, unread_uid, 'Unread')
             mails.append(mail)
 
-        return mails
+        return mails"""
 
 
 # FROM FOLDER
 @eel.expose
 def get_starred():
+    """
+    This function returns the list of starred emails
+    :return: The list of dictionary of starred emails.
+    """
     SYNCApi.get_folder(folder_name='Starred')
     return MailApi().get_folder('Starred')
 
 
 @eel.expose
 def get_unwanted():
+    """
+    This function returns the list of unwanted emails
+    :return: The list of dictionary of unwanted emails.
+    """
     SYNCApi.get_folder(folder_name='Junk')
     return MailApi().get_folder('Junk')
 
 
 @eel.expose
 def get_deleted():
+    """
+    This function returns the list of deleted emails
+    :return: The list of dictionary of deleted emails.
+    """
     SYNCApi.get_folder(folder_name='Deleted')
     return MailApi().get_folder('Deleted')
 
@@ -231,52 +195,95 @@ def get_deleted():
 # FROM :SPECIFICS:
 @eel.expose
 def get_flagged():
+    """
+    This function returns the list of flagged emails
+    :return: The list of dictionary of flagged emails.
+    """
     SYNCApi.get_flagged()
     return MailApi().get_folder('Flagged')
 
 
 @eel.expose
 def get_sent():
+    """
+    This is the primary way for the frontend to receive the list pf Sent emails.
+    :return: The list of dictionary of sent emails.
+    """
     SYNCApi.get_sent()
     return MailApi().get_folder('Sent')
 
 
 @eel.expose
 def delete_mail(uid):
+    """
+    This function provide the deletion of the gived uid both in local and remote.
+    :param uid: The uid of the mail
+    :return: Success as boolean
+    """
     # @todo: delete the mail both local and remote
     DBApi('mails').delete(what=uid, where='uuid')
+    return True
 
 
 @eel.expose
 def add_note(text, uid, attach):
+    """
+    This function provide the addition of a note for the gived uid
+    :param text: The text of the note as String.
+    :param uid: The uid of the mail as Int.
+    :param attach: The list of attachments
+    :return: None
+    """
     DBApi('notes').insert({'uid': uid, 'attach': attach, 'text': text})
 
 
 @eel.expose
 def del_note(uid):
+    """
+    This function provide the deletion of a note for a given mail uid.
+    :param uid: The mail uid as int
+    :return: None
+    """
     DBApi('notes').delete(what=uid, where='')
 
 
 @eel.expose
 def add_contact(name, surname, mail, note, nick):
+    """
+    This function provide an easy way to save a contact.
+    :param name: The name of the contact as String.
+    :param surname: The surname (if any) ot the contact as String
+    :param mail: The mail of the contact
+    :param note: Notes (if any) for the contact.
+    :param nick: The nick (if any) for the contact
+    :return: None
+    """
     DBApi('contact').insert({'name': name, 'surname': surname, 'mail': mail, 'note': note, 'nick': nick})
 
 
 @eel.expose
 def get_contacts():
+    """
+    This is the primary way to extract the list of saved contacts.
+    :return: List of dictionary of saved contacts.
+    """
     # @todo: get the contacts list
     pass
 
 
 @eel.expose
-def event():
-    # notify the frontend for incoming events
-    # @todo: send a notification
-    pass
-
-
-@eel.expose
 def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id):
+    """
+    This is the regular user registration. It simply accept all the given parameters and make a dictionary
+    to be saved in the db.
+    :param name: The username.
+    :param mail: The mail address.
+    :param passw: The account password.
+    :param imapserver: The imap server address.
+    :param smtpserver: The smtp server address.
+    :param mail_server_id: The id of the selected platfrom (read the file in './configuration/mail_server.json')
+    :return: Success as boolean.
+    """
     # Regular user registration
     data = {
         'name': name,
@@ -298,6 +305,19 @@ def user_registration(name, mail, passw, imapserver, smtpserver, mail_server_id)
 
 @eel.expose
 def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl_context, starttls):
+    """
+    This function provide the functionality for custom user and settings registration. This settings will
+    be saved in the DB as custom settings.
+    :param name: The username as String.
+    :param mail: The email address as String.
+    :param passw: The password as String.
+    :param imapserver: The imap server address as String.
+    :param smtpserver: The smtp server address as String.
+    :param ssl: Boolean flag to set the SSL setting for the imap server.
+    :param ssl_context: Boolean flag to set the ssl_context flag for the imap server.
+    :param starttls: Boolean flag to set the starttls flag for the imap server.
+    :return: Success as boolean
+    """
     mail_server_id = DBHelper.insert_custom_registration(imapserver, smtpserver, ssl, ssl_context, starttls)
     data = {
         'name': name,
@@ -319,22 +339,46 @@ def custom_user_registration(name, mail, passw, imapserver, smtpserver, ssl, ssl
 
 @eel.expose
 def set_flag(uid):
-    # @todo: set flag remote and local!
+    """
+    This function is able to flag the specified email.
+    :param uid: Int
+    :return: Boolean as success flag.
+    """
+    # @TODO: Add a flag to the mail.
     return True
 
 
 @eel.expose
 def send_mail(subject, cc, to, body, attach=None):
+    """
+    This function simply provide an easy callable interface for SMTPApi to send emails.
+    :param subject: The subject as String.
+    :param cc: The cc as String.
+    :param to: The recipient as String.
+    :param body: The body of the mail in HTML, stripped in String for easy support.
+    :param attach: The list of IOString of attachments.
+    :return: None
+    """
     SMTPApi().send_mail(subject, cc, to, body, attach)
 
 
 @eel.expose  # Expose this function to Javascript
 def say_hello_py(x):
+    """
+    This function is the primary function called in main and the scope is only to notify the correct startup of the app.
+    :param x: Str
+    :return: None
+    """
     logger.info(f'Hello from {x}.')
 
 
 @eel.expose
 def get_email_platform_settings(id):
+    """
+    This function returns the server settings associated to a specific mail service id.
+    :param id: Int
+    :return: The list of Dictionary with the settings of the specified id.
+    """
     result = DBApi('mail_server_settings').get(field='*', expression=f'WHERE ID = {str(id)}')
     fe_data = []
     for data in result:
@@ -354,6 +398,11 @@ def get_email_platform_settings(id):
 
 @eel.expose
 def get_email_platform():
+    """
+    This function returns the list of email platforms currently supported by ToooMail.
+    You can find the list of supported setting in './configuration/mail_server.json'.
+    :return: The list of Dictionary of current supported mail services.
+    """
     # Getting vendors with ID
     result = DBApi('mail_server_settings').get(field='id, service_name', expression='')
     fe_data = []
@@ -387,7 +436,7 @@ def guess_imap(user, passwrd, server):
         (False, True),
         (True, False),
         (False, False)
-            ]
+    ]
     for i in settings:
         try:
             connection = Imbox(
@@ -454,36 +503,67 @@ def guess_smtp(server):
 
 @eel.expose
 def get_username():
+    """
+    This function provide the username by accessing the UserApi class.
+    :return: Str
+    """
     return UserApi.get_username()
 
 
 def sync():
+    """
+    This function provide an interface for SYNCApi sync method.
+    :return: None
+    """
     logger.info("Starting sync in separate thread.")
     SYNCApi().download_new_mails_from_server()
 
 
 def download_from_latest_datetime():
+    """
+    This function starts the download of the Inbox from the latest saved mail datetime in the database.
+    It's an easy and dirty way to keep the local version synced with the remote server.
+    :return: None
+    """
     logger.debug("Starting today mail download in separate thread.")
     ImapApi().download_mails_from_last_saved_datetimemail()
     logger.info("Sync of the current day completed.")
 
 
 @eel.expose
-def pong():
+def pong() -> str:
+    """
+    This function provide an easy way for the frontend to keep the websocket alive.
+    :rtype: basestring
+    """
     return "ping"
 
 
 @eel.expose
-def ui_log(message):
+def ui_log(message: str) -> None:
+    """
+    This function provide the integration with Tentalog for easy logging from the frontend.
+    :param message: str
+    :return: None
+    """
     logger.debug(f'UI: {message}')
 
 
 @eel.expose
-def ui_log_error(message):
+def ui_log_error(message: str) -> None:
+    """
+    This function provide the functionality to log an error from the frontend.
+    :param message: str
+    :return: None
+    """
     logger.error(f'UI: {message}')
 
 
 def check_incoming():
+    """
+    Polling the server for incoming emails every 30 second on a separate thread.
+    :return: ToooMail.internals.notification
+    """
     while True:
         last_uid, new_emails_number = ImapApi().check_new_emails()
         if new_emails_number > 0:
@@ -493,20 +573,24 @@ def check_incoming():
         eel.sleep(30.0)  # Use eel.sleep(), not time.sleep()
 
 
+def watcher():
+    while True:
+        logger.info('Checking the remote server for incoming emails.')
+        ImapApi().mail_watcher()
+        eel.sleep(20)
+
+
 if __name__ == '__main__':
     say_hello_py('ToooMail server')
 
-    # download mail from today
-    # eel.spawn(download_from_latest_datetime)
-    # checking incoming emails
+    # Starting the watcher on separate thread
+    eel.spawn(watcher)
 
-    # @fixme: THE LIBRARY IS NOT UPDATED, THE DOC IS WRONG
-    # eel.spawn(check_incoming)
+    # Downloading new emails
+    download_from_latest_datetime()
 
     template = UserApi.check_if_user_exists()
     if template == 'index.html':
-        """processes = [multiprocessing.Process(target=SYNCApi().download_new_mails_from_server, args=()) for x in
-                     range(4)]"""
         eel.start(template, block=True, port=8686, mode=False)  # Start
     else:
         eel.start(template, block=True, port=8686)  # Start

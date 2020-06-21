@@ -30,7 +30,6 @@ class MailApi:
     def get_mails(self, step):
         ImapApi().get_inbox_from_server()
 
-        # return mails day by day
         step = step + 60
         mails = DBApi("mails").get_mail(step=step, user_id=self.user_id)
 

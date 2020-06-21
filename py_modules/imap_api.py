@@ -1,16 +1,16 @@
 import datetime
-from email.utils import parsedate_to_datetime
+import imaplib
 import json
+from email.utils import parsedate_to_datetime
 from os import path
+
 import dateutil.parser
-
+from imap_tools import MailBox, Q
 from imbox import Imbox
-from imap_tools import MailBox, Q, OR, AND
-
-from py_modules import backend_api
-from py_modules.db_api import DBApi
 
 import configuration
+from py_modules import backend_api
+from py_modules.db_api import DBApi
 
 current_configuration = configuration.get_current()
 logger = current_configuration.logger
@@ -489,13 +489,12 @@ class ImapApi:
 
     def download_mails_from_last_saved_datetimemail(self):
         """ We can sync the app using the greatest date in messages table
-            and start the download from that spacific datetime
+            and start the download from that specific datetime
         """
         try:
             last_email_raw_date = DBApi().get_last_email_date(1)
         except TypeError:
             last_email_raw_date = datetime.datetime.now().isoformat()
-        print(last_email_raw_date)
         parsed_date = dateutil.parser.parse(last_email_raw_date)
         mails = []
         with Imbox(
@@ -535,3 +534,36 @@ class ImapApi:
                 return True, data
             else:
                 return False, []
+
+    def mail_watcher(self):
+        mailserver = imaplib.IMAP4_SSL(self.server)
+        mailserver.login(self.userName, self.password)
+        result, message = mailserver.select(readonly=True)
+        if result != 'OK':
+            raise Exception(message)
+        retcode, data = mailserver.search(None, '(UNSEEN)')
+        data[0] = data[0].decode("utf-8")
+        if data[0]:
+            last_uid = str(str.split(str(data[0]))[-1])
+            logger.debug(f'Latest received email uid: {last_uid}')
+            success, last_local_uid = DBApi().get_last_email_id(1)[0][0]
+            if success:
+                logger.debug(f'Latest local email uid: {last_local_uid}')
+
+                # Testing imbox with extracted uid from remote server
+                with MailBox(self.server).login(self.userName, self.password) as mailbox:
+                    messages = mailbox.fetch(Q(uid=last_uid))
+                    for msg in messages:
+                        data.append(
+                            {
+                                "uid": msg.subject
+                            }
+                        )
+            else:
+                logger.debug('The database is empty. Skipping mail watcher rotation.')
+        else:
+            logger.debug('No new emails.')
+
+
+
+

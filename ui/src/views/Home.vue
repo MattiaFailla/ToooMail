@@ -189,7 +189,8 @@
 
 
             <el-dialog
-                    :before-close="handleClose"
+                    action=""
+                    :before-close="handleCloseWriting"
                     :visible.sync="isWriting"
                     title="Write a new email"
                     width="70%"
@@ -219,6 +220,7 @@
                 <el-form-item label="Add attachments"><br>
                   <el-upload
                           :file-list="form.files"
+                          action=""
                           class="upload-demo"
                           drag
                           multiple>
@@ -437,7 +439,7 @@
                 switch (rowType) {
                     default:
                     case "inbox":
-                        eel.get_mails(50)((data) => {
+                        eel.get_mails(100)((data) => {
                             maildata = data;
                             vm.updateMailData(data);
                             console.log(data)
@@ -542,6 +544,9 @@
             },
             handleClose(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            handleCloseWriting(){
+                this.isWriting = false;
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);

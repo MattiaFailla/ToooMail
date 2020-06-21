@@ -1,10 +1,10 @@
-import sqlite3
-import json
-import os
-import re
 import hashlib
 import importlib.util
+import os
+import re
+import sqlite3
 from datetime import datetime
+
 import configuration
 
 current_configuration = configuration.get_current()
@@ -51,14 +51,29 @@ class OldStateMigrationException(MigrationException):
 class DBApi:
 
     def __init__(self, table=None):
+        """
+        This function open the connection with the local sqlite database
+        :param table: The starting table
+        """
         self.table = table
         self.conn = sqlite3.connect(current_configuration.db_location,
                                     detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 
     def __del__(self):
+        """
+        Destroying the database connection
+        :return:
+        """
         self.conn.close()
 
     def insert(self, data):
+        """
+        Note: this function is insecure. @todo: security refactoring
+
+        This function insert data into the database by unpacking the data payload.
+        :param data: The data payload packed in a list of dict
+        :return: Success
+        """
         columns = ", ".join('"{}"'.format(col) for col in data.keys())
         values = ", ".join(":{}".format(col) for col in data.keys())
         sql = 'INSERT INTO "{0}" ({1}) VALUES ({2})'.format(self.table, columns, values)
@@ -67,12 +82,26 @@ class DBApi:
         return True
 
     def delete(self, where, what):
+        """
+        Note: this function is insecure. @todo: security refactoring
+
+        This function removes a record from the database.
+        :param where: the key of the table
+        :param what: the object we are trying to remove
+        :return: Success
+        """
         cur = self.conn.cursor()
         cur.execute('DELETE FROM "{0}" WHERE "{1}" LIKE %"{2}"%'.format(self.table, where, what))
         self.conn.commit()
-        return
+        return True
 
-    def get(self, field: object = "", expression: object = "") -> object:
+    def get(self, field: object = "", expression: object = ""):
+        """
+        This function returns a list of results from the database
+        :param field: The key of the table
+        :param expression: Optional sql expression
+        :return: List of results
+        """
         cur = self.conn.cursor()
         cur.execute("SELECT {0} FROM {1} {2}".format(field, self.table, expression))
         rows = cur.fetchall()
@@ -84,19 +113,24 @@ class DBApi:
 
     def drop(self):
         """
-        TODO Implement drop method.
+        @todo: Implement drop method.
         :return:
         """
         pass
 
     def update(self):
         """
-        TODO Implement update method.
+        @todo: Implement update method.
         :return:
         """
         pass
 
     def get_last_email_id(self, user_id):
+        """
+        This function returns the latest email uid in the database
+        :param user_id: The user id
+        :return: The latest email id
+        """
         cur = self.conn.cursor()
         cur.execute("SELECT uuid FROM mails WHERE user_id = ? ORDER BY uuid DESC LIMIT 1", (user_id,))
         rows = cur.fetchall()
@@ -104,9 +138,16 @@ class DBApi:
         for row in rows:
             data.append(row)
         self.conn.close()
-        return data
+        if data is not None:
+            return True, data
+        return False, None
 
     def get_last_email_date(self, user_id):
+        """
+        This function returns the latest saved datetime in the database
+        :param user_id: The user id
+        :return: The latest saved datetime of the latest mail
+        """
         cur = self.conn.cursor()
         cur.execute("SELECT received FROM mails WHERE user_id = ? ORDER BY received DESC LIMIT 1", (user_id,))
         row = cur.fetchone()
@@ -114,6 +155,13 @@ class DBApi:
         return row[0]
 
     def get_mail(self, step=None, user_id=0, folder="Inbox"):
+        """
+        This function folds the emails by extracting 100 row from the database by starting from @step
+        :param step: Number of rows to start from
+        :param user_id: The user id
+        :param folder: The folder name
+        :return: A list of emails
+        """
         if step is not None:
             cur = self.conn.cursor()
             cur.execute(
@@ -136,12 +184,23 @@ class DBApi:
             return data
 
     def mark_flag(self, uid):
+        """
+        This function add a flag to an email
+        :param uid: The mail id
+        :return: Success
+        """
         cur = self.conn.cursor()
         cur.execute(
             "UPDATE mails ", (uid,))
         self.conn.commit()
+        return True
 
     def get_specific_email(self, uuid):
+        """
+        This function returns a specific email data
+        :param uuid: The mail id
+        :return: An object that represents all the email data
+        """
         cur = self.conn.cursor()
         cur.execute(
             "SELECT * FROM mails WHERE uuid = ?", (uuid,))
@@ -152,17 +211,14 @@ class DBApi:
         self.conn.close()
         return data
 
-    @staticmethod
-    def upload_config():
-        """ UPLOADING APP SETTINGS """
-        for setting in current_configuration.mail_server_settings:
-            api = DBApi("mail_server_settings")
-            result = [existing[1] for existing in api.get('*')]
-            # , f'where service_name like \'{setting["service_name"]}\'')
-            if not (setting['service_name'] in result):
-                api.insert(setting)
-
     def get_next_uuid_set(self, uid, user_id, folder):
+        """
+        This function returns the next set of id starting from the selected id
+        :param uid: The id to start from
+        :param user_id: The user id
+        :param folder: The folder
+        :return: A list of id
+        """
         cur = self.conn.cursor()
         cur.execute("SELECT uuid FROM mails WHERE uuid > ? AND user_id =? AND folder = '?' ORDER BY uuid LIMIT 30",
                     (str(uid), str(user_id), folder,))
@@ -173,6 +229,12 @@ class DBApi:
         return data
 
     def get_files_information(self, uid, user_id):
+        """
+        This function returns file metadata
+        :param uid: The file id
+        :param user_id: The user id
+        :return:
+        """
         cur = self.conn.cursor()
         cur.execute(
             "SELECT real_filename, deleted FROM files WHERE uuid = ? AND user_id = ?", (str(uid), str(user_id),))
@@ -183,25 +245,26 @@ class DBApi:
         return data
 
     def mark_as_seen(self, uid):
+        """
+        This function mark as seen a mail in the local db
+        :param uid: The mail id
+        :return: Success
+        """
         cur = self.conn.cursor()
         cur.execute(
             "UPDATE mails SET opened = 1 WHERE uuid = ?", (uid,))
         self.conn.commit()
 
     def get_unopened(self):
+        """
+        This function returns the number of unread emails
+        :return: Rhe number of unread emails
+        """
         cur = self.conn.cursor()
         cur.execute("SELECT COUNT(*) FROM mails WHERE opened = 0")
         (number_of_rows,) = cur.fetchone()
         return number_of_rows
 
-    def search_mail(self, text):
-        cur = self.conn.cursor()
-        cur.execute("SELECT uuid FROM mails WHERE subject LIKE ?", ('%'+text+'%',))
-        rows = cur.fetchall()
-        data = []
-        for row in rows:
-            data.append(row[0])
-        return data
 
 
 class DBHelper:
