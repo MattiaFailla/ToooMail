@@ -51,6 +51,12 @@ class TagApi:
         # todo
         pass
 
-
-
-        
+    def tag_exists(self, tag_name: str) -> bool:
+        conn = sqlite3.connect(current_configuration.db_location)
+        c = conn.cursor()
+        c.execute("SELECT name from tags  where name = ? and user_id = ?", (tag_name, self.user_id))
+        result = c.fetchall()
+        if len(result) == 0:
+            return False
+        else:
+            return True
